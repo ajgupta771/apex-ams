@@ -1,1 +1,2230 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEX AMS — Cloud</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0B0E14;color:#E2E8F0;font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:#131720}::-webkit-scrollbar-thumb{background:#232B3E;border-radius:3px}
+#login-screen{position:fixed;inset:0;background:#0B0E14;z-index:1000;display:flex;align-items:center;justify-content:center}
+.login-box{background:#131720;border:1px solid #232B3E;border-radius:16px;padding:36px;width:100%;max-width:400px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+#sidebar{width:232px;min-width:232px;background:#131720;border-right:1px solid #232B3E;position:relative;flex-shrink:0;overflow-y:auto}
+.nav-link{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:8px;font-size:.82rem;font-weight:500;color:#94A3B8;cursor:pointer;transition:all .15s;margin-bottom:1px}
+.nav-link:hover{background:#1A2035;color:#E2E8F0}
+.nav-link.active{background:rgba(59,130,246,.15);color:#60A5FA;border-left:3px solid #3B82F6;padding-left:9px}
+.nav-link svg{flex-shrink:0;width:15px;height:15px}
+.nav-sec{font-size:.65rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.09em;padding:0 8px;margin:10px 0 4px}
+.view-page{display:none}.view-page.active{display:block}
+.sc{background:#1A2035;border:1px solid #232B3E;border-radius:12px;overflow:hidden}
+.sc-hd{padding:14px 18px;border-bottom:1px solid #232B3E;display:flex;align-items:center;justify-content:space-between}
+.sc-bd{padding:18px}
+.kpi{background:#1A2035;border:1px solid #232B3E;border-radius:12px;padding:18px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--f),var(--t))}
+.apex-table{width:100%;border-collapse:collapse}
+.apex-table th{background:#0f1420;color:#64748B;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:9px 14px;text-align:left;border-bottom:1px solid #232B3E}
+.apex-table td{padding:11px 14px;font-size:.82rem;border-bottom:1px solid rgba(35,43,62,.6);color:#CBD5E1;vertical-align:middle}
+.apex-table tr:last-child td{border-bottom:none}
+.apex-table tbody tr:hover{background:rgba(59,130,246,.04)}
+.ai{width:100%;background:#0B0E14;border:1px solid #232B3E;border-radius:7px;padding:9px 12px;color:#E2E8F0;font-size:.84rem;outline:none;transition:border-color .15s}
+.ai:focus{border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.as{width:100%;background:#0B0E14;border:1px solid #232B3E;border-radius:7px;padding:9px 12px;color:#E2E8F0;font-size:.84rem;outline:none;cursor:pointer}
+.al{display:block;font-size:.7rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+input[type=range]{-webkit-appearance:none;width:100%;height:5px;background:#232B3E;border-radius:3px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#3B82F6;cursor:pointer;border:2px solid #131720}
+.bp{background:#3B82F6;color:#fff;border:none;border-radius:7px;padding:9px 18px;font-size:.84rem;font-weight:600;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.bp:hover{background:#2563EB}.bp:disabled{opacity:.5;cursor:not-allowed}
+.bg-btn{background:transparent;color:#94A3B8;border:1px solid #232B3E;border-radius:7px;padding:8px 14px;font-size:.78rem;font-weight:500;cursor:pointer;transition:all .15s}
+.bg-btn:hover{border-color:#3B82F6;color:#60A5FA}
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.bdg-g{background:rgba(34,197,94,.12);color:#22C55E}
+.bdg-y{background:rgba(234,179,8,.12);color:#EAB308}
+.bdg-r{background:rgba(239,68,68,.12);color:#EF4444}
+.bdg-b{background:rgba(59,130,246,.12);color:#60A5FA}
+.bdg-m{background:rgba(100,116,139,.12);color:#94A3B8}
+.bdg-p{background:rgba(139,92,246,.12);color:#A78BFA}
+#toast-c{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:6px}
+.toast{background:#1A2035;border:1px solid #232B3E;border-left:3px solid #22C55E;border-radius:8px;padding:11px 16px;font-size:.82rem;color:#E2E8F0;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:tsi .2s ease;max-width:300px}
+.toast.err{border-left-color:#EF4444}
+@keyframes tsi{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
+.tab-btn{padding:7px 14px;font-size:.8rem;font-weight:500;border:none;border-bottom:2px solid transparent;color:#94A3B8;cursor:pointer;background:none;transition:all .15s}
+.tab-btn.active{color:#60A5FA;border-bottom-color:#3B82F6}
+.tab-btn:hover:not(.active){color:#E2E8F0}
+.slider-row{background:#0d1118;border:1px solid #232B3E;border-radius:8px;padding:12px;margin-bottom:8px}
+.empty-s{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:36px;color:#475569;font-size:.82rem;text-align:center}
+.chart-wrap{position:relative;width:100%;height:250px}
+.ex-row{background:#0d1118;border:1px solid #232B3E;border-radius:8px;padding:12px;margin-bottom:8px}
+.fg{display:grid;gap:10px}.fg-2{grid-template-columns:1fr 1fr}.fg-3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:768px){.fg-2,.fg-3{grid-template-columns:1fr}#wb-layout{grid-template-columns:1fr!important}#inj-layout{grid-template-columns:1fr!important}}
+.loader{width:18px;height:18px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
 
+/* ── CUSTOM SELECT WITH "OTHER" SUPPORT ── */
+.cs-wrap{position:relative}
+.cs-wrap select{width:100%}
+.cs-custom{display:none;margin-top:6px}
+.cs-custom.show{display:block}
+.cs-custom .ai{border-color:rgba(139,92,246,.4)}
+.cs-custom .ai:focus{border-color:#8B5CF6;box-shadow:0 0 0 3px rgba(139,92,246,.1)}
+
+@keyframes mIn{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+.pw-wrap{position:relative}
+.pw-wrap .ai{padding-right:42px}
+.pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#64748B;display:flex;align-items:center;padding:0}
+.pw-eye:hover{color:#E2E8F0}
+@media print{
+  #login-screen,#topbar,#sidebar,#toast-c,.no-print{display:none!important}
+  #main-content{margin:0!important;padding:8px!important}
+  .view-page{display:none!important}.view-page.active{display:block!important}
+  .sc{background:#fff!important;border:1px solid #ccc!important}
+  .apex-table th{background:#eee!important;color:#333!important}
+  .apex-table td{color:#111!important}
+  @page{margin:12mm;size:A4}
+}
+</style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}</style></head>
+<body>
+<div id="toast-c"></div>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="width:52px;height:52px;background:linear-gradient(135deg,#3B82F6,#8B5CF6);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 0 24px rgba(59,130,246,.3)">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+      </div>
+      <h1 style="font-size:1.5rem;font-weight:800;color:#E2E8F0;margin-bottom:4px">APEX<span style="color:#3B82F6">AMS</span></h1>
+      <p style="font-size:.8rem;color:#64748B">Athlete Monitoring System</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div>
+        <label class="al">Username</label>
+        <input type="text" id="login-username" class="ai" placeholder="Enter your username" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div>
+        <label class="al">Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="login-password" class="ai" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()">
+          <button class="pw-eye" onclick="togglePw('login-password',this)" type="button">
+            <svg id="eye-icon-login" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </button>
+        </div>
+      </div>
+      <div id="login-error" style="display:none;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:7px;padding:10px 14px;font-size:.8rem;color:#EF4444;line-height:1.5"></div>
+      <button class="bp" style="width:100%;justify-content:center;padding:12px;font-size:.9rem" id="login-btn" onclick="doLogin()">
+        Sign In
+      </button>
+    </div>
+    <div style="margin-top:16px;text-align:center">
+      <p style="font-size:.74rem;color:#475569">Contact your coach for your login credentials</p>
+    </div>
+    <div style="margin-top:12px;text-align:center">
+      <button onclick="downloadApp()" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:7px;padding:7px 16px;color:#22C55E;cursor:pointer;font-size:.76rem;font-weight:600;display:inline-flex;align-items:center;gap:6px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        Download App File
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<header id="topbar" style="background:#131720;border-bottom:1px solid #232B3E;height:54px;display:flex;align-items:center;padding:0 18px;gap:14px;position:sticky;top:0;z-index:200;flex-shrink:0">
+  <div style="display:flex;align-items:center;gap:9px;min-width:200px">
+    <div style="width:30px;height:30px;background:linear-gradient(135deg,#3B82F6,#8B5CF6);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+    </div>
+    <span style="font-weight:800;font-size:.95rem;letter-spacing:.06em;color:#E2E8F0">APEX<span style="color:#3B82F6">AMS</span></span>
+  </div>
+  <div style="flex:1"></div>
+  <div style="display:flex;align-items:center;gap:8px;background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:6px 12px">
+    <div id="topbar-avatar" style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;flex-shrink:0"></div>
+    <div>
+      <p id="topbar-name" style="font-size:.78rem;font-weight:600;color:#E2E8F0;line-height:1.2"></p>
+      <p id="topbar-role" style="font-size:.64rem;color:#64748B;text-transform:uppercase;letter-spacing:.06em"></p>
+    </div>
+  </div>
+  <div id="live-clock" style="font-size:.74rem;color:#475569;font-variant-numeric:tabular-nums;min-width:130px;text-align:right">24 Jun · 22:40:21</div>
+  <button onclick="doLogout()" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:7px;padding:5px 12px;color:#EF4444;font-size:.74rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+    Logout
+  </button>
+</header>
+
+<!-- BODY -->
+<div style="display:flex;min-height:calc(100vh - 54px)">
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <nav style="padding:12px 8px;padding-bottom:50px">
+    <div id="coach-nav" style="display:none">
+      <div class="nav-sec">Overview</div>
+      <div class="nav-link active" data-page="dashboard" onclick="nav('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>Dashboard</div>
+      <div class="nav-link" data-page="roster" onclick="nav('roster')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Roster</div>
+      <div class="nav-sec">Programme</div>
+      <div class="nav-link" data-page="workout-builder" onclick="nav('workout-builder')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>Workout Builder</div>
+      <div class="nav-link" data-page="plans-list" onclick="nav('plans-list')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>Saved Plans</div>
+      <div class="nav-sec">Monitoring</div>
+      <div class="nav-link" data-page="analytics" onclick="nav('analytics')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>Analytics</div>
+      <div class="nav-link" data-page="injuries" onclick="nav('injuries')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>Injury Tracker</div>
+      <div class="nav-link" data-page="athlete-logs" onclick="nav('athlete-logs')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>Athlete Logs</div>
+      <div class="nav-sec">Manage</div>
+      <div class="nav-link" data-page="add-athlete" onclick="nav('add-athlete')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>Add Athlete</div>
+      <div class="nav-link" data-page="manage-athletes" onclick="nav('manage-athletes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Manage Athletes</div>
+    </div>
+    <div id="athlete-nav" style="display:none">
+      <div class="nav-sec">My Programme</div>
+      <div class="nav-link active" data-page="my-plan" onclick="nav('my-plan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>My Plan</div>
+      <div class="nav-link" data-page="todays-session" onclick="nav('todays-session')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>Today's Sessions <span id="pending-badge" style="display:none;background:#EF4444;color:#fff;font-size:.6rem;padding:1px 5px;border-radius:8px;font-weight:700;margin-left:4px">!</span></div>
+      <div class="nav-sec">Daily Logs</div>
+      <div class="nav-link" data-page="wellness-log" onclick="nav('wellness-log')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>Wellness Check-In</div>
+      <div class="nav-link" data-page="session-log" onclick="nav('session-log')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>Log Session RPE</div>
+      <div class="nav-link" data-page="my-history" onclick="nav('my-history')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 .49-3.49"></path></svg>My History</div>
+    </div>
+  </nav>
+  <div style="position:absolute;bottom:0;left:0;right:0;padding:10px;border-top:1px solid #232B3E;text-align:center;background:#131720">
+    <div style="font-size:.62rem;color:#334155">APEX AMS Cloud · v3.2</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main id="main-content" style="flex:1;overflow-y:auto;padding:22px;max-width:100%;min-width:0">
+
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="view-page active">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div><h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Executive Dashboard</h1><p id="dash-date" style="font-size:.78rem;color:#475569;margin-top:3px"></p></div>
+    <button class="bg-btn" onclick="renderDashboard()" style="display:flex;align-items:center;gap:5px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 .49-3.49"></path></svg>Refresh</button>
+  </div>
+
+  <!-- Filter Bar -->
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;background:#1A2035;border:1px solid #232B3E;border-radius:10px;margin-bottom:18px">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+    <span style="font-size:.76rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em">Filter:</span>
+    <div style="display:flex;align-items:center;gap:6px">
+      <label style="font-size:.74rem;color:#64748B">Discipline:</label>
+      <select id="dash-discipline-filter" class="as" style="width:160px;padding:5px 10px;font-size:.78rem" onchange="renderDashboard()">
+        <option value="all">All Sports</option>
+      </select>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <label style="font-size:.74rem;color:#64748B">Athlete:</label>
+      <select id="dash-player-filter" class="as" style="width:170px;padding:5px 10px;font-size:.78rem" onchange="renderDashboard()">
+        <option value="all">All Athletes</option>
+      </select>
+    </div>
+    <button onclick="clearDashFilters()" style="background:none;border:none;color:#64748B;cursor:pointer;font-size:.74rem;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:5px;border:1px solid #232B3E" onmouseover="this.style.color='#E2E8F0'" onmouseout="this.style.color='#64748B'">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Clear
+    </button>
+    <span id="dash-filter-badge" class="badge bdg-b" style="display:none"></span>
+  </div>
+
+  <div id="kpi-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:14px;margin-bottom:20px"></div>
+  <div class="sc">
+    <div class="sc-hd"><span style="font-size:.86rem;font-weight:600;color:#E2E8F0">Roster Status</span><span class="badge bdg-b" id="roster-count-badge"></span></div>
+    <div style="overflow-x:auto"><table class="apex-table"><thead><tr><th>Athlete</th><th>Sport</th><th>Position</th><th>Wellness</th><th>Score</th><th>Sessions 7d</th><th>Injury</th></tr></thead><tbody id="roster-status-tbody"></tbody></table></div>
+  </div>
+</div>
+
+<!-- ROSTER -->
+<div id="page-roster" class="view-page">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Roster</h1>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <select id="roster-discipline-filter" class="as" style="width:155px;padding:5px 10px;font-size:.78rem" onchange="renderFullRoster()">
+        <option value="all">All Sports</option>
+      </select>
+      <select id="roster-player-filter" class="as" style="width:165px;padding:5px 10px;font-size:.78rem" onchange="renderFullRoster()">
+        <option value="all">All Athletes</option>
+      </select>
+    </div>
+  </div>
+  <div class="sc"><div style="overflow-x:auto"><table class="apex-table"><thead><tr><th>#</th><th>Name</th><th>Sport / Discipline</th><th>Position</th><th>Age</th><th>Username</th><th>Sessions 7d</th><th>Action</th></tr></thead><tbody id="roster-full-tbody"></tbody></table></div></div>
+</div>
+
+<!-- WORKOUT BUILDER -->
+<div id="page-workout-builder" class="view-page">
+  <div style="margin-bottom:20px"><h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Workout Builder</h1><p style="font-size:.78rem;color:#475569;margin-top:3px">Design &amp; assign sessions to athletes</p></div>
+  <div id="wb-layout" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start">
+    <div>
+      <div class="sc" style="margin-bottom:16px">
+        <div class="sc-hd"><span style="font-size:.86rem;font-weight:600;color:#E2E8F0">Plan Details</span></div>
+        <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
+          <div><label class="al">Plan Name</label><input type="text" id="wb-name" class="ai" placeholder="e.g. Week 3 – Lower Strength"></div>
+          <div class="fg fg-2">
+            <div>
+  <label class="al">Phase / Mesocycle</label>
+  <div class="cs-wrap">
+    <select id="wb-phase" class="as" onchange="toggleCustom(this,'wb-phase-custom')">
+      <option>Hypertrophy</option><option>Strength</option><option>Power</option>
+      <option>Peaking</option><option>Deload</option><option>GPP</option>
+      <option>SPP</option><option>Conditioning</option><option>Recovery</option>
+      <option value="__other__">✏️ Other (type custom)...</option>
+    </select>
+    <div class="cs-custom" id="wb-phase-custom">
+      <input type="text" class="ai" id="wb-phase-text" placeholder="Type your phase name..." oninput="syncCustom(this,'wb-phase')">
+    </div>
+  </div>
+</div>
+            <div><label class="al">Week</label><input type="number" id="wb-week" class="ai" placeholder="1" min="1" max="52"></div>
+          </div>
+          <div class="fg fg-2">
+            <div><label class="al">Date</label><input type="date" id="wb-date" class="ai"></div>
+            <div><label class="al">Time</label><input type="time" id="wb-time" class="ai" value="06:30"></div>
+          </div>
+          <div>
+  <label class="al">Session Type</label>
+  <div class="cs-wrap">
+    <select id="wb-type" class="as" onchange="toggleCustom(this,'wb-type-custom')">
+      <option>Strength – Lower</option><option>Strength – Upper</option>
+      <option>Strength – Full Body</option><option>Power &amp; Speed</option>
+      <option>Conditioning / Aerobic</option><option>HIIT</option>
+      <option>Skill / Technical</option><option>Recovery / Mobility</option>
+      <option>Match / Game</option><option>Speed &amp; Agility</option>
+      <option>Plyometrics</option><option>Boxing / Sparring</option>
+      <option>Calisthenics</option><option>Yoga / Stretching</option>
+      <option value="__other__">✏️ Other (type custom)...</option>
+    </select>
+    <div class="cs-custom" id="wb-type-custom">
+      <input type="text" class="ai" id="wb-type-text" placeholder="Type session type..." oninput="syncCustom(this,'wb-type')">
+    </div>
+  </div>
+</div>
+          <div><label class="al">Coach Notes</label><input type="text" id="wb-notes" class="ai" placeholder="Focus points, warm-up..."></div>
+          <div><label class="al">Assign To</label><div id="wb-assign-checks" style="display:flex;flex-direction:column;gap:6px;margin-top:4px"></div></div>
+        </div>
+      </div>
+      <div class="sc">
+        <div class="sc-hd"><span style="font-size:.86rem;font-weight:600;color:#E2E8F0">Session Totals</span></div>
+        <div class="sc-bd">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+            <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px;text-align:center"><p style="font-size:.6rem;color:#64748B;text-transform:uppercase;margin-bottom:3px">Exercises</p><p id="tot-ex" style="font-size:1.3rem;font-weight:700;color:#60A5FA">0</p></div>
+            <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px;text-align:center"><p style="font-size:.6rem;color:#64748B;text-transform:uppercase;margin-bottom:3px">Total Sets</p><p id="tot-sets" style="font-size:1.3rem;font-weight:700;color:#60A5FA">0</p></div>
+            <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px;text-align:center"><p style="font-size:.6rem;color:#64748B;text-transform:uppercase;margin-bottom:3px">Volume (kg)</p><p id="tot-vol" style="font-size:1.3rem;font-weight:700;color:#22C55E">0</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="sc">
+        <div class="sc-hd"><span style="font-size:.86rem;font-weight:600;color:#E2E8F0">Exercises</span><button class="bp" onclick="addExRow()" style="padding:5px 12px;font-size:.78rem">+ Add</button></div>
+        <div class="sc-bd">
+          <div id="exercise-list" style="margin-bottom:12px;max-height:60vh;overflow-y:auto"><div class="empty-s" id="ex-empty-msg"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path></svg>Click + Add to build</div></div>
+          <div style="display:flex;gap:8px"><button class="bp" style="flex:1" id="save-plan-btn" onclick="savePlan()">Save &amp; Assign Plan</button><button class="bg-btn" onclick="clearBuilder()">Clear</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SAVED PLANS -->
+<div id="page-plans-list" class="view-page">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+    <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Saved Plans</h1>
+    <button class="bp" onclick="nav('workout-builder')">+ New Plan</button>
+  </div>
+  <div class="sc"><div style="overflow-x:auto"><table class="apex-table"><thead><tr><th>Plan Name</th><th>Type</th><th>Phase</th><th>Week</th><th>Date</th><th>Exercises</th><th>Assigned To</th><th>Actions</th></tr></thead><tbody id="plans-list-tbody"></tbody></table></div></div>
+</div>
+
+<!-- ANALYTICS -->
+<div id="page-analytics" class="view-page">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+    <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Analytics</h1>
+    <div style="display:flex;align-items:center;gap:8px"><label class="al" style="margin:0">Athlete:</label><select id="analytics-ath-sel" class="as" style="width:170px" onchange="renderAnalyticsCharts()"></select></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
+    <div class="sc"><div class="sc-hd"><div><p style="font-size:.86rem;font-weight:600;color:#E2E8F0;margin-bottom:2px">Wellness vs Training Load</p><p style="font-size:.7rem;color:#64748B">7-day</p></div></div><div style="padding:14px"><div class="chart-wrap"><canvas id="chartWL"></canvas></div></div></div>
+    <div class="sc"><div class="sc-hd"><div><p style="font-size:.86rem;font-weight:600;color:#E2E8F0;margin-bottom:2px">ACWR</p><p style="font-size:.7rem;color:#64748B">28-day chronic</p></div></div><div style="padding:14px"><div class="chart-wrap"><canvas id="chartACWR"></canvas></div></div></div>
+  </div>
+</div>
+
+<!-- INJURIES -->
+<div id="page-injuries" class="view-page">
+  <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0;margin-bottom:16px">Injury Tracker</h1>
+
+  <!-- Filter Bar -->
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;background:#1A2035;border:1px solid #232B3E;border-radius:10px;margin-bottom:18px">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+    <span style="font-size:.74rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.05em">Filter:</span>
+    <div style="display:flex;align-items:center;gap:6px">
+      <label style="font-size:.74rem;color:#64748B">Sport:</label>
+      <select id="inj-disc-filter" class="as" style="width:150px;padding:5px 10px;font-size:.78rem" onchange="onInjDiscFilter()">
+        <option value="all">All Sports</option>
+      </select>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <label style="font-size:.74rem;color:#64748B">Athlete:</label>
+      <select id="inj-ath-filter" class="as" style="width:160px;padding:5px 10px;font-size:.78rem" onchange="renderInjuries()">
+        <option value="all">All Athletes</option>
+      </select>
+    </div>
+    <button onclick="clearInjFilters()" style="background:none;border:1px solid #232B3E;border-radius:5px;padding:4px 8px;color:#64748B;cursor:pointer;font-size:.72rem" onmouseover="this.style.color='#E2E8F0'" onmouseout="this.style.color='#64748B'">✕ Clear</button>
+  </div>
+
+  <div id="inj-layout" style="display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start">
+    <!-- Log Form -->
+    <div class="sc">
+      <div class="sc-hd"><span style="font-size:.86rem;font-weight:600;color:#E2E8F0" id="inj-form-title">Log New Injury</span></div>
+      <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
+        <input type="hidden" id="inj-edit-id">
+        <div><label class="al">Athlete</label><select id="inj-ath" class="as"></select></div>
+        <div>
+          <label class="al">Body Part / Region</label>
+          <div class="cs-wrap">
+            <select id="inj-body" class="as" onchange="toggleCustom(this,'inj-body-custom')">
+              <option>Hamstring</option><option>Quadriceps</option><option>Knee (Patella)</option>
+              <option>Ankle</option><option>Lower Back</option><option>Shoulder</option>
+              <option>Hip Flexor</option><option>Calf / Achilles</option><option>Groin</option>
+              <option>Neck</option><option>Elbow</option><option>Foot / Toe</option>
+              <option>Wrist / Hand</option><option>Rib / Chest</option>
+              <option value="__other__">✏️ Other (type custom)...</option>
+            </select>
+            <div class="cs-custom" id="inj-body-custom">
+              <input type="text" class="ai" id="inj-body-text" placeholder="Type body part..." oninput="syncCustom(this,'inj-body')">
+            </div>
+          </div>
+        </div>
+        <div><label class="al">Injury Type</label>
+          <select id="inj-type" class="as">
+            <option value="Acute">⚡ Acute — Sudden trauma</option>
+            <option value="Chronic">🔄 Chronic — Overuse / gradual</option>
+          </select>
+        </div>
+        <div><label class="al">Severity / Status</label>
+          <select id="inj-sev" class="as">
+            <option value="Full">🟢 Full Training</option>
+            <option value="Modified">🟡 Modified Load</option>
+            <option value="Sidelined">🔴 Sidelined</option>
+          </select>
+        </div>
+        <div><label class="al">Notes / Description</label><input type="text" id="inj-notes" class="ai" placeholder="e.g. Grade 1 hamstring strain..."></div>
+        <div><label class="al">Injury Date</label><input type="date" id="inj-date" class="ai"></div>
+        <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:12px">
+          <p style="font-size:.7rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">📅 Rehab Window</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div><label class="al">Rehab Start</label><input type="date" id="inj-rehab-start" class="ai"></div>
+            <div><label class="al">Expected Return</label><input type="date" id="inj-rehab-end" class="ai"></div>
+          </div>
+        </div>
+        <div><label class="al">Session Restrictions</label><input type="text" id="inj-restrictions" class="ai" placeholder="e.g. No sprinting, upper body only..."></div>
+        <div style="display:flex;gap:8px">
+          <button class="bp" onclick="logInjury()" style="flex:1;justify-content:center" id="inj-submit-btn">Log Injury</button>
+          <button class="bg-btn" id="inj-cancel-edit-btn" style="display:none" onclick="cancelInjEdit()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Injuries Table -->
+    <div>
+      <div class="sc" style="margin-bottom:18px">
+        <div class="sc-hd">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:.86rem;font-weight:600;color:#E2E8F0">🔴 Active Injuries</span>
+            <span class="badge bdg-r" id="inj-count-badge"></span>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="apex-table">
+            <thead><tr><th>Athlete</th><th>Sport</th><th>Body Part</th><th>Type</th><th>Status</th><th>Injury Date</th><th>Rehab Window</th><th>Restrictions</th><th>Actions</th></tr></thead>
+            <tbody id="injury-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Resolved History -->
+      <div class="sc">
+        <div class="sc-hd">
+          <span style="font-size:.86rem;font-weight:600;color:#E2E8F0">✅ Injury History (Resolved)</span>
+          <span class="badge bdg-g" id="inj-hist-count"></span>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="apex-table">
+            <thead><tr><th>Athlete</th><th>Sport</th><th>Body Part</th><th>Type</th><th>Status</th><th>Injury Date</th><th>Rehab Window</th><th>Notes</th><th>Action</th></tr></thead>
+            <tbody id="injury-history-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ATHLETE LOGS -->
+<div id="page-athlete-logs" class="view-page">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+    <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Athlete Submitted Logs</h1>
+    <select id="logs-ath-filter" class="as" style="width:170px" onchange="renderAthleteLogsData()"><option value="all">All Athletes</option></select>
+  </div>
+  <div style="border-bottom:1px solid #232B3E;margin-bottom:16px;display:flex">
+    <button class="tab-btn active" id="logs-tab-w" onclick="switchLogsTab('wellness')">Wellness</button>
+    <button class="tab-btn" id="logs-tab-t" onclick="switchLogsTab('training')">Session RPE</button>
+  </div>
+  <div id="logs-w-panel"><div class="sc"><div style="overflow-x:auto"><table class="apex-table"><thead><tr><th>Date</th><th>Athlete</th><th>Sleep</th><th>Fatigue</th><th>Soreness</th><th>Stress</th><th>Mood</th><th>Score</th><th>Status</th><th>Del</th></tr></thead><tbody id="coach-w-tbody"></tbody></table></div></div></div>
+  <div id="logs-t-panel" style="display:none"><div class="sc"><div style="overflow-x:auto"><table class="apex-table"><thead><tr><th>Date</th><th>Athlete</th><th>Type</th><th>Duration</th><th>RPE</th><th>AU</th><th>Del</th></tr></thead><tbody id="coach-t-tbody"></tbody></table></div></div></div>
+</div>
+
+<!-- ADD ATHLETE -->
+<div id="page-add-athlete" class="view-page">
+  <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0;margin-bottom:20px">Add User</h1>
+  <!-- Role Tabs -->
+  <div style="display:flex;gap:8px;margin-bottom:16px">
+    <button id="add-role-athlete-btn" class="bp" onclick="switchAddRole('athlete')" style="padding:7px 18px;font-size:.8rem">👤 Add Athlete</button>
+    <button id="add-role-coach-btn" class="bg-btn" onclick="switchAddRole('coach')" style="padding:7px 18px;font-size:.8rem">🛡️ Add Coach / Admin</button>
+  </div>
+
+  <!-- Athlete Form -->
+  <div id="add-athlete-form">
+  <div class="sc" style="max-width:500px">
+    <div class="sc-hd"><span style="font-size:.86rem;font-weight:600;color:#E2E8F0">New Athlete Account</span></div>
+    <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
+      <div><label class="al">Full Name</label><input type="text" id="new-ath-name" class="ai" placeholder="e.g. Rahul Sharma"></div>
+      <div class="fg fg-2">
+        <div><label class="al">Position / Role</label><input type="text" id="new-ath-pos" class="ai" placeholder="e.g. Striker"></div>
+        <div><label class="al">Age</label><input type="number" id="new-ath-age" class="ai" placeholder="22" min="14" max="60"></div>
+      </div>
+      <div>
+        <label class="al">Discipline / Sport</label>
+        <select id="new-ath-discipline" class="as">
+          <option value="Football">⚽ Football / Soccer</option>
+          <option value="Boxing">🥊 Boxing</option>
+          <option value="Calisthenics">💪 Calisthenics</option>
+          <option value="Cricket">🏏 Cricket</option>
+          <option value="Basketball">🏀 Basketball</option>
+          <option value="Badminton">🏸 Badminton</option>
+          <option value="Tennis">🎾 Tennis</option>
+          <option value="Swimming">🏊 Swimming</option>
+          <option value="Athletics">🏃 Athletics / Track</option>
+          <option value="Weightlifting">🏋️ Weightlifting</option>
+          <option value="MMA">🥋 MMA / Martial Arts</option>
+          <option value="Cycling">🚴 Cycling</option>
+          <option value="Volleyball">🏐 Volleyball</option>
+          <option value="Hockey">🏑 Hockey</option>
+          <option value="Rugby">🏉 Rugby</option>
+          <option value="General S&amp;C">💪 General S&amp;C</option>
+          <option value="Other">🎯 Other</option>
+        </select>
+      </div>
+      <div class="fg fg-2">
+        <div><label class="al">Username</label><input type="text" id="new-ath-user" class="ai" placeholder="e.g. rahul"></div>
+        <div>
+          <label class="al">Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="new-ath-pass" class="ai" placeholder="e.g. rahul123">
+            <button class="pw-eye" onclick="togglePw('new-ath-pass',this)" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:7px;padding:9px 12px;font-size:.76rem;color:#94A3B8">
+        💡 Share username &amp; password with athlete on WhatsApp
+      </div>
+      <button class="bp" onclick="addAthlete()" style="justify-content:center">Add Athlete</button>
+    </div>
+  </div>
+  </div><!-- end add-athlete-form -->
+
+  <!-- Coach/Admin Form -->
+  <div id="add-coach-form" style="display:none">
+  <div class="sc" style="max-width:500px">
+    <div class="sc-hd">
+      <span style="font-size:.86rem;font-weight:600;color:#E2E8F0">New Coach / Admin Account</span>
+      <span class="badge bdg-b">Full Access</span>
+    </div>
+    <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
+      <div><label class="al">Full Name</label><input type="text" id="new-coach-name" class="ai" placeholder="e.g. Ravi Sharma"></div>
+      <div class="fg fg-2">
+        <div><label class="al">Username</label><input type="text" id="new-coach-user" class="ai" placeholder="e.g. coach2"></div>
+        <div>
+          <label class="al">Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="new-coach-pass" class="ai" placeholder="e.g. coach456">
+            <button class="pw-eye" onclick="togglePw('new-coach-pass',this)" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:7px;padding:9px 12px;font-size:.76rem;color:#94A3B8">
+        🛡️ Coach/Admin gets <strong style="color:#E2E8F0">full access</strong> — dashboard, workout builder, analytics, all athlete data.
+      </div>
+      <button class="bp" onclick="addCoach()" style="justify-content:center">Add Coach / Admin</button>
+    </div>
+  </div>
+  </div><!-- end add-coach-form -->
+</div>
+
+<!-- MANAGE ATHLETES — Full Edit All Fields -->
+<div id="page-manage-athletes" class="view-page">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+    <div>
+      <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Manage Athletes</h1>
+      <p style="font-size:.78rem;color:#475569;margin-top:3px">Click Edit to change any athlete's data</p>
+    </div>
+    <button class="bg-btn" onclick="renderManageAthletes()" style="display:flex;align-items:center;gap:5px">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 .49-3.49"></path></svg>Refresh
+    </button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 420px;gap:18px;align-items:start">
+
+    <!-- Athletes Table -->
+    <div class="sc">
+      <div class="sc-hd">
+        <span style="font-size:.86rem;font-weight:600;color:#E2E8F0">All Athletes</span>
+        <span class="badge bdg-r" style="font-size:.64rem">🔒 Coach Only</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="apex-table">
+          <thead><tr><th>Name</th><th>Sport</th><th>Position</th><th>Age</th><th>Username</th><th>Password</th><th>Action</th></tr></thead>
+          <tbody id="manage-ath-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Edit Panel -->
+    <div id="edit-ath-panel" style="display:none">
+      <div class="sc">
+        <div class="sc-hd">
+          <span style="font-size:.86rem;font-weight:600;color:#E2E8F0" id="edit-ath-title">✏️ Edit Athlete</span>
+          <button onclick="closeEditAth()" style="background:none;border:none;color:#64748B;cursor:pointer;font-size:1.1rem;line-height:1">✕</button>
+        </div>
+        <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
+          <input type="hidden" id="edit-ath-id">
+          <input type="hidden" id="edit-ath-user-id">
+
+          <!-- Profile Info -->
+          <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px 12px;margin-bottom:4px">
+            <p style="font-size:.68rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">📋 Profile Info</p>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div><label class="al">Full Name</label><input type="text" id="edit-ath-name" class="ai" placeholder="Full name"></div>
+              <div class="fg fg-2">
+                <div><label class="al">Position / Role</label><input type="text" id="edit-ath-pos" class="ai" placeholder="e.g. Striker"></div>
+                <div><label class="al">Age</label><input type="number" id="edit-ath-age" class="ai" placeholder="22" min="14" max="60"></div>
+              </div>
+              <div>
+                <label class="al">Discipline / Sport</label>
+                <select id="edit-ath-discipline" class="as">
+                  <option value="Football">⚽ Football / Soccer</option>
+                  <option value="Boxing">🥊 Boxing</option>
+                  <option value="Calisthenics">💪 Calisthenics</option>
+                  <option value="Cricket">🏏 Cricket</option>
+                  <option value="Basketball">🏀 Basketball</option>
+                  <option value="Badminton">🏸 Badminton</option>
+                  <option value="Tennis">🎾 Tennis</option>
+                  <option value="Swimming">🏊 Swimming</option>
+                  <option value="Athletics">🏃 Athletics / Track</option>
+                  <option value="Weightlifting">🏋️ Weightlifting</option>
+                  <option value="MMA">🥋 MMA / Martial Arts</option>
+                  <option value="Cycling">🚴 Cycling</option>
+                  <option value="Volleyball">🏐 Volleyball</option>
+                  <option value="Hockey">🏑 Hockey</option>
+                  <option value="Rugby">🏉 Rugby</option>
+                  <option value="General S&amp;C">💪 General S&amp;C</option>
+                  <option value="Other">🎯 Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Login Credentials -->
+          <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px 12px">
+            <p style="font-size:.68rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">🔐 Login Credentials</p>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div><label class="al">Username</label><input type="text" id="edit-username" class="ai" placeholder="username"></div>
+              <div>
+                <label class="al">Password</label>
+                <div class="pw-wrap">
+                  <input type="password" id="edit-password" class="ai" placeholder="password">
+                  <button class="pw-eye" onclick="togglePw('edit-password',this)" type="button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:rgba(234,179,8,.06);border:1px solid rgba(234,179,8,.2);border-radius:7px;padding:9px 12px;font-size:.76rem;color:#94A3B8">
+            ⚠️ After saving, share updated credentials with athlete on WhatsApp if login changed.
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="bp" onclick="saveAllAthleteChanges()" style="flex:1;justify-content:center" id="save-ath-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Save All Changes
+            </button>
+            <button class="bg-btn" onclick="closeEditAth()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MY PLAN -->
+<div id="page-my-plan" class="view-page">
+  <div class="no-print" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+    <div><h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">My Training Plan</h1><p style="font-size:.78rem;color:#475569;margin-top:3px">Assigned by your coach — view only</p></div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <select id="plan-filter-week" class="as" style="width:120px" onchange="renderMyPlan()"><option value="all">All Plans</option></select>
+      <button class="bp" onclick="window.print()" style="padding:7px 14px;font-size:.78rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> Print</button>
+    </div>
+  </div>
+  <!-- Today's Pending Sessions Banner -->
+  <div id="today-pending-banner" style="display:none;margin-bottom:16px"></div>
+  <div id="my-plan-content"></div>
+</div>
+
+<!-- TODAY'S SESSIONS (Athlete) -->
+<div id="page-todays-session" class="view-page">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+    <div>
+      <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Today's Sessions</h1>
+      <p id="todays-date-lbl" style="font-size:.78rem;color:#475569;margin-top:3px"></p>
+    </div>
+    <button class="bg-btn" onclick="renderTodaysSessions()" style="display:flex;align-items:center;gap:5px">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 .49-3.49"></path></svg>Refresh
+    </button>
+  </div>
+
+  <!-- Wellness Check-In Card (inline) -->
+  <div id="todays-wellness-card" class="sc" style="margin-bottom:18px">
+    <div class="sc-hd">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:.86rem;font-weight:600;color:#E2E8F0">Today's Wellness Check-In</span>
+        <span id="wellness-status-badge" class="badge bdg-y">Pending</span>
+      </div>
+      <div id="wellness-ring-small" style="width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;background:rgba(59,130,246,.1);color:#60A5FA;border:2px solid #3B82F6">--</div>
+    </div>
+    <div id="wellness-submitted-view" style="display:none;padding:14px 18px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span id="wellness-submitted-text" style="font-size:.84rem;color:#94A3B8"></span>
+      </div>
+    </div>
+    <div id="wellness-form-view" class="sc-bd">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+        <div class="slider-row" style="margin-bottom:0"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:.78rem;color:#CBD5E1">😴 Sleep</span><span id="ts-val-sleep" style="font-size:.82rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="ts-sl-sleep" min="1" max="5" value="3" oninput="updTsSlider('sleep',this.value)"></div>
+        <div class="slider-row" style="margin-bottom:0"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:.78rem;color:#CBD5E1">⚡ Energy</span><span id="ts-val-fatigue" style="font-size:.82rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="ts-sl-fatigue" min="1" max="5" value="3" oninput="updTsSlider('fatigue',this.value)"></div>
+        <div class="slider-row" style="margin-bottom:0"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:.78rem;color:#CBD5E1">💪 Soreness</span><span id="ts-val-soreness" style="font-size:.82rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="ts-sl-soreness" min="1" max="5" value="3" oninput="updTsSlider('soreness',this.value)"></div>
+        <div class="slider-row" style="margin-bottom:0"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:.78rem;color:#CBD5E1">🧠 Stress</span><span id="ts-val-stress" style="font-size:.82rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="ts-sl-stress" min="1" max="5" value="3" oninput="updTsSlider('stress',this.value)"></div>
+        <div class="slider-row" style="margin-bottom:0;grid-column:1/-1"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:.78rem;color:#CBD5E1">😊 Mood</span><span id="ts-val-mood" style="font-size:.82rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="ts-sl-mood" min="1" max="5" value="3" oninput="updTsSlider('mood',this.value)"></div>
+      </div>
+      <button class="bp" style="width:100%;justify-content:center" id="ts-wellness-btn" onclick="submitTsWellness()">Submit Wellness</button>
+    </div>
+  </div>
+
+  <!-- Today's Plan Sessions with RPE -->
+  <div id="todays-sessions-content">
+    <div class="empty-s"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>Loading sessions...</div>
+  </div>
+</div>
+
+<!-- WELLNESS LOG -->
+<div id="page-wellness-log" class="view-page">
+  <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0;margin-bottom:18px">Daily Wellness Check-In</h1>
+  <div style="max-width:560px">
+    <div style="display:flex;align-items:center;gap:18px;padding:18px;background:#1A2035;border:1px solid #232B3E;border-radius:12px;margin-bottom:16px">
+      <div id="wellness-ring" style="width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;background:rgba(59,130,246,.1);color:#60A5FA;border:3px solid #3B82F6;flex-shrink:0">--</div>
+      <div><p style="font-size:.72rem;color:#64748B;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px">Live Score</p><p id="w-status-lbl" style="font-size:.95rem;font-weight:600;color:#E2E8F0">Adjust sliders</p><p style="font-size:.7rem;color:#64748B;margin-top:3px">Green &gt;80% · Yellow 60–80% · Red &lt;60%</p></div>
+    </div>
+    <div class="sc" style="margin-bottom:14px">
+      <div class="sc-hd"><span style="font-size:.86rem;font-weight:600;color:#E2E8F0">How are you feeling today?</span><span style="font-size:.72rem;color:#64748B">1=Poor · 5=Great</span></div>
+      <div class="sc-bd">
+        <div class="slider-row"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:.82rem;font-weight:500;color:#CBD5E1">😴 Sleep Quality</span><span id="val-sleep" style="font-size:.9rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="sl-sleep" min="1" max="5" value="3" oninput="updSlider('sleep',this.value)"></div>
+        <div class="slider-row"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:.82rem;font-weight:500;color:#CBD5E1">⚡ Energy / Fatigue</span><span id="val-fatigue" style="font-size:.9rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="sl-fatigue" min="1" max="5" value="3" oninput="updSlider('fatigue',this.value)"></div>
+        <div class="slider-row"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:.82rem;font-weight:500;color:#CBD5E1">💪 Muscle Soreness</span><span id="val-soreness" style="font-size:.9rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="sl-soreness" min="1" max="5" value="3" oninput="updSlider('soreness',this.value)"></div>
+        <div class="slider-row"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:.82rem;font-weight:500;color:#CBD5E1">🧠 Stress Level</span><span id="val-stress" style="font-size:.9rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="sl-stress" min="1" max="5" value="3" oninput="updSlider('stress',this.value)"></div>
+        <div class="slider-row" style="margin-bottom:0"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:.82rem;font-weight:500;color:#CBD5E1">😊 Mood</span><span id="val-mood" style="font-size:.9rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="sl-mood" min="1" max="5" value="3" oninput="updSlider('mood',this.value)"></div>
+      </div>
+    </div>
+    <button class="bp" style="width:100%;padding:11px;justify-content:center" id="submit-wellness-btn" onclick="submitWellness()">Submit Check-In</button>
+  </div>
+</div>
+
+<!-- SESSION LOG -->
+<div id="page-session-log" class="view-page">
+  <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0;margin-bottom:18px">Log Session RPE</h1>
+  <div style="max-width:500px">
+    <div style="display:flex;align-items:center;gap:18px;padding:18px;background:#1A2035;border:1px solid #232B3E;border-radius:12px;margin-bottom:16px">
+      <div style="text-align:center;background:rgba(59,130,246,.1);border:3px solid #3B82F6;border-radius:10px;padding:12px 20px;flex-shrink:0"><p style="font-size:.62rem;color:#64748B;text-transform:uppercase;margin-bottom:2px">AU</p><p id="au-live" style="font-size:1.7rem;font-weight:700;color:#60A5FA">—</p></div>
+      <div><p style="font-size:.72rem;color:#64748B;margin-bottom:3px">AU = Duration × sRPE</p><p style="font-size:.8rem;color:#94A3B8">Rate how hard the session felt after completing it.</p></div>
+    </div>
+    <div class="sc">
+      <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
+        <div>
+  <label class="al">Session Type</label>
+  <div class="cs-wrap">
+    <select id="tl-type" class="as" onchange="toggleCustom(this,'tl-type-custom')">
+      <option>Strength</option><option>Conditioning</option>
+      <option>Speed &amp; Power</option><option>Skill / Technical</option>
+      <option>Recovery</option><option>Match / Competition</option>
+      <option>Boxing / Sparring</option><option>Calisthenics</option>
+      <option>HIIT</option><option>Yoga / Stretching</option>
+      <option value="__other__">✏️ Other (type custom)...</option>
+    </select>
+    <div class="cs-custom" id="tl-type-custom">
+      <input type="text" class="ai" id="tl-type-text" placeholder="Type session type..." oninput="syncCustom(this,'tl-type')">
+    </div>
+  </div>
+</div>
+        <div><label class="al">Duration (minutes)</label><input type="number" id="tl-dur" class="ai" placeholder="e.g. 60" min="1" max="360" oninput="calcAU()"></div>
+        <div><label class="al">Session RPE (1–10)</label>
+          <div style="display:flex;align-items:center;gap:10px"><input type="range" id="tl-rpe" min="1" max="10" value="5" oninput="document.getElementById('rpe-val').textContent=this.value;calcAU()" style="flex:1"><span id="rpe-val" style="font-size:1.1rem;font-weight:700;color:#60A5FA;min-width:24px;text-align:center">5</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:.66rem;color:#475569;margin-top:2px"><span>Very Easy</span><span>Moderate</span><span>Max</span></div>
+        </div>
+        <div><label class="al">Date</label><input type="date" id="tl-date" class="ai"></div>
+        <button class="bp" onclick="submitSessionLog()" style="justify-content:center" id="submit-session-btn">Log Session</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MY HISTORY -->
+<div id="page-my-history" class="view-page">
+  <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0;margin-bottom:18px">My History</h1>
+  <div style="border-bottom:1px solid #232B3E;margin-bottom:16px;display:flex">
+    <button class="tab-btn active" id="hist-tab-w" onclick="switchHistTab('wellness')">Wellness Logs</button>
+    <button class="tab-btn" id="hist-tab-t" onclick="switchHistTab('training')">Session Logs</button>
+    <button class="tab-btn" id="hist-tab-p" onclick="switchHistTab('plans')">Plan History</button>
+  </div>
+  <div id="hist-w-panel"><div class="sc"><div style="overflow-x:auto"><table class="apex-table"><thead><tr><th>Date</th><th>Sleep</th><th>Fatigue</th><th>Soreness</th><th>Stress</th><th>Mood</th><th>Score</th><th>Status</th></tr></thead><tbody id="my-w-tbody"></tbody></table></div></div></div>
+  <div id="hist-t-panel" style="display:none"><div class="sc"><div style="overflow-x:auto"><table class="apex-table"><thead><tr><th>Date</th><th>Session / Plan</th><th>Type</th><th>Duration</th><th>RPE</th><th>AU</th><th>Wellness That Day</th></tr></thead><tbody id="my-t-tbody"></tbody></table></div></div></div>
+  <div id="hist-p-panel" style="display:none"><div id="hist-plans-content"></div></div>
+</div>
+
+<!-- ATHLETE PROFILE MODAL (opens on dashboard click) -->
+<div id="ath-profile-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(4px)" onclick="if(event.target===this)closeAthModal()">
+  <div style="background:#131720;border:1px solid #232B3E;border-radius:14px;padding:0;max-width:680px;width:94%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.6);animation:mIn .2s ease">
+
+    <!-- Modal Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid #232B3E;position:sticky;top:0;background:#131720;z-index:1">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div id="modal-avatar" style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#8B5CF6);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;color:#fff;flex-shrink:0"></div>
+        <div>
+          <p id="modal-name" style="font-size:1rem;font-weight:700;color:#E2E8F0"></p>
+          <p id="modal-sub" style="font-size:.74rem;color:#64748B;margin-top:2px"></p>
+        </div>
+      </div>
+      <button onclick="closeAthModal()" style="background:none;border:none;color:#64748B;cursor:pointer;font-size:1.3rem;line-height:1;padding:4px">✕</button>
+    </div>
+
+    <!-- Modal Body -->
+    <div style="padding:20px 22px">
+
+      <!-- Stats row -->
+      <div id="modal-stats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px"></div>
+
+      <!-- Wellness History -->
+      <div class="sc" style="margin-bottom:14px">
+        <div class="sc-hd"><span style="font-size:.84rem;font-weight:600;color:#E2E8F0">Recent Wellness Logs</span></div>
+        <div style="overflow-x:auto">
+          <table class="apex-table">
+            <thead><tr><th>Date</th><th>Sleep</th><th>Fatigue</th><th>Soreness</th><th>Stress</th><th>Mood</th><th>Score</th><th>Status</th></tr></thead>
+            <tbody id="modal-wellness-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Session History -->
+      <div class="sc">
+        <div class="sc-hd"><span style="font-size:.84rem;font-weight:600;color:#E2E8F0">Recent Sessions</span></div>
+        <div style="overflow-x:auto">
+          <table class="apex-table">
+            <thead><tr><th>Date</th><th>Type</th><th>Duration</th><th>RPE</th><th>AU</th></tr></thead>
+            <tbody id="modal-sessions-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</main>
+</div>
+
+<script>
+'use strict';
+const SB_URL='https://sgdqgtunzjokdyairoey.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNnZHFndHVuempva2R5YWlyb2V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMDI0NDYsImV4cCI6MjA5Nzc3ODQ0Nn0.0YhpVPxz96j9eX0T_t-4WXMb_kZmdSLeuxwNhKyNS94';
+
+let SESSION=null,ALL_ATHLETES=[],ALL_WELLNESS=[],ALL_TRAINING=[],ALL_INJURIES=[],ALL_PLANS=[];
+let chartWL_inst=null,chartACWR_inst=null,exCount=0,logsTab='wellness';
+
+async function sb(method,table,body=null,params=''){
+  const url=`${SB_URL}/rest/v1/${table}${params}`;
+  const opts={
+    method,
+    mode:'cors',
+    headers:{
+      'apikey':SB_KEY,
+      'Authorization':`Bearer ${SB_KEY}`,
+      'Content-Type':'application/json',
+      'Prefer':method==='POST'?'return=representation':'',
+      'X-Client-Info':'apex-ams/1.0'
+    }
+  };
+  if(body) opts.body=JSON.stringify(body);
+  const res=await fetch(url,opts);
+  if(!res.ok){const err=await res.text();throw new Error(`${res.status}: ${err}`);}
+  if(res.status===204) return[];
+  return res.json();
+}
+const dbGet=(table,params='')=>sb('GET',table,null,params);
+const dbPost=(table,body)=>sb('POST',table,body);
+const dbPatch=(table,body,params)=>sb('PATCH',table,body,params);
+const dbDelete=(table,params)=>sb('DELETE',table,null,params);
+
+const todayStr=()=>new Date().toISOString().split('T')[0];
+const rnd=()=>Math.random().toString(36).substr(2,8);
+const fmtDate=d=>{if(!d)return'—';return new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});};
+const fmtTime=t=>{if(!t||t==='—')return'—';const[h,m]=t.split(':');const hr=parseInt(h);return`${hr===0?12:hr>12?hr-12:hr}:${m} ${hr>=12?'PM':'AM'}`;};
+const wcol=p=>{if(p>=80)return{label:'Good',cls:'bdg-g',hex:'#22C55E'};if(p>=60)return{label:'Moderate',cls:'bdg-y',hex:'#EAB308'};return{label:'Low',cls:'bdg-r',hex:'#EF4444'};};
+const dLabel=d=>new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+
+function toast(msg,type='ok'){const el=document.createElement('div');el.className='toast'+(type==='err'?' err':'');el.textContent=msg;document.getElementById('toast-c').appendChild(el);setTimeout(()=>el.remove(),3400);}
+// ─── CUSTOM SELECT WITH "OTHER" SUPPORT ───
+function toggleCustom(sel,customId){
+  const div=document.getElementById(customId);
+  if(!div) return;
+  if(sel.value==='__other__'){
+    div.classList.add('show');
+    const inp=div.querySelector('input');
+    if(inp){inp.focus();inp.value='';}
+    sel.dataset.customVal='';
+  } else {
+    div.classList.remove('show');
+    sel.dataset.customVal='';
+  }
+}
+function syncCustom(inp,selId){
+  const sel=document.getElementById(selId);
+  if(sel) sel.dataset.customVal=inp.value.trim();
+}
+function getSelectVal(selId){
+  const sel=document.getElementById(selId);
+  if(!sel) return '';
+  if(sel.value==='__other__'){
+    const v=sel.dataset.customVal||(sel.closest('.cs-wrap')?.querySelector('input')?.value||'');
+    return v||'Other';
+  }
+  return sel.value;
+}
+
+function tick(){document.getElementById('live-clock').textContent=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'})+' · '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+setInterval(tick,1000);tick();
+
+// PASSWORD TOGGLE
+function togglePw(inputId,btn){
+  const inp=document.getElementById(inputId);
+  const isHidden=inp.type==='password';
+  inp.type=isHidden?'text':'password';
+  btn.innerHTML=isHidden?
+    `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`:
+    `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+}
+
+// DOWNLOAD APP
+function downloadApp(){
+  const html=document.documentElement.outerHTML;
+  const blob=new Blob([html],{type:'text/html'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='apex-ams-cloud.html';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+// LOGIN
+async function doLogin(){
+  const username=document.getElementById('login-username').value.trim().toLowerCase();
+  const password=document.getElementById('login-password').value.trim();
+  const errEl=document.getElementById('login-error');
+  const btn=document.getElementById('login-btn');
+  if(!username||!password){errEl.style.display='block';errEl.textContent='Please enter username and password.';return;}
+  btn.innerHTML='<span class="loader"></span> Signing in...';btn.disabled=true;errEl.style.display='none';
+  try{
+    const users=await dbGet('users',`?username=eq.${username}&password=eq.${password}&select=*`);
+    if(!users||users.length===0){
+      errEl.style.display='block';errEl.textContent='Wrong username or password. Please try again.';
+      btn.innerHTML='Sign In';btn.disabled=false;return;
+    }
+    const user=users[0];
+    SESSION={id:user.id,name:user.name,username:user.username,role:user.role};
+    if(user.role==='athlete'){
+      const aths=await dbGet('athletes',`?user_id=eq.${user.id}&select=*`);
+      if(aths&&aths.length>0) SESSION.athlete_id=aths[0].id;
+    }
+    await loadAllData();
+    bootApp();
+  }catch(e){
+    errEl.style.display='block';
+    const msg=e.message||'';
+    if(msg.includes('Failed to fetch')||msg.includes('NetworkError'))errEl.textContent='⚠️ No internet connection. Please check and try again.';
+    else if(msg.includes('401')||msg.includes('403'))errEl.textContent='⚠️ API key error: '+msg;
+    else if(msg.includes('relation')||msg.includes('does not exist'))errEl.textContent='⚠️ Database not set up. Run SQL setup in Supabase.';
+    else errEl.textContent='⚠️ Error: '+msg;
+    btn.innerHTML='Sign In';btn.disabled=false;
+  }
+}
+
+async function loadAllData(){
+  const[athletes,wellness,training,injuries,plans,assignments]=await Promise.all([
+    dbGet('athletes','?select=*,users(name,username)&order=name'),
+    dbGet('wellness_logs','?select=*&order=log_date.desc&limit=500'),
+    dbGet('training_logs','?select=*&order=log_date.desc&limit=500'),
+    dbGet('injuries','?select=*&order=injury_date.desc'),
+    dbGet('plans','?select=*&order=created_at.desc'),
+    dbGet('plan_assignments','?select=*'),
+  ]);
+  ALL_ATHLETES=athletes||[];ALL_WELLNESS=wellness||[];ALL_TRAINING=training||[];
+  ALL_INJURIES=injuries||[];
+  ALL_PLANS=(plans||[]).map(p=>({...p,exercises:p.exercises||[],assignedTo:(assignments||[]).filter(a=>a.plan_id===p.id).map(a=>a.athlete_id)}));
+}
+
+function bootApp(){
+  document.getElementById('login-screen').style.display='none';
+  const av=document.getElementById('topbar-avatar');
+  av.textContent=SESSION.name.charAt(0).toUpperCase();
+  av.style.background=SESSION.role==='coach'?'#3B82F6':'#22C55E';
+  av.style.color=SESSION.role==='coach'?'#fff':'#0B0E14';
+  document.getElementById('topbar-name').textContent=SESSION.name;
+  document.getElementById('topbar-role').textContent=SESSION.role==='coach'?'Coach / Analyst':'Athlete';
+  document.getElementById('coach-nav').style.display=SESSION.role==='coach'?'block':'none';
+  document.getElementById('athlete-nav').style.display=SESSION.role==='athlete'?'block':'none';
+  SESSION.role==='coach'?nav('dashboard'):nav('my-plan');
+}
+
+function doLogout(){
+  SESSION=null;ALL_ATHLETES=[];ALL_WELLNESS=[];ALL_TRAINING=[];ALL_INJURIES=[];ALL_PLANS=[];
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('login-username').value='';
+  document.getElementById('login-password').value='';
+  document.getElementById('login-error').style.display='none';
+  document.getElementById('login-btn').innerHTML='Sign In';
+  document.getElementById('login-btn').disabled=false;
+}
+
+// NAV
+function nav(page){
+  document.querySelectorAll('.view-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  const el=document.getElementById('page-'+page);if(el)el.classList.add('active');
+  const lnk=document.querySelector(`.nav-link[data-page="${page}"]`);if(lnk)lnk.classList.add('active');
+  switch(page){
+    case'dashboard':renderDashboard();break;case'roster':renderFullRoster();break;
+    case'workout-builder':initBuilder();break;case'plans-list':renderPlansList();break;
+    case'analytics':initAnalytics();break;case'injuries':renderInjuries();break;
+    case'athlete-logs':renderAthleteLogs();break;case'my-plan':renderMyPlan();break;
+    case'wellness-log':resetWellnessForm();break;case'session-log':resetSessionLog();break;
+    case'my-history':renderMyHistory();break;case'manage-athletes':renderManageAthletes();break;
+    case'todays-session':renderTodaysSessions();break;
+  }
+}
+
+function getLast7Days(){const a=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);a.push(d.toISOString().split('T')[0]);}return a;}
+
+// DASHBOARD
+function populateDashFilters(){
+  const disciplines=[...new Set(ALL_ATHLETES.map(a=>a.discipline).filter(Boolean))].sort();
+  const df=document.getElementById('dash-discipline-filter');
+  const curD=df.value;
+  df.innerHTML='<option value="all">All Sports</option>'+disciplines.map(d=>`<option value="${d}">${d}</option>`).join('');
+  if(disciplines.includes(curD)) df.value=curD;
+  const selDisc=df.value;
+  const pf=document.getElementById('dash-player-filter');
+  const curP=pf.value;
+  const filtAths=selDisc==='all'?ALL_ATHLETES:ALL_ATHLETES.filter(a=>a.discipline===selDisc);
+  pf.innerHTML='<option value="all">All Athletes</option>'+filtAths.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
+  if(filtAths.find(a=>a.id===curP)) pf.value=curP;
+}
+
+function clearDashFilters(){
+  document.getElementById('dash-discipline-filter').value='all';
+  document.getElementById('dash-player-filter').value='all';
+  renderDashboard();
+}
+
+function renderDashboard(){
+  document.getElementById('dash-date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  populateDashFilters();
+  const discFilter=document.getElementById('dash-discipline-filter').value;
+  const playerFilter=document.getElementById('dash-player-filter').value;
+  let athletes=ALL_ATHLETES;
+  if(discFilter!=='all') athletes=athletes.filter(a=>a.discipline===discFilter);
+  if(playerFilter!=='all') athletes=athletes.filter(a=>a.id===playerFilter);
+  // Filter badge
+  const badge=document.getElementById('dash-filter-badge');
+  const isFiltered=discFilter!=='all'||playerFilter!=='all';
+  badge.style.display=isFiltered?'inline-flex':'none';
+  if(isFiltered){const parts=[];if(discFilter!=='all')parts.push(discFilter);if(playerFilter!=='all'){const a=ALL_ATHLETES.find(x=>x.id===playerFilter);if(a)parts.push(a.name);}badge.textContent='Showing: '+parts.join(' · ');}
+  const injuries=ALL_INJURIES.filter(i=>!i.resolved&&athletes.find(a=>a.id===i.athlete_id));
+  let totalW=0,wCount=0;
+  athletes.forEach(a=>{const last=ALL_WELLNESS.filter(w=>w.athlete_id===a.id).sort((x,y)=>y.log_date.localeCompare(x.log_date))[0];if(last){totalW+=last.score;wCount++;}});
+  const avgW=wCount>0?Math.round(totalW/wCount):0;const wc=wcol(avgW);
+  const kpis=[
+    {label:'Athletes'+(discFilter!=='all'?' ('+discFilter+')':''),value:athletes.length,sub:discFilter!=='all'?discFilter:'Registered',f:'#3B82F6',t:'#8B5CF6'},
+    {label:'Team Avg Wellness',value:avgW+'%',sub:wc.label,f:'#22C55E',t:'#16A34A'},
+    {label:'Active Injuries',value:injuries.length,sub:'Monitoring',f:'#EF4444',t:'#B91C1C'},
+    {label:'Plans Created',value:ALL_PLANS.length,sub:'Programmes',f:'#8B5CF6',t:'#6D28D9'},
+  ];
+  document.getElementById('kpi-grid').innerHTML=kpis.map(k=>`<div class="kpi" style="--f:${k.f};--t:${k.t}"><p style="font-size:.67rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px">${k.label}</p><p style="font-size:1.9rem;font-weight:800;color:#E2E8F0;line-height:1;margin-bottom:4px">${k.value}</p><p style="font-size:.73rem;color:#94A3B8">${k.sub}</p></div>`).join('');
+  document.getElementById('roster-count-badge').textContent=athletes.length+' athletes';
+  const l7=getLast7Days();
+  const rows=athletes.map(a=>{
+    const last=ALL_WELLNESS.filter(w=>w.athlete_id===a.id).sort((x,y)=>y.log_date.localeCompare(x.log_date))[0];
+    const pct=last?last.score:null;const wcc=pct!==null?wcol(pct):{label:'No data',cls:'bdg-m',hex:'#64748B'};
+    const inj=injuries.find(i=>i.athlete_id===a.id);
+    const injB=inj?`<span class="badge ${inj.severity==='Sidelined'?'bdg-r':inj.severity==='Modified'?'bdg-y':'bdg-g'}">${inj.severity}</span>`:'<span class="badge bdg-g">Healthy</span>';
+    const sess7=ALL_TRAINING.filter(t=>t.athlete_id===a.id&&l7.includes(t.log_date)).length;
+    const discBadge=a.discipline?`<span class="badge bdg-p" style="font-size:.62rem">${a.discipline}</span>`:'—';
+    return`<tr style="cursor:pointer" onclick="openAthModal('${a.id}')" title="Click to view ${a.name}'s full profile">
+      <td style="font-weight:600;color:#60A5FA;text-decoration:underline;text-decoration-color:rgba(96,165,250,.3)">${a.name}</td>
+      <td>${discBadge}</td>
+      <td style="color:#94A3B8">${a.position||'—'}</td>
+      <td><span class="badge ${wcc.cls}">${wcc.label}</span></td>
+      <td style="font-weight:700;color:${wcc.hex}">${pct!==null?pct+'%':'—'}</td>
+      <td>${sess7}</td>
+      <td>${injB}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('roster-status-tbody').innerHTML=rows||'<tr><td colspan="7"><div class="empty-s">No athletes match filter.</div></td></tr>';
+}
+
+// ─── FEATURE 1: MANAGE ATHLETES (username/password change) ───
+// ─── MANAGE ATHLETES — Full Edit All Fields ───
+function renderManageAthletes(){
+  closeEditAth();
+  // Join athletes with users to get all data
+  Promise.all([
+    dbGet('athletes','?select=*,users(id,username,password)&order=name'),
+  ]).then(([athletes])=>{
+    const rows=(athletes||[]).map(a=>{
+      const username=a.users?.username||'—';
+      const password=a.users?.password||'—';
+      const uid=a.users?.id||'';
+      return`<tr style="cursor:pointer" onclick="openEditAth('${a.id}','${uid}','${a.name}','${a.position||''}','${a.age||''}','${a.discipline||''}','${username}','${password}')">
+        <td style="font-weight:600;color:#E2E8F0">${a.name}</td>
+        <td>${a.discipline?`<span class="badge bdg-p" style="font-size:.62rem">${a.discipline}</span>`:'—'}</td>
+        <td style="color:#94A3B8">${a.position||'—'}</td>
+        <td>${a.age||'—'}</td>
+        <td><code style="background:#0B0E14;padding:2px 7px;border-radius:4px;font-size:.76rem;color:#60A5FA">${username}</code></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span id="pw-${a.id}" style="font-family:monospace;font-size:.76rem;color:#94A3B8">••••••</span>
+            <button onclick="event.stopPropagation();toggleShowPw('${a.id}','${password}')" style="background:none;border:none;cursor:pointer;color:#64748B;padding:2px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </td>
+        <td>
+          <button onclick="event.stopPropagation();openEditAth('${a.id}','${uid}','${a.name}','${a.position||''}','${a.age||''}','${a.discipline||''}','${username}','${password}')"
+            style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:4px 10px;color:#60A5FA;font-size:.74rem;font-weight:600;cursor:pointer">
+            ✏️ Edit
+          </button>
+        </td>
+      </tr>`;
+    }).join('');
+    document.getElementById('manage-ath-tbody').innerHTML=rows||'<tr><td colspan="7"><div class="empty-s">No athletes found.</div></td></tr>';
+  }).catch(e=>toast('Error: '+e.message,'err'));
+}
+
+function toggleShowPw(id, pw){
+  const el=document.getElementById('pw-'+id);
+  el.textContent=el.textContent.includes('•')?pw:'••••••';
+}
+
+function openEditAth(athId, userId, name, pos, age, discipline, username, password){
+  document.getElementById('edit-ath-panel').style.display='block';
+  document.getElementById('edit-ath-title').textContent='✏️ Editing: '+name;
+  document.getElementById('edit-ath-id').value=athId;
+  document.getElementById('edit-ath-user-id').value=userId;
+  document.getElementById('edit-ath-name').value=name;
+  document.getElementById('edit-ath-pos').value=pos;
+  document.getElementById('edit-ath-age').value=age;
+  document.getElementById('edit-username').value=username;
+  document.getElementById('edit-password').value=password;
+  // Set discipline dropdown
+  const discSel=document.getElementById('edit-ath-discipline');
+  const opts=[...discSel.options];
+  const match=opts.find(o=>o.value===discipline);
+  if(match) discSel.value=discipline;
+  else discSel.value='General S&C';
+  // Scroll to panel
+  document.getElementById('edit-ath-panel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function closeEditAth(){
+  document.getElementById('edit-ath-panel').style.display='none';
+}
+
+async function saveAllAthleteChanges(){
+  const athId=document.getElementById('edit-ath-id').value;
+  const userId=document.getElementById('edit-ath-user-id').value;
+  const name=document.getElementById('edit-ath-name').value.trim();
+  const pos=document.getElementById('edit-ath-pos').value.trim();
+  const age=parseInt(document.getElementById('edit-ath-age').value)||0;
+  const discipline=document.getElementById('edit-ath-discipline').value;
+  const username=document.getElementById('edit-username').value.trim().toLowerCase();
+  const password=document.getElementById('edit-password').value.trim();
+  if(!name||!username||!password){toast('Name, username and password are required.','err');return;}
+  const btn=document.getElementById('save-ath-btn');
+  btn.innerHTML='<span class="loader"></span> Saving...';btn.disabled=true;
+  try{
+    // Update athletes table
+    await dbPatch('athletes',{name,position:pos,age,discipline},`?id=eq.${athId}`);
+    // Update users table
+    await dbPatch('users',{name,username,password},`?id=eq.${userId}`);
+    await loadAllData();
+    closeEditAth();
+    renderManageAthletes();
+    toast('✅ '+name+' — all changes saved!');
+  }catch(e){toast('Error saving: '+e.message,'err');}
+  btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Save All Changes';
+  btn.disabled=false;
+}
+
+// Legacy stubs (kept for compatibility)
+function cancelEdit(){closeEditAth();}
+async function saveUserChanges(){await saveAllAthleteChanges();}
+
+// ─── ATHLETE PROFILE MODAL (Dashboard click) ───
+function openAthModal(athId){
+  const a=ALL_ATHLETES.find(x=>x.id===athId);
+  if(!a) return;
+  // Header
+  document.getElementById('modal-avatar').textContent=a.name.charAt(0).toUpperCase();
+  document.getElementById('modal-name').textContent=a.name;
+  document.getElementById('modal-sub').textContent=(a.discipline||'')+(a.position?' · '+a.position:'')+(a.age?' · Age '+a.age:'');
+  // Stats
+  const wellness=ALL_WELLNESS.filter(w=>w.athlete_id===athId).sort((x,y)=>y.log_date.localeCompare(x.log_date));
+  const training=ALL_TRAINING.filter(t=>t.athlete_id===athId).sort((x,y)=>y.log_date.localeCompare(x.log_date));
+  const lastW=wellness[0];
+  const totalSessions=training.length;
+  const avgAU=totalSessions>0?Math.round(training.slice(0,7).reduce((s,t)=>s+t.au,0)/Math.min(7,training.length)):0;
+  const inj=ALL_INJURIES.find(i=>i.athlete_id===athId&&!i.resolved);
+  const wc=lastW?wcol(lastW.score):{label:'No data',hex:'#64748B',cls:'bdg-m'};
+  document.getElementById('modal-stats').innerHTML=[
+    ['Last Wellness',lastW?lastW.score+'%':'—',wc.hex],
+    ['Status',wc.label,wc.hex],
+    ['Total Sessions',totalSessions,'#60A5FA'],
+    ['Injury',inj?inj.severity:'Healthy',inj?'#EF4444':'#22C55E'],
+  ].map(([l,v,c])=>`<div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:12px;text-align:center"><p style="font-size:.62rem;color:#64748B;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">${l}</p><p style="font-size:1.1rem;font-weight:800;color:${c}">${v}</p></div>`).join('');
+  // Wellness table
+  const wRows=wellness.slice(0,10).map(w=>{const wc2=wcol(w.score);return`<tr><td style="color:#94A3B8">${fmtDate(w.log_date)}</td><td>${w.sleep}</td><td>${w.fatigue}</td><td>${w.soreness}</td><td>${w.stress}</td><td>${w.mood}</td><td style="font-weight:700;color:${wc2.hex}">${w.score}%</td><td><span class="badge ${wc2.cls}">${wc2.label}</span></td></tr>`;}).join('');
+  document.getElementById('modal-wellness-tbody').innerHTML=wRows||'<tr><td colspan="8"><div class="empty-s">No wellness logs</div></td></tr>';
+  // Sessions table
+  const sRows=training.slice(0,10).map(t=>`<tr><td style="color:#94A3B8">${fmtDate(t.log_date)}</td><td>${t.session_type}</td><td>${t.duration_mins} min</td><td>${t.rpe}</td><td style="font-weight:700;color:#60A5FA">${t.au}</td></tr>`).join('');
+  document.getElementById('modal-sessions-tbody').innerHTML=sRows||'<tr><td colspan="5"><div class="empty-s">No sessions logged</div></td></tr>';
+  // Show modal
+  document.getElementById('ath-profile-modal').style.display='flex';
+}
+
+function closeAthModal(){
+  document.getElementById('ath-profile-modal').style.display='none';
+}
+
+// ─── FEATURE 2: COPY EXERCISE ROW ───
+function onUnitChange(sel){
+  const row=sel.closest('.ex-row');
+  const hint=row.querySelector('.ex-1rm-hint');
+  const weightLabel=row.querySelector('.al');
+  if(hint) hint.style.display=sel.value==='%1RM'?'block':'none';
+  // Update weight label
+  const wl=row.querySelectorAll('.al')[3];
+  if(wl){
+    if(sel.value==='%1RM') wl.textContent='Load (% of 1RM)';
+    else if(sel.value==='BW') wl.textContent='Extra Load (optional)';
+    else wl.textContent='Load';
+  }
+}
+
+function copyExRow(sourceId){
+  const source=document.getElementById(sourceId);
+  if(!source) return;
+  // Read all values from source
+  const vals={
+    name:source.querySelector('.ex-name')?.value||'',
+    sets:source.querySelector('.ex-sets')?.value||3,
+    reps:source.querySelector('.ex-reps')?.value||8,
+    tempo:source.querySelector('.ex-tempo')?.value||'2-0-2-0',
+    weight:source.querySelector('.ex-weight')?.value||0,
+    unit:source.querySelector('.ex-unit')?.value||'kg',
+    rest:source.querySelector('.ex-rest')?.value||90,
+    dist:source.querySelector('.ex-dist')?.value||'',
+    intensity:source.querySelector('.ex-intensity')?.value||70,
+    rpe:source.querySelector('.ex-rpe')?.value||7,
+  };
+  // Add new row
+  addExRow();
+  // Fill in values to the last added row
+  const allRows=document.querySelectorAll('#exercise-list .ex-row');
+  const newRow=allRows[allRows.length-1];
+  if(!newRow) return;
+  newRow.querySelector('.ex-name').value=vals.name+' (Copy)';
+  newRow.querySelector('.ex-sets').value=vals.sets;
+  newRow.querySelector('.ex-reps').value=vals.reps;
+  newRow.querySelector('.ex-tempo').value=vals.tempo;
+  newRow.querySelector('.ex-weight').value=vals.weight;
+  newRow.querySelector('.ex-unit').value=vals.unit;
+  newRow.querySelector('.ex-rest').value=vals.rest;
+  newRow.querySelector('.ex-dist').value=vals.dist;
+  newRow.querySelector('.ex-intensity').value=vals.intensity;
+  newRow.querySelector('.ex-rpe').value=vals.rpe;
+  calcTotals();
+  toast('Exercise copied!');
+}
+
+// ─── FEATURE 2: COPY PLAN ───
+async function copyPlan(planId){
+  const plan=ALL_PLANS.find(p=>p.id===planId);
+  if(!plan){toast('Plan not found.','err');return;}
+  if(!confirm(`Copy "${plan.name}"?\n\nThis will create a duplicate plan assigned to the same athletes.`)) return;
+  try{
+    const newPlan=await dbPost('plans',{
+      name:plan.name+' (Copy)',
+      phase:plan.phase,
+      week_number:plan.week_number,
+      session_date:plan.session_date,
+      session_time:plan.session_time,
+      session_type:plan.session_type,
+      notes:plan.notes,
+      exercises:plan.exercises
+    });
+    const newPlanId=newPlan[0].id;
+    await Promise.all((plan.assignedTo||[]).map(athId=>dbPost('plan_assignments',{plan_id:newPlanId,athlete_id:athId})));
+    await loadAllData();
+    renderPlansList();
+    toast('✅ Plan copied: "'+plan.name+' (Copy)"');
+  }catch(e){toast('Error copying plan: '+e.message,'err');}
+}
+
+// ROSTER
+function populateRosterFilters(){
+  const disciplines=[...new Set(ALL_ATHLETES.map(a=>a.discipline).filter(Boolean))].sort();
+  const df=document.getElementById('roster-discipline-filter');
+  const curD=df.value;
+  df.innerHTML='<option value="all">All Sports</option>'+disciplines.map(d=>`<option value="${d}">${d}</option>`).join('');
+  if(disciplines.includes(curD)) df.value=curD;
+  const selDisc=df.value;
+  const pf=document.getElementById('roster-player-filter');
+  const curP=pf.value;
+  const filtAths=selDisc==='all'?ALL_ATHLETES:ALL_ATHLETES.filter(a=>a.discipline===selDisc);
+  pf.innerHTML='<option value="all">All Athletes</option>'+filtAths.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
+  if(filtAths.find(a=>a.id===curP)) pf.value=curP;
+}
+
+function renderFullRoster(){
+  populateRosterFilters();
+  const discFilter=document.getElementById('roster-discipline-filter').value;
+  const playerFilter=document.getElementById('roster-player-filter').value;
+  let athletes=ALL_ATHLETES;
+  if(discFilter!=='all') athletes=athletes.filter(a=>a.discipline===discFilter);
+  if(playerFilter!=='all') athletes=athletes.filter(a=>a.id===playerFilter);
+  const l7=getLast7Days();
+  const rows=athletes.map((a,i)=>{
+    const sess7=ALL_TRAINING.filter(t=>t.athlete_id===a.id&&l7.includes(t.log_date)).length;
+    const discBadge=a.discipline?`<span class="badge bdg-p" style="font-size:.62rem">${a.discipline}</span>`:'—';
+    return`<tr style="cursor:pointer" onclick="openAthModal('${a.id}')" title="Click to view ${a.name}'s profile">
+      <td style="color:#64748B">${i+1}</td>
+      <td style="font-weight:600;color:#60A5FA;text-decoration:underline;text-decoration-color:rgba(96,165,250,.3)">${a.name}</td>
+      <td>${discBadge}</td>
+      <td style="color:#94A3B8">${a.position||'—'}</td>
+      <td>${a.age||'—'}</td>
+      <td style="color:#94A3B8"><code style="background:#0B0E14;padding:2px 7px;border-radius:4px;font-size:.76rem">${a.users?.username||'—'}</code></td>
+      <td>${sess7}</td>
+      <td onclick="event.stopPropagation()">
+        <button onclick="deleteAthlete('${a.id}','${a.user_id}','${a.name}')"
+          style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:6px;padding:4px 10px;color:#EF4444;font-size:.74rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          Delete
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('roster-full-tbody').innerHTML=rows||'<tr><td colspan="8"><div class="empty-s">No athletes match filter.</div></td></tr>';
+}
+
+async function deleteAthlete(athleteId, userId, name){
+  if(!confirm(`Delete "${name}"?\n\nThis will permanently delete:\n• Athlete profile\n• All wellness logs\n• All session logs\n• All plan assignments\n\nThis cannot be undone!`)) return;
+  try{
+    // Delete all related data first
+    await dbDelete('wellness_logs',`?athlete_id=eq.${athleteId}`);
+    await dbDelete('training_logs',`?athlete_id=eq.${athleteId}`);
+    await dbDelete('injuries',`?athlete_id=eq.${athleteId}`);
+    await dbDelete('plan_assignments',`?athlete_id=eq.${athleteId}`);
+    await dbDelete('athletes',`?id=eq.${athleteId}`);
+    await dbDelete('users',`?id=eq.${userId}`);
+    await loadAllData();
+    renderFullRoster();
+    toast(`✅ ${name} deleted from roster.`);
+  }catch(e){toast('Error deleting athlete: '+e.message,'err');}
+}
+
+// BUILDER
+function initBuilder(){
+  document.getElementById('wb-date').value=todayStr();document.getElementById('wb-time').value='06:30';
+  document.getElementById('wb-name').value='';document.getElementById('wb-notes').value='';document.getElementById('wb-week').value='';
+  document.getElementById('wb-assign-checks').innerHTML=ALL_ATHLETES.map(a=>`<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.82rem;color:#CBD5E1"><input type="checkbox" value="${a.id}" style="accent-color:#3B82F6;width:14px;height:14px" checked>${a.name} <span style="font-size:.7rem;color:#64748B">${a.discipline?'('+a.discipline+')':a.position?'('+a.position+')':''}</span></label>`).join('');
+  calcTotals();
+}
+function addExRow(){
+  const emptyMsg=document.getElementById('ex-empty-msg');if(emptyMsg)emptyMsg.style.display='none';
+  exCount++;const id='ex'+exCount;const div=document.createElement('div');div.className='ex-row';div.id=id;
+  div.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+    <span style="font-size:.74rem;font-weight:700;color:#64748B;text-transform:uppercase">Exercise ${exCount}</span>
+    <div style="display:flex;gap:6px">
+      <button onclick="copyExRow('${id}')" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);border-radius:5px;padding:3px 8px;color:#60A5FA;font-size:.72rem;font-weight:600;cursor:pointer">📋 Copy</button>
+      <button onclick="removeEx('${id}')" style="background:none;border:none;color:#64748B;cursor:pointer;font-size:.8rem" onmouseover="this.style.color='#EF4444'" onmouseout="this.style.color='#64748B'">✕ Remove</button>
+    </div>
+  </div>
+  <div style="margin-bottom:10px"><label class="al">Exercise Name</label><input type="text" class="ai ex-name" placeholder="e.g. Back Squat" oninput="calcTotals()"/></div>
+  <div class="fg fg-3" style="margin-bottom:10px">
+    <div><label class="al">Sets</label><input type="number" class="ai ex-sets" value="3" min="1" oninput="calcTotals()"/></div>
+    <div><label class="al">Reps</label><input type="number" class="ai ex-reps" value="8" min="1" oninput="calcTotals()"/></div>
+    <div><label class="al">Tempo</label><input type="text" class="ai ex-tempo" value="2-0-2-0"/></div>
+  </div>
+  <div class="fg fg-3" style="margin-bottom:10px">
+    <div>
+      <label class="al">Load</label>
+      <input type="number" class="ai ex-weight" value="0" min="0" step="0.5" oninput="calcTotals()"/>
+    </div>
+    <div>
+      <label class="al">Load Unit</label>
+      <select class="as ex-unit" onchange="onUnitChange(this)">
+        <option value="kg">kg — Kilograms</option>
+        <option value="lb">lb — Pounds</option>
+        <option value="%1RM">% 1RM — Percentage</option>
+        <option value="BW">BW — Bodyweight</option>
+        <option value="Band">Band</option>
+      </select>
+    </div>
+    <div><label class="al">Rest (sec)</label><input type="number" class="ai ex-rest" value="90" min="0" oninput="calcTotals()"/></div>
+  </div>
+  <div class="fg fg-3">
+    <div><label class="al">Distance</label><input type="text" class="ai ex-dist" placeholder="e.g. 200m"/></div>
+    <div><label class="al">Intensity %</label><input type="number" class="ai ex-intensity" value="70" min="0" max="100" oninput="calcTotals()"/></div>
+    <div><label class="al">Target RPE</label><input type="number" class="ai ex-rpe" value="7" min="1" max="10" oninput="calcTotals()"/></div>
+  </div>
+  <div class="ex-1rm-hint" style="display:none;margin-top:8px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.2);border-radius:6px;padding:8px 12px;font-size:.74rem;color:#A78BFA">
+    💡 % 1RM: Enter percentage (e.g. 75 = 75% of 1 Rep Max). Athletes should know their 1RM for this exercise.
+  </div>`;
+  document.getElementById('exercise-list').appendChild(div);calcTotals();
+}
+function removeEx(id){
+  const el=document.getElementById(id);if(el)el.remove();
+  if(document.querySelectorAll('#exercise-list .ex-row').length===0){
+    const list=document.getElementById('exercise-list');
+    if(!document.getElementById('ex-empty-msg')){const e=document.createElement('div');e.className='empty-s';e.id='ex-empty-msg';e.innerHTML='<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>Click + Add to build';list.appendChild(e);}
+  }
+  calcTotals();
+}
+function calcTotals(){
+  const rows=document.querySelectorAll('#exercise-list .ex-row');let totSets=0,totVol=0;
+  rows.forEach(r=>{const sets=parseInt(r.querySelector('.ex-sets')?.value)||0;const reps=parseInt(r.querySelector('.ex-reps')?.value)||0;const weight=parseFloat(r.querySelector('.ex-weight')?.value)||0;const unit=r.querySelector('.ex-unit')?.value||'kg';totSets+=sets;if(unit==='kg'||unit==='lb')totVol+=sets*reps*weight;});
+  document.getElementById('tot-ex').textContent=rows.length;document.getElementById('tot-sets').textContent=totSets;document.getElementById('tot-vol').textContent=Math.round(totVol).toLocaleString();
+}
+function clearBuilder(){
+  document.getElementById('exercise-list').innerHTML=`<div class="empty-s" id="ex-empty-msg"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>Click + Add to build</div>`;
+  exCount=0;
+  // Reset custom selects
+  ['wb-phase','wb-type'].forEach(id=>{
+    const sel=document.getElementById(id);
+    if(sel){sel.selectedIndex=0;sel.dataset.customVal='';}
+    const cid=id+'-custom';
+    const div=document.getElementById(cid);
+    if(div){div.classList.remove('show');const inp=div.querySelector('input');if(inp)inp.value='';}
+  });
+  calcTotals();
+}
+async function savePlan(){
+  const name=document.getElementById('wb-name').value.trim();
+  if(!name){toast('Enter a plan name.','err');return;}
+  const exercises=[];document.querySelectorAll('#exercise-list .ex-row').forEach(r=>{exercises.push({name:(r.querySelector('.ex-name')?.value||'Exercise').trim(),sets:parseInt(r.querySelector('.ex-sets')?.value)||0,reps:parseInt(r.querySelector('.ex-reps')?.value)||0,tempo:r.querySelector('.ex-tempo')?.value||'2-0-2-0',weight:parseFloat(r.querySelector('.ex-weight')?.value)||0,unit:r.querySelector('.ex-unit')?.value||'kg',rest:parseInt(r.querySelector('.ex-rest')?.value)||0,distance:(r.querySelector('.ex-dist')?.value||'').trim(),intensity:parseInt(r.querySelector('.ex-intensity')?.value)||0,rpe:parseInt(r.querySelector('.ex-rpe')?.value)||0});});
+  if(exercises.length===0){toast('Add at least one exercise.','err');return;}
+  const assignedTo=[...document.querySelectorAll('#wb-assign-checks input:checked')].map(c=>c.value);
+  if(assignedTo.length===0){toast('Select at least one athlete.','err');return;}
+  const btn=document.getElementById('save-plan-btn');btn.innerHTML='<span class="loader"></span> Saving...';btn.disabled=true;
+  try{
+    const plan=await dbPost('plans',{name,phase:getSelectVal('wb-phase'),week_number:parseInt(document.getElementById('wb-week').value)||1,session_date:document.getElementById('wb-date').value,session_time:document.getElementById('wb-time').value,session_type:getSelectVal('wb-type'),notes:document.getElementById('wb-notes').value.trim(),exercises});
+    const planId=plan[0].id;
+    await Promise.all(assignedTo.map(athId=>dbPost('plan_assignments',{plan_id:planId,athlete_id:athId})));
+    await loadAllData();toast('✅ Plan saved and assigned!');clearBuilder();
+  }catch(e){toast('Error: '+e.message,'err');}
+  btn.innerHTML='Save & Assign Plan';btn.disabled=false;
+}
+
+// PLANS LIST
+function renderPlansList(){
+  const rows=ALL_PLANS.map(p=>{
+    const names=(p.assignedTo||[]).map(id=>{const a=ALL_ATHLETES.find(x=>x.id===id);return a?a.name:'?';}).join(', ');
+    return`<tr>
+      <td style="font-weight:600;color:#E2E8F0">${p.name}</td>
+      <td style="color:#94A3B8;font-size:.78rem">${p.session_type||'—'}</td>
+      <td><span class="badge bdg-b">${p.phase||'—'}</span></td>
+      <td style="font-weight:600;color:#A78BFA">W${p.week_number}</td>
+      <td style="color:#94A3B8">${fmtDate(p.session_date)}</td>
+      <td style="font-weight:600;color:#60A5FA">${(p.exercises||[]).length}</td>
+      <td style="font-size:.76rem;color:#94A3B8;max-width:180px">${names}</td>
+      <td>
+        <div style="display:flex;gap:5px">
+          <button onclick="copyPlan('${p.id}')" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:4px 8px;color:#60A5FA;font-size:.72rem;font-weight:600;cursor:pointer">📋 Copy</button>
+          <button class="bg-btn" style="padding:3px 8px;font-size:.72rem" onclick="deletePlan('${p.id}')">🗑 Delete</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('plans-list-tbody').innerHTML=rows||'<tr><td colspan="8"><div class="empty-s">No plans saved. Use Workout Builder.</div></td></tr>';
+}
+async function deletePlan(id){
+  if(!confirm('Delete this plan?'))return;
+  try{await dbDelete('plan_assignments',`?plan_id=eq.${id}`);await dbDelete('plans',`?id=eq.${id}`);await loadAllData();renderPlansList();toast('Plan deleted.');}
+  catch(e){toast('Error: '+e.message,'err');}
+}
+
+// ANALYTICS
+function initAnalytics(){
+  const sel=document.getElementById('analytics-ath-sel');const prev=sel.value;
+  sel.innerHTML=ALL_ATHLETES.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
+  if(prev&&ALL_ATHLETES.find(a=>a.id===prev))sel.value=prev;else if(ALL_ATHLETES.length)sel.value=ALL_ATHLETES[0].id;
+  renderAnalyticsCharts();
+}
+function renderAnalyticsCharts(){
+  const athId=document.getElementById('analytics-ath-sel').value;const d7=getLast7Days();
+  const training=ALL_TRAINING.filter(t=>t.athlete_id===athId);const wellness=ALL_WELLNESS.filter(w=>w.athlete_id===athId);
+  const labels=d7.map(dLabel);const auByDay=d7.map(d=>training.filter(t=>t.log_date===d).reduce((s,t)=>s+t.au,0));
+  const wellByDay=d7.map(d=>{const w=wellness.find(x=>x.log_date===d);return w?w.score:null;});
+  if(chartWL_inst)chartWL_inst.destroy();
+  const cA=document.getElementById('chartWL').getContext('2d');
+  chartWL_inst=new Chart(cA,{data:{labels,datasets:[{type:'line',label:'Wellness %',data:wellByDay,borderColor:'#22C55E',backgroundColor:'rgba(34,197,94,.08)',borderWidth:2.5,pointBackgroundColor:'#22C55E',pointRadius:4,tension:.35,fill:true,yAxisID:'yL',spanGaps:true},{type:'bar',label:'Load (AU)',data:auByDay,backgroundColor:'rgba(59,130,246,.45)',borderColor:'rgba(59,130,246,.7)',borderWidth:1,borderRadius:4,yAxisID:'yR'}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#94A3B8',font:{size:11},boxWidth:11}},tooltip:{backgroundColor:'#1A2035',borderColor:'#232B3E',borderWidth:1,titleColor:'#E2E8F0',bodyColor:'#94A3B8'}},scales:{yL:{type:'linear',position:'left',min:0,max:100,grid:{color:'rgba(35,43,62,.5)'},ticks:{color:'#94A3B8',font:{size:10},callback:v=>v+'%'}},yR:{type:'linear',position:'right',min:0,grid:{drawOnChartArea:false},ticks:{color:'#94A3B8',font:{size:10}}},x:{grid:{color:'rgba(35,43,62,.5)'},ticks:{color:'#94A3B8',font:{size:10}}}}}});
+  const acwrData=[],acwrLabels=[];
+  for(let i=13;i>=0;i--){const refDate=new Date();refDate.setDate(refDate.getDate()-i);const refStr=refDate.toISOString().split('T')[0];acwrLabels.push(dLabel(refStr));const getAvg=n=>{let tot=0;for(let j=0;j<n;j++){const d2=new Date(refStr+'T00:00:00');d2.setDate(d2.getDate()-j);const ds=d2.toISOString().split('T')[0];tot+=training.filter(t=>t.log_date===ds).reduce((s,t)=>s+t.au,0);}return tot/n;};const acute=getAvg(7),chronic=getAvg(28);acwrData.push(chronic>0?+(acute/chronic).toFixed(2):null);}
+  const sweetPlugin={id:'sw',beforeDraw(chart){const{ctx:c,chartArea:{left,right},scales:{y}}=chart;if(!y)return;c.save();c.fillStyle='rgba(34,197,94,.07)';c.fillRect(left,y.getPixelForValue(1.3),right-left,y.getPixelForValue(.8)-y.getPixelForValue(1.3));c.strokeStyle='rgba(239,68,68,.6)';c.lineWidth=1.5;c.setLineDash([5,4]);c.beginPath();c.moveTo(left,y.getPixelForValue(1.5));c.lineTo(right,y.getPixelForValue(1.5));c.stroke();c.setLineDash([]);c.restore();}};
+  if(chartACWR_inst)chartACWR_inst.destroy();
+  const cB=document.getElementById('chartACWR').getContext('2d');
+  chartACWR_inst=new Chart(cB,{type:'line',plugins:[sweetPlugin],data:{labels:acwrLabels,datasets:[{label:'ACWR',data:acwrData,borderColor:'#F59E0B',backgroundColor:'rgba(245,158,11,.07)',borderWidth:2.5,pointBackgroundColor:acwrData.map(v=>!v?'#64748B':v>1.5?'#EF4444':v>1.3?'#EAB308':v>=0.8?'#22C55E':'#EAB308'),pointRadius:5,tension:.35,fill:false,spanGaps:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94A3B8',font:{size:11},boxWidth:11}},tooltip:{backgroundColor:'#1A2035',borderColor:'#232B3E',borderWidth:1,titleColor:'#E2E8F0',bodyColor:'#94A3B8',callbacks:{label:ctx=>`ACWR: ${ctx.parsed.y!==null?ctx.parsed.y.toFixed(2):'—'}`}}},scales:{y:{min:0,max:2.2,grid:{color:'rgba(35,43,62,.5)'},ticks:{color:'#94A3B8',font:{size:10},stepSize:.5}},x:{grid:{color:'rgba(35,43,62,.5)'},ticks:{color:'#94A3B8',font:{size:10}}}}}});
+}
+
+// INJURIES
+// ─── INJURY TRACKER — Full Edit / Delete / Filter ───
+
+function populateInjFilters(){
+  const discs=[...new Set(ALL_ATHLETES.map(a=>a.discipline).filter(Boolean))].sort();
+  const df=document.getElementById('inj-disc-filter');
+  const curD=df.value;
+  df.innerHTML='<option value="all">All Sports</option>'+discs.map(d=>`<option value="${d}">${d}</option>`).join('');
+  if(discs.includes(curD)) df.value=curD;
+  onInjDiscFilter(false);
+}
+
+function onInjDiscFilter(doRender=true){
+  const disc=document.getElementById('inj-disc-filter').value;
+  const af=document.getElementById('inj-ath-filter');
+  const curA=af.value;
+  const filtAths=disc==='all'?ALL_ATHLETES:ALL_ATHLETES.filter(a=>a.discipline===disc);
+  af.innerHTML='<option value="all">All Athletes</option>'+filtAths.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
+  if(filtAths.find(a=>a.id===curA)) af.value=curA;
+  if(doRender) renderInjuries();
+}
+
+function clearInjFilters(){
+  document.getElementById('inj-disc-filter').value='all';
+  document.getElementById('inj-ath-filter').value='all';
+  renderInjuries();
+}
+
+function renderInjuries(){
+  populateInjFilters();
+  document.getElementById('inj-ath').innerHTML=ALL_ATHLETES.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
+  document.getElementById('inj-date').value=todayStr();
+
+  const discF=document.getElementById('inj-disc-filter').value;
+  const athF=document.getElementById('inj-ath-filter').value;
+
+  // Filter athletes
+  let filtAths=ALL_ATHLETES;
+  if(discF!=='all') filtAths=filtAths.filter(a=>a.discipline===discF);
+  if(athF!=='all') filtAths=filtAths.filter(a=>a.id===athF);
+  const filtIds=new Set(filtAths.map(a=>a.id));
+
+  const active=ALL_INJURIES.filter(i=>!i.resolved&&filtIds.has(i.athlete_id));
+  const resolved=ALL_INJURIES.filter(i=>i.resolved&&filtIds.has(i.athlete_id));
+
+  document.getElementById('inj-count-badge').textContent=active.length+' active';
+  document.getElementById('inj-hist-count').textContent=resolved.length+' resolved';
+
+  // ── Active rows ──
+  const activeRows=active.map(inj=>{
+    const a=ALL_ATHLETES.find(x=>x.id===inj.athlete_id);
+    const bc=inj.severity==='Sidelined'?'bdg-r':inj.severity==='Modified'?'bdg-y':'bdg-g';
+    const tc=inj.injury_type==='Acute'?'bdg-r':'bdg-y';
+    const rehab=inj.rehab_start&&inj.rehab_end?`${fmtDate(inj.rehab_start)}<br><span style="color:#60A5FA">→ ${fmtDate(inj.rehab_end)}</span>`:'—';
+    const disc=a?.discipline?`<span class="badge bdg-p" style="font-size:.6rem">${a.discipline}</span>`:'—';
+    // Encode for safe onclick
+    const injData=encodeURIComponent(JSON.stringify(inj));
+    return`<tr>
+      <td style="font-weight:600;color:#E2E8F0">${a?a.name:'?'}</td>
+      <td>${disc}</td>
+      <td>${inj.body_part}</td>
+      <td><span class="badge ${tc}">${inj.injury_type||'—'}</span></td>
+      <td><span class="badge ${bc}">${inj.severity}</span></td>
+      <td style="color:#94A3B8;font-size:.78rem">${fmtDate(inj.injury_date)}</td>
+      <td style="color:#94A3B8;font-size:.74rem;line-height:1.5">${rehab}</td>
+      <td style="color:#94A3B8;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.76rem">${inj.restrictions||inj.notes||'—'}</td>
+      <td>
+        <div style="display:flex;gap:4px;flex-wrap:nowrap">
+          <button onclick="openEditInj('${inj.id}')" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:5px;padding:3px 7px;color:#60A5FA;font-size:.7rem;font-weight:600;cursor:pointer;white-space:nowrap">✏️ Edit</button>
+          <button onclick="resolveInj('${inj.id}')" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:5px;padding:3px 7px;color:#22C55E;font-size:.7rem;font-weight:600;cursor:pointer;white-space:nowrap">✅ Resolve</button>
+          <button onclick="deleteInj('${inj.id}')" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:5px;padding:3px 7px;color:#EF4444;font-size:.7rem;font-weight:600;cursor:pointer">🗑</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('injury-tbody').innerHTML=activeRows||'<tr><td colspan="9"><div class="empty-s">No active injuries for this filter.</div></td></tr>';
+
+  // ── Resolved rows ──
+  const resolvedRows=resolved.map(inj=>{
+    const a=ALL_ATHLETES.find(x=>x.id===inj.athlete_id);
+    const bc=inj.severity==='Sidelined'?'bdg-r':inj.severity==='Modified'?'bdg-y':'bdg-g';
+    const rehab=inj.rehab_start&&inj.rehab_end?`${fmtDate(inj.rehab_start)} → ${fmtDate(inj.rehab_end)}`:'—';
+    const disc=a?.discipline?`<span class="badge bdg-p" style="font-size:.6rem">${a.discipline}</span>`:'—';
+    return`<tr>
+      <td style="color:#94A3B8;font-weight:600">${a?a.name:'?'}</td>
+      <td>${disc}</td>
+      <td style="color:#64748B">${inj.body_part}</td>
+      <td><span class="badge ${inj.injury_type==='Acute'?'bdg-r':'bdg-y'}" style="opacity:.7">${inj.injury_type||'—'}</span></td>
+      <td><span class="badge ${bc}" style="opacity:.7">${inj.severity}</span></td>
+      <td style="color:#64748B;font-size:.78rem">${fmtDate(inj.injury_date)}</td>
+      <td style="color:#64748B;font-size:.76rem">${rehab}</td>
+      <td style="color:#64748B;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.76rem">${inj.notes||'—'}</td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <button onclick="openEditInj('${inj.id}')" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:5px;padding:3px 7px;color:#60A5FA;font-size:.7rem;font-weight:600;cursor:pointer">✏️ Edit</button>
+          <button onclick="deleteInj('${inj.id}')" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:5px;padding:3px 7px;color:#EF4444;font-size:.7rem;font-weight:600;cursor:pointer">🗑 Delete</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('injury-history-tbody').innerHTML=resolvedRows||'<tr><td colspan="9"><div class="empty-s">No resolved injuries yet.</div></td></tr>';
+}
+
+// Called for compatibility
+function renderInjuryHistory(){ renderInjuries(); }
+
+// ── EDIT Injury ──
+function openEditInj(id){
+  const inj=ALL_INJURIES.find(x=>x.id===id);
+  if(!inj) return;
+  const a=ALL_ATHLETES.find(x=>x.id===inj.athlete_id);
+  document.getElementById('inj-edit-id').value=id;
+  document.getElementById('inj-form-title').textContent=`✏️ Editing: ${a?a.name:'?'} — ${inj.body_part}`;
+  document.getElementById('inj-ath').value=inj.athlete_id;
+  // Body part
+  const bodyOpts=[...document.getElementById('inj-body').options].map(o=>o.value);
+  if(bodyOpts.includes(inj.body_part)){
+    document.getElementById('inj-body').value=inj.body_part;
+    document.getElementById('inj-body-custom').classList.remove('show');
+  } else {
+    document.getElementById('inj-body').value='__other__';
+    document.getElementById('inj-body-custom').classList.add('show');
+    document.getElementById('inj-body-text').value=inj.body_part;
+    document.getElementById('inj-body').dataset.customVal=inj.body_part;
+  }
+  document.getElementById('inj-type').value=inj.injury_type||'Acute';
+  document.getElementById('inj-sev').value=inj.severity;
+  document.getElementById('inj-notes').value=inj.notes||'';
+  document.getElementById('inj-date').value=inj.injury_date||'';
+  document.getElementById('inj-rehab-start').value=inj.rehab_start||'';
+  document.getElementById('inj-rehab-end').value=inj.rehab_end||'';
+  document.getElementById('inj-restrictions').value=inj.restrictions||'';
+  document.getElementById('inj-submit-btn').textContent='Save Changes';
+  document.getElementById('inj-cancel-edit-btn').style.display='inline-flex';
+  // Scroll to form
+  document.getElementById('inj-form-title').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function cancelInjEdit(){
+  document.getElementById('inj-edit-id').value='';
+  document.getElementById('inj-form-title').textContent='Log New Injury';
+  document.getElementById('inj-submit-btn').textContent='Log Injury';
+  document.getElementById('inj-cancel-edit-btn').style.display='none';
+  document.getElementById('inj-notes').value='';
+  document.getElementById('inj-restrictions').value='';
+  document.getElementById('inj-rehab-start').value='';
+  document.getElementById('inj-rehab-end').value='';
+  document.getElementById('inj-date').value=todayStr();
+}
+
+async function logInjury(){
+  const editId=document.getElementById('inj-edit-id').value;
+  const data={
+    athlete_id:document.getElementById('inj-ath').value,
+    body_part:getSelectVal('inj-body'),
+    injury_type:document.getElementById('inj-type').value,
+    severity:document.getElementById('inj-sev').value,
+    notes:document.getElementById('inj-notes').value.trim(),
+    restrictions:document.getElementById('inj-restrictions').value.trim(),
+    injury_date:document.getElementById('inj-date').value,
+    rehab_start:document.getElementById('inj-rehab-start').value||null,
+    rehab_end:document.getElementById('inj-rehab-end').value||null,
+  };
+  if(!data.injury_date){toast('Select injury date.','err');return;}
+  const btn=document.getElementById('inj-submit-btn');
+  btn.innerHTML='<span class="loader"></span>';btn.disabled=true;
+  try{
+    if(editId){
+      // EDIT mode
+      await dbPatch('injuries',data,`?id=eq.${editId}`);
+      toast('✅ Injury updated!');
+      cancelInjEdit();
+    } else {
+      // NEW mode
+      await dbPost('injuries',{...data,resolved:false});
+      toast('✅ Injury logged.');
+      document.getElementById('inj-notes').value='';
+      document.getElementById('inj-restrictions').value='';
+      document.getElementById('inj-rehab-start').value='';
+      document.getElementById('inj-rehab-end').value='';
+    }
+    await loadAllData();
+    renderInjuries();
+  }catch(e){toast('Error: '+e.message,'err');}
+  btn.innerHTML=editId?'Save Changes':'Log Injury';
+  btn.disabled=false;
+}
+
+async function resolveInj(id){
+  if(!confirm('Mark this injury as resolved?\nIt will move to the history section.'))return;
+  try{
+    await dbPatch('injuries',{resolved:true},`?id=eq.${id}`);
+    await loadAllData();renderInjuries();
+    toast('✅ Injury resolved and saved to history.');
+  }catch(e){toast('Error: '+e.message,'err');}
+}
+
+async function deleteInj(id){
+  const inj=ALL_INJURIES.find(x=>x.id===id);
+  const a=ALL_ATHLETES.find(x=>x.id===inj?.athlete_id);
+  if(!confirm(`⚠️ Permanently delete this injury record?\n\nAthlete: ${a?a.name:'?'}\nBody Part: ${inj?.body_part||'?'}\n\nThis cannot be undone.`))return;
+  try{
+    await dbDelete('injuries',`?id=eq.${id}`);
+    await loadAllData();renderInjuries();
+    toast('Injury record deleted.');
+  }catch(e){toast('Error: '+e.message,'err');}
+}
+
+// ─── ADD COACH / ADMIN ───
+function switchAddRole(role){
+  document.getElementById('add-athlete-form').style.display=role==='athlete'?'block':'none';
+  document.getElementById('add-coach-form').style.display=role==='coach'?'block':'none';
+  document.getElementById('add-role-athlete-btn').className=role==='athlete'?'bp':'bg-btn';
+  document.getElementById('add-role-athlete-btn').style.padding='7px 18px';
+  document.getElementById('add-role-athlete-btn').style.fontSize='.8rem';
+  document.getElementById('add-role-coach-btn').className=role==='coach'?'bp':'bg-btn';
+  document.getElementById('add-role-coach-btn').style.padding='7px 18px';
+  document.getElementById('add-role-coach-btn').style.fontSize='.8rem';
+}
+
+async function addCoach(){
+  const name=document.getElementById('new-coach-name').value.trim();
+  const username=document.getElementById('new-coach-user').value.trim().toLowerCase();
+  const password=document.getElementById('new-coach-pass').value.trim();
+  if(!name||!username||!password){toast('All fields required.','err');return;}
+  try{
+    await dbPost('users',{name,username,password,role:'coach'});
+    document.getElementById('new-coach-name').value='';
+    document.getElementById('new-coach-user').value='';
+    document.getElementById('new-coach-pass').value='';
+    toast(`✅ Coach "${name}" added! Login: ${username} / ${password}`);
+  }catch(e){toast('Error (username may exist): '+e.message,'err');}
+}
+
+// ─── TODAY'S SESSIONS (Athlete portal) ───
+function renderTodaysSessions(){
+  if(!SESSION?.athlete_id) return;
+  const today=todayStr();
+  document.getElementById('todays-date-lbl').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+  // Check if wellness already submitted today
+  const todayW=ALL_WELLNESS.find(w=>w.athlete_id===SESSION.athlete_id&&w.log_date===today);
+  const wBadge=document.getElementById('wellness-status-badge');
+  const wRing=document.getElementById('wellness-ring-small');
+  const wSubmitted=document.getElementById('wellness-submitted-view');
+  const wForm=document.getElementById('wellness-form-view');
+  const wText=document.getElementById('wellness-submitted-text');
+  if(todayW){
+    const wc=wcol(todayW.score);
+    wBadge.textContent='Done ✅';wBadge.className='badge bdg-g';
+    wRing.textContent=todayW.score+'%';wRing.style.color=wc.hex;wRing.style.borderColor=wc.hex;wRing.style.background=wc.hex+'1A';
+    wSubmitted.style.display='block';wForm.style.display='none';
+    wText.textContent=`Submitted: Score ${todayW.score}% (${wc.label}) · Sleep ${todayW.sleep} · Energy ${todayW.fatigue} · Soreness ${todayW.soreness} · Stress ${todayW.stress} · Mood ${todayW.mood}`;
+  } else {
+    wBadge.textContent='Pending';wBadge.className='badge bdg-y';
+    wRing.textContent='--';wRing.style.color='#60A5FA';wRing.style.borderColor='#3B82F6';wRing.style.background='rgba(59,130,246,.1)';
+    wSubmitted.style.display='none';wForm.style.display='block';
+    // Reset sliders
+    ['sleep','fatigue','soreness','stress','mood'].forEach(k=>{
+      const sl=document.getElementById('ts-sl-'+k);const vl=document.getElementById('ts-val-'+k);
+      if(sl)sl.value=3;if(vl)vl.textContent=3;
+    });
+  }
+
+  // Update pending badge in nav
+  const pb=document.getElementById('pending-badge');
+
+  // Get today's assigned plans
+  const todayPlans=ALL_PLANS.filter(p=>p.assignedTo&&p.assignedTo.includes(SESSION.athlete_id)&&p.session_date===today);
+
+  // Get sessions already logged today
+  const todaySessions=ALL_TRAINING.filter(t=>t.athlete_id===SESSION.athlete_id&&t.log_date===today);
+
+  let pendingCount=todayW?0:1;
+  let html='';
+
+  if(todayPlans.length===0&&!todayW){
+    html=`<div class="sc"><div class="sc-bd"><div class="empty-s">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+      No sessions assigned for today. Check your plan for upcoming sessions.
+    </div></div></div>`;
+  } else {
+    todayPlans.forEach((p,pi)=>{
+      // Check if RPE already logged for this plan today
+      const planSession=todaySessions.find(s=>s.plan_id===p.id);
+      const isLogged=!!planSession;
+      if(!isLogged) pendingCount++;
+
+      const exs=p.exercises||[];
+      const totVol=exs.reduce((s,e)=>(e.unit==='kg'||e.unit==='lb')?s+e.sets*e.reps*e.weight:s,0);
+
+      html+=`<div class="sc" style="margin-bottom:16px">
+        <div class="sc-hd">
+          <div>
+            <p style="font-size:.9rem;font-weight:700;color:#E2E8F0;margin-bottom:3px">${p.name}</p>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <span class="badge bdg-b">${p.session_type||''}</span>
+              <span class="badge bdg-p">${p.phase||''}</span>
+              <span class="badge bdg-m">Week ${p.week_number}</span>
+              <span style="font-size:.72rem;color:#64748B">${fmtTime(p.session_time)}</span>
+            </div>
+          </div>
+          <span class="badge ${isLogged?'bdg-g':'bdg-y'}">${isLogged?'✅ RPE Done':'⏳ RPE Pending'}</span>
+        </div>
+
+        <!-- Exercise summary -->
+        <div style="padding:10px 18px;border-bottom:1px solid #232B3E;display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+          <div style="text-align:center"><p style="font-size:.6rem;color:#64748B;text-transform:uppercase;margin-bottom:2px">Exercises</p><p style="font-size:.9rem;font-weight:700;color:#60A5FA">${exs.length}</p></div>
+          <div style="text-align:center"><p style="font-size:.6rem;color:#64748B;text-transform:uppercase;margin-bottom:2px">Total Sets</p><p style="font-size:.9rem;font-weight:700;color:#60A5FA">${exs.reduce((s,e)=>s+e.sets,0)}</p></div>
+          <div style="text-align:center"><p style="font-size:.6rem;color:#64748B;text-transform:uppercase;margin-bottom:2px">Volume</p><p style="font-size:.9rem;font-weight:700;color:#22C55E">${Math.round(totVol).toLocaleString()} kg</p></div>
+          <div style="text-align:center"><p style="font-size:.6rem;color:#64748B;text-transform:uppercase;margin-bottom:2px">Time</p><p style="font-size:.9rem;font-weight:700;color:#F59E0B">${fmtTime(p.session_time)}</p></div>
+        </div>
+
+        ${p.notes?`<div style="padding:8px 18px;background:rgba(59,130,246,.05);border-bottom:1px solid #232B3E;font-size:.78rem;color:#94A3B8"><span style="font-weight:600;color:#60A5FA">Coach Note: </span>${p.notes}</div>`:''}
+
+        <!-- Exercise list compact -->
+        <div style="overflow-x:auto">
+          <table class="apex-table">
+            <thead><tr><th>Exercise</th><th style="text-align:center">Sets</th><th style="text-align:center">Reps</th><th style="text-align:center">Load</th><th style="text-align:center">Tempo</th><th style="text-align:center">Rest</th><th style="text-align:center">RPE</th></tr></thead>
+            <tbody>${exs.map(e=>{
+              let loadD=e.weight>0?e.weight+' '+e.unit:'BW';
+              if(e.unit==='%1RM') loadD=e.weight+'% 1RM';
+              return`<tr><td style="font-weight:600;color:#E2E8F0">${e.name}</td><td style="text-align:center;color:#60A5FA;font-weight:700">${e.sets}</td><td style="text-align:center;color:#A78BFA;font-weight:700">${e.reps}</td><td style="text-align:center;color:#22C55E;font-weight:700">${loadD}</td><td style="text-align:center;font-family:monospace;color:#F59E0B">${e.tempo||'—'}</td><td style="text-align:center;color:#94A3B8">${e.rest>0?e.rest+'s':'—'}</td><td style="text-align:center;font-weight:700;color:#EF4444">${e.rpe}</td></tr>`;
+            }).join('')}</tbody>
+          </table>
+        </div>
+
+        <!-- RPE Submit for this plan -->
+        ${isLogged?`
+        <div style="padding:12px 18px;background:rgba(34,197,94,.06);border-top:1px solid #232B3E;display:flex;align-items:center;gap:10px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span style="font-size:.82rem;color:#94A3B8">RPE logged: <strong style="color:#22C55E">${planSession.rpe}/10</strong> · Duration: <strong style="color:#E2E8F0">${planSession.duration_mins} min</strong> · AU: <strong style="color:#60A5FA">${planSession.au}</strong></span>
+        </div>`:`
+        <div style="padding:14px 18px;border-top:1px solid #232B3E;background:#0d1118">
+          <p style="font-size:.74rem;font-weight:700;color:#EAB308;margin-bottom:10px">⏳ Log your RPE for this session:</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;align-items:end">
+            <div>
+              <label class="al">Duration (min)</label>
+              <input type="number" id="ts-dur-${pi}" class="ai" placeholder="e.g. 60" min="1" max="360" oninput="calcTsAU(${pi})"/>
+            </div>
+            <div>
+              <label class="al">Session RPE (1–10)</label>
+              <div style="display:flex;align-items:center;gap:8px">
+                <input type="range" id="ts-rpe-${pi}" min="1" max="10" value="7" oninput="document.getElementById('ts-rpe-val-${pi}').textContent=this.value;calcTsAU(${pi})" style="flex:1"/>
+                <span id="ts-rpe-val-${pi}" style="font-size:1rem;font-weight:700;color:#60A5FA;min-width:22px;text-align:center">7</span>
+              </div>
+            </div>
+            <div>
+              <label class="al">AU (auto)</label>
+              <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:7px;padding:8px 12px;font-size:1rem;font-weight:700;color:#60A5FA;text-align:center" id="ts-au-${pi}">—</div>
+            </div>
+          </div>
+          <button class="bp" style="width:100%;margin-top:10px;justify-content:center" onclick="submitPlanRPE('${p.id}',${pi},'${p.name}')">
+            Submit RPE for "${p.name}"
+          </button>
+        </div>`}
+      </div>`;
+    });
+  }
+
+  document.getElementById('todays-sessions-content').innerHTML=html||'<div class="empty-s">No sessions today.</div>';
+
+  // Update pending badge
+  if(pb) pb.style.display=pendingCount>0?'inline':'none';
+}
+
+function updTsSlider(k,v){
+  document.getElementById('ts-val-'+k).textContent=v;
+  calcTsWellness();
+}
+function calcTsWellness(){
+  const keys=['sleep','fatigue','soreness','stress','mood'];
+  const total=keys.reduce((s,k)=>s+parseInt(document.getElementById('ts-sl-'+k).value),0);
+  const pct=Math.round((total/25)*100);
+  const wc=wcol(pct);
+  const ring=document.getElementById('wellness-ring-small');
+  ring.textContent=pct+'%';ring.style.color=wc.hex;ring.style.borderColor=wc.hex;ring.style.background=wc.hex+'1A';
+  return pct;
+}
+async function submitTsWellness(){
+  if(!SESSION?.athlete_id){toast('Athlete not found.','err');return;}
+  const pct=calcTsWellness();
+  const btn=document.getElementById('ts-wellness-btn');btn.innerHTML='<span class="loader"></span>';btn.disabled=true;
+  try{
+    await dbDelete('wellness_logs',`?athlete_id=eq.${SESSION.athlete_id}&log_date=eq.${todayStr()}`);
+    await dbPost('wellness_logs',{
+      athlete_id:SESSION.athlete_id,log_date:todayStr(),
+      sleep:parseInt(document.getElementById('ts-sl-sleep').value),
+      fatigue:parseInt(document.getElementById('ts-sl-fatigue').value),
+      soreness:parseInt(document.getElementById('ts-sl-soreness').value),
+      stress:parseInt(document.getElementById('ts-sl-stress').value),
+      mood:parseInt(document.getElementById('ts-sl-mood').value),score:pct
+    });
+    await loadAllData();toast('✅ Wellness submitted! Score: '+pct+'%');renderTodaysSessions();
+  }catch(e){toast('Error: '+e.message,'err');}
+  btn.innerHTML='Submit Wellness';btn.disabled=false;
+}
+function calcTsAU(pi){
+  const dur=parseInt(document.getElementById(`ts-dur-${pi}`)?.value)||0;
+  const rpe=parseInt(document.getElementById(`ts-rpe-${pi}`)?.value)||0;
+  const auEl=document.getElementById(`ts-au-${pi}`);
+  if(auEl) auEl.textContent=(dur>0&&rpe>0)?(dur*rpe):'—';
+}
+async function submitPlanRPE(planId,pi,planName){
+  if(!SESSION?.athlete_id){toast('Athlete not found.','err');return;}
+  const dur=parseInt(document.getElementById(`ts-dur-${pi}`)?.value)||0;
+  const rpe=parseInt(document.getElementById(`ts-rpe-${pi}`)?.value)||7;
+  if(!dur||dur<1){toast('Enter session duration.','err');return;}
+  try{
+    await dbPost('training_logs',{
+      athlete_id:SESSION.athlete_id,log_date:todayStr(),
+      session_type:planName,plan_id:planId,
+      duration_mins:dur,rpe,au:dur*rpe
+    });
+    await loadAllData();toast('✅ RPE logged for "'+planName+'"!');renderTodaysSessions();
+  }catch(e){toast('Error: '+e.message,'err');}
+}
+
+// ─── ENHANCED MY HISTORY ───
+function switchHistTab(tab){
+  ['wellness','training','plans'].forEach(t=>{
+    const p=document.getElementById('hist-'+t[0]+'-panel')||document.getElementById('hist-p-panel');
+    if(t==='wellness')document.getElementById('hist-w-panel').style.display=tab==='wellness'?'block':'none';
+    else if(t==='training')document.getElementById('hist-t-panel').style.display=tab==='training'?'block':'none';
+    else if(t==='plans'){const el=document.getElementById('hist-p-panel');if(el)el.style.display=tab==='plans'?'block':'none';}
+    const btn=document.getElementById('hist-tab-'+t[0]);
+    if(btn)btn.className='tab-btn'+(tab===t?' active':'');
+  });
+  renderMyHistory();
+}
+
+function renderMyHistory(){
+  if(!SESSION?.athlete_id) return;
+  const wellness=ALL_WELLNESS.filter(w=>w.athlete_id===SESSION.athlete_id).sort((a,b)=>b.log_date.localeCompare(a.log_date));
+  const training=ALL_TRAINING.filter(t=>t.athlete_id===SESSION.athlete_id).sort((a,b)=>b.log_date.localeCompare(a.log_date));
+
+  // Wellness tab
+  const wRows=wellness.map(w=>{const wc=wcol(w.score);return`<tr><td style="color:#94A3B8">${fmtDate(w.log_date)}</td><td>${w.sleep}</td><td>${w.fatigue}</td><td>${w.soreness}</td><td>${w.stress}</td><td>${w.mood}</td><td style="font-weight:700;color:${wc.hex}">${w.score}%</td><td><span class="badge ${wc.cls}">${wc.label}</span></td></tr>`;}).join('');
+  document.getElementById('my-w-tbody').innerHTML=wRows||'<tr><td colspan="8"><div class="empty-s">No wellness logs yet.</div></td></tr>';
+
+  // Training tab — show with wellness score for that day
+  const tRows=training.map(t=>{
+    const dayW=wellness.find(w=>w.log_date===t.log_date);
+    const wScore=dayW?`<span style="color:${wcol(dayW.score).hex};font-weight:700">${dayW.score}%</span>`:'<span style="color:#475569">—</span>';
+    const planName=t.plan_id?ALL_PLANS.find(p=>p.id===t.plan_id)?.name||t.session_type:t.session_type;
+    return`<tr>
+      <td style="color:#94A3B8">${fmtDate(t.log_date)}</td>
+      <td style="font-weight:600;color:#E2E8F0;max-width:180px">${planName}</td>
+      <td style="color:#94A3B8;font-size:.76rem">${t.session_type}</td>
+      <td>${t.duration_mins} min</td>
+      <td>${t.rpe}</td>
+      <td style="font-weight:700;color:#60A5FA">${t.au}</td>
+      <td>${wScore}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('my-t-tbody').innerHTML=tRows||'<tr><td colspan="7"><div class="empty-s">No sessions logged yet.</div></td></tr>';
+
+  // Plan History tab — group by week/date
+  const histPPanel=document.getElementById('hist-p-panel');
+  if(histPPanel){
+    // Group sessions by plan
+    const planSummary={};
+    training.forEach(t=>{
+      const key=t.plan_id||t.session_type;
+      if(!planSummary[key]){
+        const plan=t.plan_id?ALL_PLANS.find(p=>p.id===t.plan_id):null;
+        planSummary[key]={
+          name:plan?plan.name:t.session_type,
+          week:plan?`Week ${plan.week_number}`:'—',
+          phase:plan?.phase||'—',
+          sessions:[],
+        };
+      }
+      const dayW=wellness.find(w=>w.log_date===t.log_date);
+      planSummary[key].sessions.push({
+        date:t.log_date,rpe:t.rpe,au:t.au,dur:t.duration_mins,
+        wellness:dayW?dayW.score:null
+      });
+    });
+
+    const html=Object.values(planSummary).map(ps=>{
+      const sRows=ps.sessions.map(s=>{
+        const wc2=s.wellness?wcol(s.wellness):null;
+        return`<tr>
+          <td style="color:#94A3B8">${fmtDate(s.date)}</td>
+          <td style="font-weight:700;color:#EF4444">${s.rpe}/10</td>
+          <td style="font-weight:700;color:#60A5FA">${s.au} AU</td>
+          <td style="color:#94A3B8">${s.dur} min</td>
+          <td>${s.wellness?`<span style="color:${wc2.hex};font-weight:700">${s.wellness}%</span>`:'—'}</td>
+        </tr>`;
+      }).join('');
+      return`<div class="sc" style="margin-bottom:14px">
+        <div class="sc-hd">
+          <div>
+            <p style="font-size:.88rem;font-weight:700;color:#E2E8F0">${ps.name}</p>
+            <div style="display:flex;gap:6px;margin-top:3px">
+              <span class="badge bdg-p" style="font-size:.62rem">${ps.week}</span>
+              <span class="badge bdg-b" style="font-size:.62rem">${ps.phase}</span>
+              <span class="badge bdg-m" style="font-size:.62rem">${ps.sessions.length} session${ps.sessions.length>1?'s':''}</span>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <p style="font-size:.72rem;color:#64748B">Avg RPE</p>
+            <p style="font-size:1.1rem;font-weight:800;color:#EF4444">${(ps.sessions.reduce((s,x)=>s+x.rpe,0)/ps.sessions.length).toFixed(1)}</p>
+          </div>
+        </div>
+        <div style="overflow-x:auto"><table class="apex-table">
+          <thead><tr><th>Date</th><th>RPE</th><th>AU Load</th><th>Duration</th><th>Wellness That Day</th></tr></thead>
+          <tbody>${sRows}</tbody>
+        </table></div>
+      </div>`;
+    }).join('');
+    histPPanel.innerHTML=`<div id="hist-plans-content">${html||'<div class="empty-s">No plan sessions logged yet.</div>'}</div>`;
+  }
+}
+
+// ATHLETE LOGS
+function renderAthleteLogs(){
+  const filter=document.getElementById('logs-ath-filter');const prev=filter.value;
+  filter.innerHTML='<option value="all">All Athletes</option>'+ALL_ATHLETES.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
+  if(prev&&(prev==='all'||ALL_ATHLETES.find(a=>a.id===prev)))filter.value=prev;
+  document.getElementById('logs-w-panel').style.display=logsTab==='wellness'?'block':'none';
+  document.getElementById('logs-t-panel').style.display=logsTab==='training'?'block':'none';
+  document.getElementById('logs-tab-w').className='tab-btn'+(logsTab==='wellness'?' active':'');
+  document.getElementById('logs-tab-t').className='tab-btn'+(logsTab==='training'?' active':'');
+  renderAthleteLogsData();
+}
+function switchLogsTab(tab){logsTab=tab;document.getElementById('logs-w-panel').style.display=tab==='wellness'?'block':'none';document.getElementById('logs-t-panel').style.display=tab==='training'?'block':'none';document.getElementById('logs-tab-w').className='tab-btn'+(tab==='wellness'?' active':'');document.getElementById('logs-tab-t').className='tab-btn'+(tab==='training'?' active':'');renderAthleteLogsData();}
+function renderAthleteLogsData(){
+  const sel=document.getElementById('logs-ath-filter').value;
+  let wellness=[...ALL_WELLNESS].sort((a,b)=>b.log_date.localeCompare(a.log_date));
+  let training=[...ALL_TRAINING].sort((a,b)=>b.log_date.localeCompare(a.log_date));
+  if(sel!=='all'){wellness=wellness.filter(w=>w.athlete_id===sel);training=training.filter(t=>t.athlete_id===sel);}
+
+  const delBtn=(fn,id)=>`<button onclick="${fn}('${id}')" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:5px;padding:2px 7px;color:#EF4444;font-size:.7rem;cursor:pointer" title="Delete">🗑</button>`;
+
+  const wRows=wellness.map(w=>{
+    const a=ALL_ATHLETES.find(x=>x.id===w.athlete_id);const wc=wcol(w.score);
+    return`<tr><td style="color:#94A3B8">${fmtDate(w.log_date)}</td><td style="font-weight:600;color:#E2E8F0">${a?a.name:'?'}</td><td>${w.sleep}</td><td>${w.fatigue}</td><td>${w.soreness}</td><td>${w.stress}</td><td>${w.mood}</td><td style="font-weight:700;color:${wc.hex}">${w.score}%</td><td><span class="badge ${wc.cls}">${wc.label}</span></td><td>${delBtn('deleteWellnessLog',w.id)}</td></tr>`;
+  }).join('');
+  document.getElementById('coach-w-tbody').innerHTML=wRows||'<tr><td colspan="10"><div class="empty-s">No wellness logs.</div></td></tr>';
+
+  const tRows=training.map(t=>{
+    const a=ALL_ATHLETES.find(x=>x.id===t.athlete_id);
+    return`<tr><td style="color:#94A3B8">${fmtDate(t.log_date)}</td><td style="font-weight:600;color:#E2E8F0">${a?a.name:'?'}</td><td>${t.session_type}</td><td>${t.duration_mins} min</td><td>${t.rpe}</td><td style="font-weight:700;color:#60A5FA">${t.au}</td><td>${delBtn('deleteSessionLog',t.id)}</td></tr>`;
+  }).join('');
+  document.getElementById('coach-t-tbody').innerHTML=tRows||'<tr><td colspan="7"><div class="empty-s">No session logs.</div></td></tr>';
+}
+
+async function deleteWellnessLog(id){
+  if(!confirm('Delete this wellness log?\nThis cannot be undone.'))return;
+  try{
+    await dbDelete('wellness_logs',`?id=eq.${id}`);
+    await loadAllData();renderAthleteLogsData();
+    toast('Wellness log deleted.');
+  }catch(e){toast('Error: '+e.message,'err');}
+}
+
+async function deleteSessionLog(id){
+  if(!confirm('Delete this session log?\nThis cannot be undone.'))return;
+  try{
+    await dbDelete('training_logs',`?id=eq.${id}`);
+    await loadAllData();renderAthleteLogsData();
+    toast('Session log deleted.');
+  }catch(e){toast('Error: '+e.message,'err');}
+}
+
+// ADD ATHLETE
+async function addAthlete(){
+  const name=document.getElementById('new-ath-name').value.trim();
+  const pos=document.getElementById('new-ath-pos').value.trim();
+  const age=parseInt(document.getElementById('new-ath-age').value);
+  const discipline=document.getElementById('new-ath-discipline').value;
+  const username=document.getElementById('new-ath-user').value.trim().toLowerCase();
+  const password=document.getElementById('new-ath-pass').value.trim();
+  if(!name||!pos||!username||!password){toast('All fields required.','err');return;}
+  if(!age||age<14){toast('Valid age required.','err');return;}
+  try{
+    const userRes=await dbPost('users',{name,username,password,role:'athlete'});
+    await dbPost('athletes',{user_id:userRes[0].id,name,position:pos,age,discipline});
+    await loadAllData();
+    ['new-ath-name','new-ath-pos','new-ath-age','new-ath-user','new-ath-pass'].forEach(id=>document.getElementById(id).value='');
+    toast('✅ '+name+' added! ('+discipline+') Login: '+username+' / '+password);
+  }catch(e){toast('Error: '+e.message,'err');}
+}
+
+// MY PLAN
+function renderMyPlan(){
+  if(!SESSION)return;
+  const myPlans=ALL_PLANS.filter(p=>p.assignedTo&&p.assignedTo.includes(SESSION.athlete_id));
+  const wf=document.getElementById('plan-filter-week');
+  if(myPlans.length===0){
+    wf.style.display='none';
+    document.getElementById('my-plan-content').innerHTML='<div class="empty-s"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>No plans assigned yet. Your coach will publish one soon.</div>';
+    return;
+  }
+  wf.style.display='';
+  const weeks=[...new Set(myPlans.map(p=>p.week_number))].sort((a,b)=>a-b);
+  const curVal=wf.value;
+  wf.innerHTML='<option value="all">All Plans</option>'+weeks.map(w=>`<option value="${w}">Week ${w}</option>`).join('');
+  const validVals=['all',...weeks.map(w=>String(w))];
+  wf.value=validVals.includes(curVal)?curVal:'all';
+  const filtered=wf.value==='all'?myPlans:myPlans.filter(p=>String(p.week_number)===wf.value);
+  document.getElementById('my-plan-content').innerHTML=filtered.map(p=>renderPlanCard(p)).join('');
+}
+
+function renderPlanCard(p){
+  const exs=p.exercises||[];
+  const totSets=exs.reduce((s,e)=>s+e.sets,0);
+  const totReps=exs.reduce((s,e)=>s+e.sets*e.reps,0);
+  const totVol=exs.reduce((s,e)=>(e.unit==='kg'||e.unit==='lb')?s+e.sets*e.reps*e.weight:s,0);
+  const avgRPE=exs.length>0?(exs.reduce((s,e)=>s+e.rpe,0)/exs.length):6;
+  const totalRest=exs.reduce((s,e)=>s+e.rest*e.sets,0);
+  const estDur=Math.round((totSets*45+totalRest)/60);
+  const estAU=Math.round(estDur*avgRPE);
+  const exRows=exs.map((e,i)=>{
+    // Smart load display
+    let loadDisplay='BW';
+    if(e.unit==='%1RM') loadDisplay=`<span style="color:#A78BFA;font-weight:700">${e.weight}% 1RM</span>`;
+    else if(e.unit==='BW'&&e.weight>0) loadDisplay=`BW +${e.weight}kg`;
+    else if(e.unit==='BW') loadDisplay='BW';
+    else if(e.weight>0) loadDisplay=`${e.weight} ${e.unit}`;
+    // Volume calc (only for kg/lb)
+    let volDisplay='—';
+    if((e.unit==='kg'||e.unit==='lb')&&e.weight>0) volDisplay=Math.round(e.sets*e.reps*e.weight).toLocaleString()+' '+e.unit;
+    else if(e.unit==='%1RM') volDisplay=`${e.sets}×${e.reps} @ ${e.weight}%`;
+    return`<tr>
+      <td style="font-weight:600;color:#E2E8F0">${i+1}. ${e.name}</td>
+      <td style="font-weight:700;color:#60A5FA;text-align:center">${e.sets}</td>
+      <td style="font-weight:700;color:#A78BFA;text-align:center">${e.reps}</td>
+      <td style="text-align:center;font-family:monospace;color:#F59E0B">${e.tempo||'—'}</td>
+      <td style="font-weight:700;color:#22C55E;text-align:center">${loadDisplay}</td>
+      <td style="text-align:center;color:#94A3B8">${e.distance||'—'}</td>
+      <td style="text-align:center;font-weight:600;color:#E2E8F0">${e.intensity}%</td>
+      <td style="text-align:center;font-weight:700;color:#EF4444">${e.rpe}</td>
+      <td style="text-align:center;color:#94A3B8">${e.rest>0?e.rest+'s':'—'}</td>
+      <td style="font-weight:700;color:#22C55E;text-align:center">${volDisplay}</td>
+    </tr>`;
+  }).join('');
+  const statsBar=[['Exercises',exs.length,'#60A5FA'],['Sets',totSets,'#60A5FA'],['Reps',totReps,'#A78BFA'],['Volume',Math.round(totVol).toLocaleString()+' kg','#22C55E'],['Duration',estDur+' min','#F59E0B'],['Est. AU',estAU,'#EF4444']].map(([l,v,c])=>`<div style="padding:12px 10px;border-right:1px solid #232B3E;text-align:center"><p style="font-size:.6rem;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">${l}</p><p style="font-size:1rem;font-weight:800;color:${c}">${v}</p></div>`).join('');
+  return`<div class="sc" style="margin-bottom:18px">
+    <div class="sc-hd">
+      <div><p style="font-size:.94rem;font-weight:700;color:#E2E8F0;margin-bottom:4px">${p.name}</p>
+      <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap"><span class="badge bdg-b">${p.session_type||''}</span><span class="badge bdg-p">${p.phase||''}</span><span class="badge bdg-m">Week ${p.week_number}</span></div></div>
+      <div style="text-align:right"><p style="font-size:.84rem;font-weight:600;color:#E2E8F0">${fmtDate(p.session_date)}</p><p style="font-size:.76rem;color:#64748B;margin-top:2px">${fmtTime(p.session_time)}</p></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid #232B3E">${statsBar}</div>
+    ${p.notes?`<div style="padding:10px 18px;background:rgba(59,130,246,.05);border-bottom:1px solid #232B3E;font-size:.8rem;color:#94A3B8"><span style="font-weight:600;color:#60A5FA">Coach Note: </span>${p.notes}</div>`:''}
+    <div style="overflow-x:auto"><table class="apex-table">
+      <thead><tr><th>Exercise</th><th style="text-align:center">Sets</th><th style="text-align:center">Reps</th><th style="text-align:center">Tempo</th><th style="text-align:center">Load</th><th style="text-align:center">Distance</th><th style="text-align:center">Intensity</th><th style="text-align:center">RPE</th><th style="text-align:center">Rest</th><th style="text-align:center">Volume</th></tr></thead>
+      <tbody>${exRows}</tbody>
+    </table></div>
+  </div>`;
+}
+
+// WELLNESS
+function resetWellnessForm(){
+  ['sleep','fatigue','soreness','stress','mood'].forEach(k=>{document.getElementById('sl-'+k).value=3;document.getElementById('val-'+k).textContent=3;});
+  calcWellness();
+}
+function updSlider(k,v){document.getElementById('val-'+k).textContent=v;calcWellness();}
+function calcWellness(){
+  const keys=['sleep','fatigue','soreness','stress','mood'];
+  const total=keys.reduce((s,k)=>s+parseInt(document.getElementById('sl-'+k).value),0);
+  const pct=Math.round((total/25)*100);const wc=wcol(pct);
+  const ring=document.getElementById('wellness-ring');
+  ring.textContent=pct+'%';ring.style.color=wc.hex;ring.style.borderColor=wc.hex;ring.style.background=wc.hex+'1A';
+  const lbl=document.getElementById('w-status-lbl');lbl.textContent=wc.label;lbl.style.color=wc.hex;
+  return pct;
+}
+async function submitWellness(){
+  if(!SESSION?.athlete_id){toast('Athlete profile not found.','err');return;}
+  const pct=calcWellness();
+  const btn=document.getElementById('submit-wellness-btn');btn.innerHTML='<span class="loader"></span> Saving...';btn.disabled=true;
+  try{
+    await dbDelete('wellness_logs',`?athlete_id=eq.${SESSION.athlete_id}&log_date=eq.${todayStr()}`);
+    await dbPost('wellness_logs',{athlete_id:SESSION.athlete_id,log_date:todayStr(),
+      sleep:parseInt(document.getElementById('sl-sleep').value),
+      fatigue:parseInt(document.getElementById('sl-fatigue').value),
+      soreness:parseInt(document.getElementById('sl-soreness').value),
+      stress:parseInt(document.getElementById('sl-stress').value),
+      mood:parseInt(document.getElementById('sl-mood').value),score:pct});
+    await loadAllData();toast('✅ Wellness saved! Score: '+pct+'%');resetWellnessForm();
+  }catch(e){toast('Error: '+e.message,'err');}
+  btn.innerHTML='Submit Check-In';btn.disabled=false;
+}
+
+// SESSION LOG
+function resetSessionLog(){
+  document.getElementById('tl-date').value=todayStr();
+  document.getElementById('tl-dur').value='';
+  document.getElementById('tl-rpe').value=5;
+  document.getElementById('rpe-val').textContent=5;
+  document.getElementById('au-live').textContent='—';
+  // Reset custom select
+  const sel=document.getElementById('tl-type');
+  if(sel){sel.selectedIndex=0;sel.dataset.customVal='';}
+  const div=document.getElementById('tl-type-custom');
+  if(div){div.classList.remove('show');const inp=div.querySelector('input');if(inp)inp.value='';}
+}
+function calcAU(){
+  const dur=parseInt(document.getElementById('tl-dur').value)||0;
+  const rpe=parseInt(document.getElementById('tl-rpe').value)||0;
+  document.getElementById('au-live').textContent=(dur>0&&rpe>0)?(dur*rpe):'—';
+}
+async function submitSessionLog(){
+  if(!SESSION?.athlete_id){toast('Athlete profile not found.','err');return;}
+  const dur=parseInt(document.getElementById('tl-dur').value);
+  const rpe=parseInt(document.getElementById('tl-rpe').value);
+  const date=document.getElementById('tl-date').value;
+  if(!dur||dur<1){toast('Enter duration.','err');return;}
+  if(!date){toast('Select date.','err');return;}
+  const btn=document.getElementById('submit-session-btn');btn.innerHTML='<span class="loader"></span> Saving...';btn.disabled=true;
+  try{
+    await dbPost('training_logs',{athlete_id:SESSION.athlete_id,log_date:date,session_type:getSelectVal('tl-type'),duration_mins:dur,rpe,au:dur*rpe});
+    await loadAllData();toast('✅ Session logged! AU: '+(dur*rpe));resetSessionLog();
+  }catch(e){toast('Error: '+e.message,'err');}
+  btn.innerHTML='Log Session';btn.disabled=false;
+}
+
+// MY HISTORY - handled by new functions above
+</script>
+
+
+</body></html>
