@@ -377,6 +377,7 @@
 <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22APEX%20AMS%22%2C%22short_name%22%3A%22APEX%20AMS%22%2C%22description%22%3A%22Athlete%20Monitoring%20System%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230B0E14%22%2C%22theme_color%22%3A%22%230B0E14%22%2C%22orientation%22%3A%22portrait%22%7D">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0B0E14;color:#E2E8F0;font-family:'Inter',system-ui,sans-serif;min-height:100vh}
@@ -528,7 +529,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <p id="topbar-role" style="font-size:.64rem;color:#64748B;text-transform:uppercase;letter-spacing:.06em"></p>
     </div>
   </div>
-  <div id="live-clock" style="font-size:.74rem;color:#475569;font-variant-numeric:tabular-nums;min-width:130px;text-align:right">25 Jun · 16:29:38</div>
+  <div id="live-clock" style="font-size:.74rem;color:#475569;font-variant-numeric:tabular-nums;min-width:130px;text-align:right">25 Jun · 17:17:22</div>
   <!-- Download App Button in Topbar -->
   <button onclick="downloadApp()" title="Download App File" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:7px;padding:5px 10px;color:#22C55E;font-size:.72rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap">
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -1281,32 +1282,55 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 const SB_URL='https://sgdqgtunzjokdyairoey.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNnZHFndHVuempva2R5YWlyb2V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMDI0NDYsImV4cCI6MjA5Nzc3ODQ0Nn0.0YhpVPxz96j9eX0T_t-4WXMb_kZmdSLeuxwNhKyNS94';
 
+// Supabase JS Client — handles CORS automatically
+const _sbc=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+
 let SESSION=null,ALL_ATHLETES=[],ALL_WELLNESS=[],ALL_TRAINING=[],ALL_INJURIES=[],ALL_PLANS=[];
 let chartWL_inst=null,chartACWR_inst=null,exCount=0,logsTab='wellness';
 
-async function sb(method,table,body=null,params=''){
-  const url=`${SB_URL}/rest/v1/${table}${params}`;
-  const opts={
-    method,
-    mode:'cors',
-    headers:{
-      'apikey':SB_KEY,
-      'Authorization':`Bearer ${SB_KEY}`,
-      'Content-Type':'application/json',
-      'Prefer':method==='POST'?'return=representation':'',
-      'X-Client-Info':'apex-ams/1.0'
-    }
-  };
-  if(body) opts.body=JSON.stringify(body);
-  const res=await fetch(url,opts);
-  if(!res.ok){const err=await res.text();throw new Error(`${res.status}: ${err}`);}
-  if(res.status===204) return[];
-  return res.json();
+// Database helpers using Supabase JS (no CORS issues)
+async function dbGet(table,params=''){
+  let sel='*';
+  const selM=params.match(/[?&]select=([^&]+)/);
+  if(selM) sel=decodeURIComponent(selM[1]);
+  let q=_sbc.from(table).select(sel);
+  // eq filters
+  const eqs=[...params.matchAll(/[?&]([a-z_]+)=eq\.([^&]+)/g)];
+  eqs.forEach(m=>{if(!['select','order','limit'].includes(m[1]))q=q.eq(m[1],decodeURIComponent(m[2]));});
+  // order
+  const ordM=params.match(/order=([a-z_]+)\.(asc|desc)/);
+  if(ordM) q=q.order(ordM[1],{ascending:ordM[2]==='asc'});
+  // limit
+  const limM=params.match(/limit=(\d+)/);
+  if(limM) q=q.limit(parseInt(limM[1]));
+  const {data,error}=await q;
+  if(error) throw new Error(error.message);
+  return data||[];
 }
-const dbGet=(table,params='')=>sb('GET',table,null,params);
-const dbPost=(table,body)=>sb('POST',table,body);
-const dbPatch=(table,body,params)=>sb('PATCH',table,body,params);
-const dbDelete=(table,params)=>sb('DELETE',table,null,params);
+
+async function dbPost(table,body){
+  const {data,error}=await _sbc.from(table).insert(body).select();
+  if(error) throw new Error(error.message);
+  return data||[];
+}
+
+async function dbPatch(table,body,params=''){
+  let q=_sbc.from(table).update(body);
+  const eqs=[...params.matchAll(/[?&]([a-z_]+)=eq\.([^&]+)/g)];
+  eqs.forEach(m=>{q=q.eq(m[1],decodeURIComponent(m[2]));});
+  const {data,error}=await q.select();
+  if(error) throw new Error(error.message);
+  return data||[];
+}
+
+async function dbDelete(table,params=''){
+  let q=_sbc.from(table).delete();
+  const eqs=[...params.matchAll(/[?&]([a-z_]+)=eq\.([^&]+)/g)];
+  eqs.forEach(m=>{q=q.eq(m[1],decodeURIComponent(m[2]));});
+  const {error}=await q;
+  if(error) throw new Error(error.message);
+  return[];
+}
 
 const todayStr=()=>new Date().toISOString().split('T')[0];
 const rnd=()=>Math.random().toString(36).substr(2,8);
