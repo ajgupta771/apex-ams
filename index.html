@@ -170,7 +170,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <p id="topbar-role" style="font-size:.64rem;color:#64748B;text-transform:uppercase;letter-spacing:.06em"></p>
     </div>
   </div>
-  <div id="live-clock" style="font-size:.74rem;color:#475569;font-variant-numeric:tabular-nums;min-width:130px;text-align:right">25 Jun · 17:48:42</div>
+  <div id="live-clock" style="font-size:.74rem;color:#475569;font-variant-numeric:tabular-nums;min-width:130px;text-align:right">26 Jun · 22:24:35</div>
   <!-- Download App Button in Topbar -->
   <button onclick="downloadApp()" title="Download App File" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:7px;padding:5px 10px;color:#22C55E;font-size:.72rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap">
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -620,103 +620,145 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
 <!-- MANAGE ATHLETES — Full Edit All Fields -->
 <div id="page-manage-athletes" class="view-page">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
     <div>
-      <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Manage Athletes</h1>
-      <p style="font-size:.78rem;color:#475569;margin-top:3px">Click Edit to change any athlete's data</p>
+      <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Manage Users</h1>
+      <p style="font-size:.78rem;color:#475569;margin-top:3px">Edit athletes and coach/admin accounts</p>
     </div>
     <button class="bg-btn" onclick="renderManageAthletes()" style="display:flex;align-items:center;gap:5px">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 .49-3.49"></path></svg>Refresh
     </button>
   </div>
 
-  <div style="display:grid;grid-template-columns:1fr 420px;gap:18px;align-items:start">
+  <!-- Tabs -->
+  <div style="border-bottom:1px solid #232B3E;margin-bottom:18px;display:flex">
+    <button class="tab-btn active" id="manage-tab-ath" onclick="switchManageTab('athletes')">👤 Athletes</button>
+    <button class="tab-btn" id="manage-tab-coach" onclick="switchManageTab('coaches')">🛡️ Coach / Admin</button>
+  </div>
 
-    <!-- Athletes Table -->
-    <div class="sc">
-      <div class="sc-hd">
-        <span style="font-size:.86rem;font-weight:600;color:#E2E8F0">All Athletes</span>
-        <span class="badge bdg-r" style="font-size:.64rem">🔒 Coach Only</span>
-      </div>
-      <div style="overflow-x:auto">
-        <table class="apex-table">
-          <thead><tr><th>Name</th><th>Sport</th><th>Position</th><th>Age</th><th>Username</th><th>Password</th><th>Action</th></tr></thead>
-          <tbody id="manage-ath-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Edit Panel -->
-    <div id="edit-ath-panel" style="display:none">
+  <!-- ATHLETES TAB -->
+  <div id="manage-ath-panel">
+    <div style="display:grid;grid-template-columns:1fr 420px;gap:18px;align-items:start">
       <div class="sc">
         <div class="sc-hd">
-          <span style="font-size:.86rem;font-weight:600;color:#E2E8F0" id="edit-ath-title">✏️ Edit Athlete</span>
-          <button onclick="closeEditAth()" style="background:none;border:none;color:#64748B;cursor:pointer;font-size:1.1rem;line-height:1">✕</button>
+          <span style="font-size:.86rem;font-weight:600;color:#E2E8F0">All Athletes</span>
+          <span class="badge bdg-r" style="font-size:.64rem">🔒 Coach Only</span>
         </div>
-        <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
-          <input type="hidden" id="edit-ath-id">
-          <input type="hidden" id="edit-ath-user-id">
-
-          <!-- Profile Info -->
-          <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px 12px;margin-bottom:4px">
-            <p style="font-size:.68rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">📋 Profile Info</p>
-            <div style="display:flex;flex-direction:column;gap:10px">
-              <div><label class="al">Full Name</label><input type="text" id="edit-ath-name" class="ai" placeholder="Full name"></div>
-              <div class="fg fg-2">
-                <div><label class="al">Position / Role</label><input type="text" id="edit-ath-pos" class="ai" placeholder="e.g. Striker"></div>
-                <div><label class="al">Age</label><input type="number" id="edit-ath-age" class="ai" placeholder="22" min="14" max="60"></div>
-              </div>
-              <div>
-                <label class="al">Discipline / Sport</label>
-                <select id="edit-ath-discipline" class="as">
-                  <option value="Football">⚽ Football / Soccer</option>
-                  <option value="Boxing">🥊 Boxing</option>
-                  <option value="Calisthenics">💪 Calisthenics</option>
-                  <option value="Cricket">🏏 Cricket</option>
-                  <option value="Basketball">🏀 Basketball</option>
-                  <option value="Badminton">🏸 Badminton</option>
-                  <option value="Tennis">🎾 Tennis</option>
-                  <option value="Swimming">🏊 Swimming</option>
-                  <option value="Athletics">🏃 Athletics / Track</option>
-                  <option value="Weightlifting">🏋️ Weightlifting</option>
-                  <option value="MMA">🥋 MMA / Martial Arts</option>
-                  <option value="Cycling">🚴 Cycling</option>
-                  <option value="Volleyball">🏐 Volleyball</option>
-                  <option value="Hockey">🏑 Hockey</option>
-                  <option value="Rugby">🏉 Rugby</option>
-                  <option value="General S&amp;C">💪 General S&amp;C</option>
-                  <option value="Other">🎯 Other</option>
-                </select>
-              </div>
-            </div>
+        <div style="overflow-x:auto">
+          <table class="apex-table">
+            <thead><tr><th>Name</th><th>Sport</th><th>Position</th><th>Age</th><th>Username</th><th>Password</th><th>Action</th></tr></thead>
+            <tbody id="manage-ath-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="edit-ath-panel" style="display:none">
+        <div class="sc">
+          <div class="sc-hd">
+            <span style="font-size:.86rem;font-weight:600;color:#E2E8F0" id="edit-ath-title">✏️ Edit Athlete</span>
+            <button onclick="closeEditAth()" style="background:none;border:none;color:#64748B;cursor:pointer;font-size:1.1rem;line-height:1">✕</button>
           </div>
-
-          <!-- Login Credentials -->
-          <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px 12px">
-            <p style="font-size:.68rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">🔐 Login Credentials</p>
-            <div style="display:flex;flex-direction:column;gap:10px">
-              <div><label class="al">Username</label><input type="text" id="edit-username" class="ai" placeholder="username"></div>
-              <div>
-                <label class="al">Password</label>
-                <div class="pw-wrap">
-                  <input type="password" id="edit-password" class="ai" placeholder="password">
-                  <button class="pw-eye" onclick="togglePw('edit-password',this)" type="button">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                  </button>
+          <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
+            <input type="hidden" id="edit-ath-id">
+            <input type="hidden" id="edit-ath-user-id">
+            <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px 12px">
+              <p style="font-size:.68rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">📋 Profile Info</p>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div><label class="al">Full Name</label><input type="text" id="edit-ath-name" class="ai" placeholder="Full name"></div>
+                <div class="fg fg-2">
+                  <div><label class="al">Position / Role</label><input type="text" id="edit-ath-pos" class="ai" placeholder="e.g. Striker"></div>
+                  <div><label class="al">Age</label><input type="number" id="edit-ath-age" class="ai" placeholder="22" min="14" max="60"></div>
+                </div>
+                <div><label class="al">Discipline / Sport</label>
+                  <select id="edit-ath-discipline" class="as">
+                    <option value="Football">⚽ Football / Soccer</option><option value="Boxing">🥊 Boxing</option>
+                    <option value="Calisthenics">💪 Calisthenics</option><option value="Cricket">🏏 Cricket</option>
+                    <option value="Basketball">🏀 Basketball</option><option value="Badminton">🏸 Badminton</option>
+                    <option value="Tennis">🎾 Tennis</option><option value="Swimming">🏊 Swimming</option>
+                    <option value="Athletics">🏃 Athletics / Track</option><option value="Weightlifting">🏋️ Weightlifting</option>
+                    <option value="MMA">🥋 MMA / Martial Arts</option><option value="Cycling">🚴 Cycling</option>
+                    <option value="Volleyball">🏐 Volleyball</option><option value="Hockey">🏑 Hockey</option>
+                    <option value="Rugby">🏉 Rugby</option><option value="General S&amp;C">💪 General S&amp;C</option>
+                    <option value="Other">🎯 Other</option>
+                  </select>
                 </div>
               </div>
             </div>
+            <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px 12px">
+              <p style="font-size:.68rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">🔐 Login Credentials</p>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div><label class="al">Username</label><input type="text" id="edit-username" class="ai" placeholder="username"></div>
+                <div><label class="al">Password</label>
+                  <div class="pw-wrap">
+                    <input type="password" id="edit-password" class="ai" placeholder="password">
+                    <button class="pw-eye" onclick="togglePw('edit-password',this)" type="button">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="bp" onclick="saveAllAthleteChanges()" style="flex:1;justify-content:center" id="save-ath-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>Save Changes
+              </button>
+              <button class="bg-btn" onclick="closeEditAth()">Cancel</button>
+            </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-          <div style="background:rgba(234,179,8,.06);border:1px solid rgba(234,179,8,.2);border-radius:7px;padding:9px 12px;font-size:.76rem;color:#94A3B8">
-            ⚠️ After saving, share updated credentials with athlete on WhatsApp if login changed.
+  <!-- COACH/ADMIN TAB -->
+  <div id="manage-coach-panel" style="display:none">
+    <div style="display:grid;grid-template-columns:1fr 380px;gap:18px;align-items:start">
+      <div class="sc">
+        <div class="sc-hd">
+          <span style="font-size:.86rem;font-weight:600;color:#E2E8F0">All Coaches / Admins</span>
+          <span class="badge bdg-b">Full Access</span>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="apex-table">
+            <thead><tr><th>Name</th><th>Username</th><th>Password</th><th>Role</th><th>Action</th></tr></thead>
+            <tbody id="manage-coach-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="edit-coach-panel" style="display:none">
+        <div class="sc">
+          <div class="sc-hd">
+            <span style="font-size:.86rem;font-weight:600;color:#E2E8F0" id="edit-coach-title">✏️ Edit Coach</span>
+            <button onclick="closeEditCoach()" style="background:none;border:none;color:#64748B;cursor:pointer;font-size:1.1rem;line-height:1">✕</button>
           </div>
-          <div style="display:flex;gap:8px">
-            <button class="bp" onclick="saveAllAthleteChanges()" style="flex:1;justify-content:center" id="save-ath-btn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Save All Changes
-            </button>
-            <button class="bg-btn" onclick="closeEditAth()">Cancel</button>
+          <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
+            <input type="hidden" id="edit-coach-user-id">
+            <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px 12px">
+              <p style="font-size:.68rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">👤 Profile</p>
+              <div><label class="al">Full Name</label><input type="text" id="edit-coach-name" class="ai" placeholder="Coach name"></div>
+            </div>
+            <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px 12px">
+              <p style="font-size:.68rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">🔐 Login Credentials</p>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div><label class="al">Username</label><input type="text" id="edit-coach-username" class="ai" placeholder="username"></div>
+                <div><label class="al">New Password</label>
+                  <div class="pw-wrap">
+                    <input type="password" id="edit-coach-password" class="ai" placeholder="new password">
+                    <button class="pw-eye" onclick="togglePw('edit-coach-password',this)" type="button">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:7px;padding:9px 12px;font-size:.76rem;color:#94A3B8">
+              💡 Apna khud ka password bhi yahan se change kar sakte ho!
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="bp" onclick="saveCoachChanges()" style="flex:1;justify-content:center" id="save-coach-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>Save Changes
+              </button>
+              <button class="bg-btn" onclick="closeEditCoach()">Cancel</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1297,6 +1339,89 @@ async function saveAllAthleteChanges(){
 // Legacy stubs (kept for compatibility)
 function cancelEdit(){closeEditAth();}
 async function saveUserChanges(){await saveAllAthleteChanges();}
+
+// ─── MANAGE TAB SWITCH ───
+function switchManageTab(tab){
+  document.getElementById('manage-ath-panel').style.display=tab==='athletes'?'block':'none';
+  document.getElementById('manage-coach-panel').style.display=tab==='coaches'?'block':'none';
+  document.getElementById('manage-tab-ath').className='tab-btn'+(tab==='athletes'?' active':'');
+  document.getElementById('manage-tab-coach').className='tab-btn'+(tab==='coaches'?' active':'');
+  if(tab==='coaches') renderCoachList();
+}
+
+// ─── COACH/ADMIN LIST ───
+function renderCoachList(){
+  dbGet('users','?role=eq.coach&select=*&order=name').then(coaches=>{
+    const rows=(coaches||[]).map(c=>{
+      const isSelf=SESSION&&SESSION.id===c.id;
+      return`<tr>
+        <td style="font-weight:600;color:#E2E8F0">${c.name}${isSelf?'<span class="badge bdg-b" style="margin-left:6px;font-size:.58rem">You</span>':''}</td>
+        <td><code style="background:#0B0E14;padding:2px 7px;border-radius:4px;font-size:.76rem;color:#60A5FA">${c.username}</code></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span id="cpw-${c.id}" style="font-family:monospace;font-size:.76rem;color:#94A3B8">••••••</span>
+            <button onclick="event.stopPropagation();toggleShowPw('cpw-${c.id}','${c.password}')" style="background:none;border:none;cursor:pointer;color:#64748B;padding:2px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </td>
+        <td><span class="badge bdg-b">Coach</span></td>
+        <td>
+          <button onclick="openEditCoach('${c.id}','${c.name}','${c.username}')"
+            style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:4px 10px;color:#60A5FA;font-size:.74rem;font-weight:600;cursor:pointer">
+            ✏️ Edit
+          </button>
+        </td>
+      </tr>`;
+    }).join('');
+    document.getElementById('manage-coach-tbody').innerHTML=rows||'<tr><td colspan="5"><div class="empty-s">No coaches found.</div></td></tr>';
+  }).catch(e=>toast('Error: '+e.message,'err'));
+}
+
+function openEditCoach(userId,name,username){
+  document.getElementById('edit-coach-panel').style.display='block';
+  document.getElementById('edit-coach-user-id').value=userId;
+  document.getElementById('edit-coach-title').textContent='✏️ Editing: '+name;
+  document.getElementById('edit-coach-name').value=name;
+  document.getElementById('edit-coach-username').value=username;
+  document.getElementById('edit-coach-password').value='';
+  document.getElementById('edit-coach-panel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function closeEditCoach(){
+  document.getElementById('edit-coach-panel').style.display='none';
+}
+
+async function saveCoachChanges(){
+  const userId=document.getElementById('edit-coach-user-id').value;
+  const name=document.getElementById('edit-coach-name').value.trim();
+  const username=document.getElementById('edit-coach-username').value.trim().toLowerCase();
+  const password=document.getElementById('edit-coach-password').value.trim();
+  if(!name||!username){toast('Name and username required.','err');return;}
+  const btn=document.getElementById('save-coach-btn');
+  btn.innerHTML='<span class="loader"></span>';btn.disabled=true;
+  try{
+    const updateData={name,username};
+    if(password) updateData.password=password;
+    await dbPatch('users',updateData,`?id=eq.${userId}`);
+    // Update session name if editing self
+    if(SESSION&&SESSION.id===userId){
+      SESSION.name=name;SESSION.username=username;
+      document.getElementById('topbar-name').textContent=name;
+    }
+    toast('✅ '+name+' updated!'+(password?' Password changed!':''));
+    closeEditCoach();
+    renderCoachList();
+  }catch(e){toast('Error: '+e.message,'err');}
+  btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Save Changes';
+  btn.disabled=false;
+}
+
+function toggleShowPw(elId,pw){
+  const el=document.getElementById(elId);
+  if(!el)return;
+  el.textContent=el.textContent.includes('•')?pw:'••••••';
+}
 
 // ─── ATHLETE PROFILE MODAL (Dashboard click) ───
 function openAthModal(athId){
