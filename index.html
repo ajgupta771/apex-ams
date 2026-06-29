@@ -1,22 +1,24 @@
-<html lang="en"><head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>APEX AMS — Cloud</title>
 
 <!-- PWA Meta Tags -->
-<meta name="application-name" content="APEX AMS">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="APEX AMS">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0B0E14">
-<meta name="description" content="Athlete Monitoring System — Track wellness, training load &amp; injuries">
+<meta name="application-name" content="APEX AMS"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="APEX AMS"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#0B0E14"/>
+<meta name="description" content="Athlete Monitoring System — Track wellness, training load & injuries"/>
 
 <!-- PWA Icons (inline SVG as data URL) -->
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230B0E14'/%3E%3Crect x='40' y='40' width='432' height='432' rx='80' fill='url(%23g)'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B82F6'/%3E%3Cstop offset='1' stop-color='%238B5CF6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolyline points='480,256 390,256 325,455 195,57 130,256 32,256' fill='none' stroke='white' stroke-width='48' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230B0E14'/%3E%3Crect x='40' y='40' width='432' height='432' rx='80' fill='url(%23g)'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B82F6'/%3E%3Cstop offset='1' stop-color='%238B5CF6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolyline points='480,256 390,256 325,455 195,57 130,256 32,256' fill='none' stroke='white' stroke-width='48' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"/>
 
 <!-- PWA Manifest (inline) -->
-<link rel="manifest" href="data:application/json,%7B%22name%22%3A%22APEX%20AMS%22%2C%22short_name%22%3A%22APEX%20AMS%22%2C%22description%22%3A%22Athlete%20Monitoring%20System%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230B0E14%22%2C%22theme_color%22%3A%22%230B0E14%22%2C%22orientation%22%3A%22portrait%22%7D">
+<link rel="manifest" href="data:application/json,%7B%22name%22%3A%22APEX%20AMS%22%2C%22short_name%22%3A%22APEX%20AMS%22%2C%22description%22%3A%22Athlete%20Monitoring%20System%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230B0E14%22%2C%22theme_color%22%3A%22%230B0E14%22%2C%22orientation%22%3A%22portrait%22%7D"/>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
@@ -74,6 +76,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 @media(max-width:768px){.fg-2,.fg-3{grid-template-columns:1fr}#wb-layout{grid-template-columns:1fr!important}#inj-layout{grid-template-columns:1fr!important}}
 .loader{width:18px;height:18px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* Date Filter Bar */
+.df-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;background:#1A2035;border:1px solid #232B3E;border-radius:10px;margin-bottom:14px}
+.df-bar label{font-size:.7rem;color:#64748B;font-weight:700;text-transform:uppercase;white-space:nowrap}
+.df-bar .ai{padding:4px 8px;font-size:.76rem;width:auto}
+.df-bar .as{padding:4px 8px;font-size:.76rem;width:auto}
+.df-quick{display:flex;gap:3px}
+.df-quick button{background:#0B0E14;border:1px solid #232B3E;border-radius:5px;padding:3px 8px;color:#64748B;cursor:pointer;font-size:.7rem;font-weight:600;transition:all .15s}
+.df-quick button:hover,.df-quick button.active{background:rgba(59,130,246,.15);border-color:#3B82F6;color:#60A5FA}
+
 
 /* ── CUSTOM SELECT WITH "OTHER" SUPPORT ── */
 .cs-wrap{position:relative}
@@ -98,7 +109,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   @page{margin:12mm;size:A4}
 }
 </style>
-<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}</style></head>
+</head>
 <body>
 <div id="toast-c"></div>
 
@@ -107,7 +118,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   <div class="login-box">
     <div style="text-align:center;margin-bottom:28px">
       <div style="width:52px;height:52px;background:linear-gradient(135deg,#3B82F6,#8B5CF6);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 0 24px rgba(59,130,246,.3)">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       </div>
       <h1 style="font-size:1.5rem;font-weight:800;color:#E2E8F0;margin-bottom:4px">APEX<span style="color:#3B82F6">AMS</span></h1>
       <p style="font-size:.8rem;color:#64748B">Athlete Monitoring System</p>
@@ -115,14 +126,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <div style="display:flex;flex-direction:column;gap:16px">
       <div>
         <label class="al">Username</label>
-        <input type="text" id="login-username" class="ai" placeholder="Enter your username" onkeydown="if(event.key==='Enter')doLogin()">
+        <input type="text" id="login-username" class="ai" placeholder="Enter your username" onkeydown="if(event.key==='Enter')doLogin()"/>
       </div>
       <div>
         <label class="al">Password</label>
         <div class="pw-wrap">
-          <input type="password" id="login-password" class="ai" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()">
+          <input type="password" id="login-password" class="ai" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()"/>
           <button class="pw-eye" onclick="togglePw('login-password',this)" type="button">
-            <svg id="eye-icon-login" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <svg id="eye-icon-login" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
       </div>
@@ -136,13 +147,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     </div>
     <div style="margin-top:12px;text-align:center">
       <button onclick="downloadApp()" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:7px;padding:7px 16px;color:#22C55E;cursor:pointer;font-size:.76rem;font-weight:600;display:inline-flex;align-items:center;gap:6px">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Download App File
       </button>
     </div>
-    <div style="margin-top:8px;text-align:center" id="pwa-install-div">
+    <div style="margin-top:8px;text-align:center" id="pwa-install-div" style="display:none">
       <button id="pwa-install-btn" onclick="installPWA()" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.25);border-radius:7px;padding:7px 16px;color:#A78BFA;cursor:pointer;font-size:.76rem;font-weight:600;display:inline-flex;align-items:center;gap:6px">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
         📱 Install as App
       </button>
     </div>
@@ -158,7 +169,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 <header id="topbar" style="background:#131720;border-bottom:1px solid #232B3E;height:54px;display:flex;align-items:center;padding:0 18px;gap:10px;position:sticky;top:0;z-index:200;flex-shrink:0">
   <div style="display:flex;align-items:center;gap:9px;min-width:200px">
     <div style="width:30px;height:30px;background:linear-gradient(135deg,#3B82F6,#8B5CF6);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     </div>
     <span style="font-weight:800;font-size:.95rem;letter-spacing:.06em;color:#E2E8F0">APEX<span style="color:#3B82F6">AMS</span></span>
   </div>
@@ -170,14 +181,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <p id="topbar-role" style="font-size:.64rem;color:#64748B;text-transform:uppercase;letter-spacing:.06em"></p>
     </div>
   </div>
-  <div id="live-clock" style="font-size:.74rem;color:#475569;font-variant-numeric:tabular-nums;min-width:130px;text-align:right">26 Jun · 22:24:35</div>
+  <div id="live-clock" style="font-size:.74rem;color:#475569;font-variant-numeric:tabular-nums;min-width:130px;text-align:right"></div>
   <!-- Download App Button in Topbar -->
   <button onclick="downloadApp()" title="Download App File" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:7px;padding:5px 10px;color:#22C55E;font-size:.72rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     App
   </button>
   <button onclick="doLogout()" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:7px;padding:5px 12px;color:#EF4444;font-size:.74rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
     Logout
   </button>
 </header>
@@ -190,27 +201,31 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   <nav style="padding:12px 8px;padding-bottom:50px">
     <div id="coach-nav" style="display:none">
       <div class="nav-sec">Overview</div>
-      <div class="nav-link active" data-page="dashboard" onclick="nav('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>Dashboard</div>
-      <div class="nav-link" data-page="roster" onclick="nav('roster')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Roster</div>
+      <div class="nav-link active" data-page="dashboard" onclick="nav('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</div>
+      <div class="nav-link" data-page="roster" onclick="nav('roster')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Roster</div>
       <div class="nav-sec">Programme</div>
-      <div class="nav-link" data-page="workout-builder" onclick="nav('workout-builder')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>Workout Builder</div>
-      <div class="nav-link" data-page="plans-list" onclick="nav('plans-list')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>Saved Plans</div>
+      <div class="nav-link" data-page="workout-builder" onclick="nav('workout-builder')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>Workout Builder</div>
+      <div class="nav-link" data-page="plans-list" onclick="nav('plans-list')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Saved Plans</div>
       <div class="nav-sec">Monitoring</div>
-      <div class="nav-link" data-page="analytics" onclick="nav('analytics')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>Analytics</div>
-      <div class="nav-link" data-page="injuries" onclick="nav('injuries')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>Injury Tracker</div>
-      <div class="nav-link" data-page="athlete-logs" onclick="nav('athlete-logs')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>Athlete Logs</div>
+      <div class="nav-link" data-page="analytics" onclick="nav('analytics')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Analytics</div>
+      <div class="nav-link" data-page="injuries" onclick="nav('injuries')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Injury Tracker</div>
+      <div class="nav-link" data-page="athlete-logs" onclick="nav('athlete-logs')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Athlete Logs</div>
+      <div class="nav-link" data-page="menstrual-coach" onclick="nav('menstrual-coach')" style="color:#EC4899"><svg viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span style="color:#EC4899">Cycle Tracker</span></div>
       <div class="nav-sec">Manage</div>
-      <div class="nav-link" data-page="add-athlete" onclick="nav('add-athlete')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>Add Athlete</div>
-      <div class="nav-link" data-page="manage-athletes" onclick="nav('manage-athletes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Manage Athletes</div>
+      <div class="nav-link" data-page="add-athlete" onclick="nav('add-athlete')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>Add Athlete</div>
+      <div class="nav-link" data-page="manage-athletes" onclick="nav('manage-athletes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Manage Users</div>
+      <div class="nav-sec">Planning</div>
+      <div class="nav-link" data-page="calendar" onclick="nav('calendar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Weekly Calendar</div>
     </div>
     <div id="athlete-nav" style="display:none">
       <div class="nav-sec">My Programme</div>
-      <div class="nav-link active" data-page="my-plan" onclick="nav('my-plan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>My Plan</div>
-      <div class="nav-link" data-page="todays-session" onclick="nav('todays-session')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>Today's Sessions <span id="pending-badge" style="display:none;background:#EF4444;color:#fff;font-size:.6rem;padding:1px 5px;border-radius:8px;font-weight:700;margin-left:4px">!</span></div>
+      <div class="nav-link active" data-page="my-plan" onclick="nav('my-plan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>My Plan</div>
+      <div class="nav-link" data-page="todays-session" onclick="nav('todays-session')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Today's Sessions <span id="pending-badge" style="display:none;background:#EF4444;color:#fff;font-size:.6rem;padding:1px 5px;border-radius:8px;font-weight:700;margin-left:4px">!</span></div>
       <div class="nav-sec">Daily Logs</div>
-      <div class="nav-link" data-page="wellness-log" onclick="nav('wellness-log')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>Wellness Check-In</div>
-      <div class="nav-link" data-page="session-log" onclick="nav('session-log')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>Log Session RPE</div>
-      <div class="nav-link" data-page="my-history" onclick="nav('my-history')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 .49-3.49"></path></svg>My History</div>
+      <div class="nav-link" data-page="wellness-log" onclick="nav('wellness-log')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Wellness Check-In</div>
+      <div class="nav-link" data-page="session-log" onclick="nav('session-log')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Log Session RPE</div>
+      <div class="nav-link" data-page="my-history" onclick="nav('my-history')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.49"/></svg>My History</div>
+      <div id="mc-nav-link" class="nav-link" data-page="menstrual" onclick="nav('menstrual')" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span style="color:#EC4899">Cycle Tracker</span></div>
     </div>
   </nav>
   <div style="position:absolute;bottom:0;left:0;right:0;padding:10px;border-top:1px solid #232B3E;text-align:center;background:#131720">
@@ -227,38 +242,36 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <div><h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Executive Dashboard</h1><p id="dash-date" style="font-size:.78rem;color:#475569;margin-top:3px"></p></div>
     <div style="display:flex;gap:8px;align-items:center">
       <button onclick="exportAllDataCSV()" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:6px;padding:5px 10px;color:#22C55E;font-size:.76rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Export All
       </button>
       <button onclick="window.print()" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:5px 10px;color:#60A5FA;font-size:.76rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
         Print
       </button>
       <button class="bg-btn" onclick="renderDashboard()" style="display:flex;align-items:center;gap:5px;padding:5px 10px">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 .49-3.49"></path></svg>Refresh
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.49"/></svg>Refresh
       </button>
     </div>
   </div>
 
   <!-- Filter Bar -->
-  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;background:#1A2035;border:1px solid #232B3E;border-radius:10px;margin-bottom:18px">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-    <span style="font-size:.76rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em">Filter:</span>
-    <div style="display:flex;align-items:center;gap:6px">
-      <label style="font-size:.74rem;color:#64748B">Discipline:</label>
-      <select id="dash-discipline-filter" class="as" style="width:160px;padding:5px 10px;font-size:.78rem" onchange="renderDashboard()">
-        <option value="all">All Sports</option>
-      </select>
+  <div class="df-bar">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+    <label>Sport:</label>
+    <select id="dash-discipline-filter" class="as" style="width:140px" onchange="renderDashboard()"><option value="all">All Sports</option></select>
+    <label>Athlete:</label>
+    <select id="dash-player-filter" class="as" style="width:150px" onchange="renderDashboard()"><option value="all">All Athletes</option></select>
+    <label>From:</label><input type="date" id="dash-date-from" class="ai" style="width:130px" onchange="renderDashboard()"/>
+    <label>To:</label><input type="date" id="dash-date-to" class="ai" style="width:130px" onchange="renderDashboard()"/>
+    <div class="df-quick">
+      <button onclick="setDashRange(7)" id="dash-q7">7D</button>
+      <button onclick="setDashRange(30)" id="dash-q30">30D</button>
+      <button onclick="setDashRange(90)" id="dash-q90">3M</button>
+      <button onclick="setDashRange(365)" id="dash-q365">1Y</button>
+      <button onclick="setDashRange(0)">All</button>
     </div>
-    <div style="display:flex;align-items:center;gap:6px">
-      <label style="font-size:.74rem;color:#64748B">Athlete:</label>
-      <select id="dash-player-filter" class="as" style="width:170px;padding:5px 10px;font-size:.78rem" onchange="renderDashboard()">
-        <option value="all">All Athletes</option>
-      </select>
-    </div>
-    <button onclick="clearDashFilters()" style="background:none;border:none;color:#64748B;cursor:pointer;font-size:.74rem;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:5px;border:1px solid #232B3E" onmouseover="this.style.color='#E2E8F0'" onmouseout="this.style.color='#64748B'">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Clear
-    </button>
+    <button onclick="clearDashFilters()" style="background:none;border:1px solid #232B3E;border-radius:5px;padding:3px 8px;color:#64748B;cursor:pointer;font-size:.7rem">✕ Clear</button>
     <span id="dash-filter-badge" class="badge bdg-b" style="display:none"></span>
   </div>
 
@@ -287,13 +300,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
 <!-- WORKOUT BUILDER -->
 <div id="page-workout-builder" class="view-page">
-  <div style="margin-bottom:20px"><h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Workout Builder</h1><p style="font-size:.78rem;color:#475569;margin-top:3px">Design &amp; assign sessions to athletes</p></div>
+  <div style="margin-bottom:20px"><h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Workout Builder</h1><p style="font-size:.78rem;color:#475569;margin-top:3px">Design & assign sessions to athletes</p></div>
   <div id="wb-layout" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start">
     <div>
       <div class="sc" style="margin-bottom:16px">
         <div class="sc-hd"><span style="font-size:.86rem;font-weight:600;color:#E2E8F0">Plan Details</span></div>
         <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
-          <div><label class="al">Plan Name</label><input type="text" id="wb-name" class="ai" placeholder="e.g. Week 3 – Lower Strength"></div>
+          <div><label class="al">Plan Name</label><input type="text" id="wb-name" class="ai" placeholder="e.g. Week 3 – Lower Strength"/></div>
           <div class="fg fg-2">
             <div>
   <label class="al">Phase / Mesocycle</label>
@@ -305,15 +318,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <option value="__other__">✏️ Other (type custom)...</option>
     </select>
     <div class="cs-custom" id="wb-phase-custom">
-      <input type="text" class="ai" id="wb-phase-text" placeholder="Type your phase name..." oninput="syncCustom(this,'wb-phase')">
+      <input type="text" class="ai" id="wb-phase-text" placeholder="Type your phase name..." oninput="syncCustom(this,'wb-phase')"/>
     </div>
   </div>
 </div>
-            <div><label class="al">Week</label><input type="number" id="wb-week" class="ai" placeholder="1" min="1" max="52"></div>
+            <div><label class="al">Week</label><input type="number" id="wb-week" class="ai" placeholder="1" min="1" max="52"/></div>
           </div>
           <div class="fg fg-2">
-            <div><label class="al">Date</label><input type="date" id="wb-date" class="ai"></div>
-            <div><label class="al">Time</label><input type="time" id="wb-time" class="ai" value="06:30"></div>
+            <div><label class="al">Date</label><input type="date" id="wb-date" class="ai"/></div>
+            <div><label class="al">Time</label><input type="time" id="wb-time" class="ai" value="06:30"/></div>
           </div>
           <div>
   <label class="al">Session Type</label>
@@ -329,11 +342,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <option value="__other__">✏️ Other (type custom)...</option>
     </select>
     <div class="cs-custom" id="wb-type-custom">
-      <input type="text" class="ai" id="wb-type-text" placeholder="Type session type..." oninput="syncCustom(this,'wb-type')">
+      <input type="text" class="ai" id="wb-type-text" placeholder="Type session type..." oninput="syncCustom(this,'wb-type')"/>
     </div>
   </div>
 </div>
-          <div><label class="al">Coach Notes</label><input type="text" id="wb-notes" class="ai" placeholder="Focus points, warm-up..."></div>
+          <div><label class="al">Coach Notes</label><input type="text" id="wb-notes" class="ai" placeholder="Focus points, warm-up..."/></div>
           <div><label class="al">Assign To</label><div id="wb-assign-checks" style="display:flex;flex-direction:column;gap:6px;margin-top:4px"></div></div>
         </div>
       </div>
@@ -352,8 +365,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <div class="sc">
         <div class="sc-hd"><span style="font-size:.86rem;font-weight:600;color:#E2E8F0">Exercises</span><button class="bp" onclick="addExRow()" style="padding:5px 12px;font-size:.78rem">+ Add</button></div>
         <div class="sc-bd">
-          <div id="exercise-list" style="margin-bottom:12px;max-height:60vh;overflow-y:auto"><div class="empty-s" id="ex-empty-msg"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path></svg>Click + Add to build</div></div>
-          <div style="display:flex;gap:8px"><button class="bp" style="flex:1" id="save-plan-btn" onclick="savePlan()">Save &amp; Assign Plan</button><button class="bg-btn" onclick="clearBuilder()">Clear</button></div>
+          <div id="exercise-list" style="margin-bottom:12px;max-height:60vh;overflow-y:auto"><div class="empty-s" id="ex-empty-msg"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>Click + Add to build</div></div>
+          <div style="display:flex;gap:8px"><button class="bp" style="flex:1" id="save-plan-btn" onclick="savePlan()">Save & Assign Plan</button><button class="bg-btn" onclick="clearBuilder()">Clear</button></div>
         </div>
       </div>
     </div>
@@ -362,23 +375,127 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
 <!-- SAVED PLANS -->
 <div id="page-plans-list" class="view-page">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
     <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Saved Plans</h1>
-    <button class="bp" onclick="nav('workout-builder')">+ New Plan</button>
+    <div style="display:flex;gap:8px">
+      <button class="bg-btn" onclick="renderPlansList()" style="padding:5px 10px">↻ Refresh</button>
+      <button class="bp" onclick="nav('workout-builder')">+ New Plan</button>
+    </div>
+  </div>
+  <!-- Date Filter -->
+  <div class="df-bar">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+    <label>Sport:</label>
+    <select id="plans-disc-filter" class="as" style="width:130px" onchange="renderPlansList()"><option value="all">All Sports</option></select>
+    <label>Phase:</label>
+    <select id="plans-phase-filter" class="as" style="width:120px" onchange="renderPlansList()">
+      <option value="all">All Phases</option>
+      <option>Hypertrophy</option><option>Strength</option><option>Power</option>
+      <option>Peaking</option><option>Deload</option><option>Conditioning</option>
+    </select>
+    <label>From:</label><input type="date" id="plans-date-from" class="ai" style="width:130px" onchange="renderPlansList()"/>
+    <label>To:</label><input type="date" id="plans-date-to" class="ai" style="width:130px" onchange="renderPlansList()"/>
+    <div class="df-quick">
+      <button onclick="setPlanRange(7)">7D</button>
+      <button onclick="setPlanRange(30)">30D</button>
+      <button onclick="setPlanRange(90)">3M</button>
+      <button onclick="setPlanRange(0)">All</button>
+    </div>
+    <button onclick="clearPlanFilters()" style="background:none;border:1px solid #232B3E;border-radius:5px;padding:3px 8px;color:#64748B;cursor:pointer;font-size:.7rem">✕ Clear</button>
   </div>
   <div class="sc"><div style="overflow-x:auto"><table class="apex-table"><thead><tr><th>Plan Name</th><th>Type</th><th>Phase</th><th>Week</th><th>Date</th><th>Exercises</th><th>Assigned To</th><th>Actions</th></tr></thead><tbody id="plans-list-tbody"></tbody></table></div></div>
 </div>
 
 <!-- ANALYTICS -->
 <div id="page-analytics" class="view-page">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
     <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Analytics</h1>
-    <div style="display:flex;align-items:center;gap:8px"><label class="al" style="margin:0">Athlete:</label><select id="analytics-ath-sel" class="as" style="width:170px" onchange="renderAnalyticsCharts()"></select></div>
+    <button class="bg-btn" onclick="renderAnalyticsCharts()" style="display:flex;align-items:center;gap:5px;padding:5px 10px">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.49"/></svg>Refresh
+    </button>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
-    <div class="sc"><div class="sc-hd"><div><p style="font-size:.86rem;font-weight:600;color:#E2E8F0;margin-bottom:2px">Wellness vs Training Load</p><p style="font-size:.7rem;color:#64748B">7-day</p></div></div><div style="padding:14px"><div class="chart-wrap"><canvas id="chartWL"></canvas></div></div></div>
-    <div class="sc"><div class="sc-hd"><div><p style="font-size:.86rem;font-weight:600;color:#E2E8F0;margin-bottom:2px">ACWR</p><p style="font-size:.7rem;color:#64748B">28-day chronic</p></div></div><div style="padding:14px"><div class="chart-wrap"><canvas id="chartACWR"></canvas></div></div></div>
+
+  <!-- Filter Bar -->
+  <div style="background:#1A2035;border:1px solid #232B3E;border-radius:10px;padding:12px 16px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+      <span style="font-size:.72rem;font-weight:700;color:#64748B;text-transform:uppercase">Filter:</span>
+
+      <!-- View Mode -->
+      <div style="display:flex;align-items:center;gap:5px">
+        <label style="font-size:.72rem;color:#64748B">View:</label>
+        <select id="an-view-mode" class="as" style="width:130px;padding:4px 8px;font-size:.76rem" onchange="onAnViewChange()">
+          <option value="single">Single Athlete</option>
+          <option value="team">Team Overview</option>
+        </select>
+      </div>
+
+      <!-- Single Athlete selector -->
+      <div id="an-single-wrap" style="display:flex;align-items:center;gap:5px">
+        <label style="font-size:.72rem;color:#64748B">Athlete:</label>
+        <select id="analytics-ath-sel" class="as" style="width:160px;padding:4px 8px;font-size:.76rem" onchange="renderAnalyticsCharts()"></select>
+      </div>
+
+      <!-- Team selector -->
+      <div id="an-team-wrap" style="display:none;align-items:center;gap:5px">
+        <label style="font-size:.72rem;color:#64748B">Sport:</label>
+        <select id="an-team-disc" class="as" style="width:140px;padding:4px 8px;font-size:.76rem" onchange="renderAnalyticsCharts()">
+          <option value="all">All Sports</option>
+        </select>
+      </div>
+
+      <!-- Date Range -->
+      <div style="display:flex;align-items:center;gap:5px">
+        <label style="font-size:.72rem;color:#64748B">From:</label>
+        <input type="date" id="an-date-from" class="ai" style="width:130px;padding:4px 8px;font-size:.76rem" onchange="renderAnalyticsCharts()"/>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px">
+        <label style="font-size:.72rem;color:#64748B">To:</label>
+        <input type="date" id="an-date-to" class="ai" style="width:130px;padding:4px 8px;font-size:.76rem" onchange="renderAnalyticsCharts()"/>
+      </div>
+
+      <!-- Quick ranges -->
+      <div style="display:flex;gap:4px">
+        <button onclick="setAnRange(7)" class="bg-btn" style="padding:3px 8px;font-size:.7rem">7D</button>
+        <button onclick="setAnRange(28)" class="bg-btn" style="padding:3px 8px;font-size:.7rem">28D</button>
+        <button onclick="setAnRange(90)" class="bg-btn" style="padding:3px 8px;font-size:.7rem">3M</button>
+        <button onclick="setAnRange(365)" class="bg-btn" style="padding:3px 8px;font-size:.7rem">1Y</button>
+      </div>
+    </div>
   </div>
+
+  <!-- Charts Grid -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+    <div class="sc">
+      <div class="sc-hd"><div><p style="font-size:.84rem;font-weight:600;color:#E2E8F0">Wellness vs Training Load</p><p id="an-wl-sub" style="font-size:.68rem;color:#64748B">Selected period</p></div></div>
+      <div style="padding:12px"><div class="chart-wrap"><canvas id="chartWL"></canvas></div></div>
+    </div>
+    <div class="sc">
+      <div class="sc-hd"><div><p style="font-size:.84rem;font-weight:600;color:#E2E8F0">ACWR — Rolling Average (RA) Model</p><p style="font-size:.68rem;color:#64748B">Acute 7d / Chronic 28d</p></div></div>
+      <div style="padding:12px"><div class="chart-wrap"><canvas id="chartACWR"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- EWMA Chart + Team Wellness -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+    <div class="sc">
+      <div class="sc-hd">
+        <div><p style="font-size:.84rem;font-weight:600;color:#E2E8F0">EWMA Model</p><p style="font-size:.68rem;color:#64748B">Exponentially Weighted Moving Average</p></div>
+        <span class="badge bdg-p" style="font-size:.6rem">Advanced</span>
+      </div>
+      <div style="padding:12px"><div class="chart-wrap"><canvas id="chartEWMA"></canvas></div></div>
+    </div>
+    <div class="sc" id="an-team-chart-wrap">
+      <div class="sc-hd"><div><p style="font-size:.84rem;font-weight:600;color:#E2E8F0">Team Wellness Comparison</p><p style="font-size:.68rem;color:#64748B">Latest score per athlete</p></div></div>
+      <div style="padding:12px"><div class="chart-wrap"><canvas id="chartTeam"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div id="an-stats-row" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px"></div>
+
+  <!-- RPE Pending Alert -->
+  <div id="an-rpe-pending" style="display:none"></div>
 </div>
 
 <!-- INJURIES -->
@@ -387,11 +504,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Injury Tracker</h1>
     <div style="display:flex;gap:8px">
       <button onclick="exportInjuriesCSV()" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:6px;padding:5px 10px;color:#22C55E;font-size:.76rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         CSV
       </button>
       <button onclick="window.print()" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:5px 10px;color:#60A5FA;font-size:.76rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
         Print
       </button>
     </div>
@@ -399,7 +516,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
   <!-- Filter Bar -->
   <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;background:#1A2035;border:1px solid #232B3E;border-radius:10px;margin-bottom:18px">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
     <span style="font-size:.74rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.05em">Filter:</span>
     <div style="display:flex;align-items:center;gap:6px">
       <label style="font-size:.74rem;color:#64748B">Sport:</label>
@@ -413,7 +530,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
         <option value="all">All Athletes</option>
       </select>
     </div>
-    <button onclick="clearInjFilters()" style="background:none;border:1px solid #232B3E;border-radius:5px;padding:4px 8px;color:#64748B;cursor:pointer;font-size:.72rem" onmouseover="this.style.color='#E2E8F0'" onmouseout="this.style.color='#64748B'">✕ Clear</button>
+    <label style="font-size:.72rem;color:#64748B">From:</label>
+    <input type="date" id="inj-date-from" class="ai" style="width:130px;padding:4px 8px;font-size:.76rem" onchange="renderInjuries()"/>
+    <label style="font-size:.72rem;color:#64748B">To:</label>
+    <input type="date" id="inj-date-to" class="ai" style="width:130px;padding:4px 8px;font-size:.76rem" onchange="renderInjuries()"/>
+    <div class="df-quick">
+      <button onclick="setInjRange(7)">7D</button>
+      <button onclick="setInjRange(30)">30D</button>
+      <button onclick="setInjRange(90)">3M</button>
+      <button onclick="setInjRange(0)">All</button>
+    </div>
+    <button onclick="clearInjFilters()" style="background:none;border:1px solid #232B3E;border-radius:5px;padding:4px 8px;color:#64748B;cursor:pointer;font-size:.72rem">✕ Clear</button>
   </div>
 
   <div id="inj-layout" style="display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start">
@@ -421,7 +548,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <div class="sc">
       <div class="sc-hd"><span style="font-size:.86rem;font-weight:600;color:#E2E8F0" id="inj-form-title">Log New Injury</span></div>
       <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
-        <input type="hidden" id="inj-edit-id">
+        <input type="hidden" id="inj-edit-id"/>
         <div><label class="al">Athlete</label><select id="inj-ath" class="as"></select></div>
         <div>
           <label class="al">Body Part / Region</label>
@@ -435,7 +562,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
               <option value="__other__">✏️ Other (type custom)...</option>
             </select>
             <div class="cs-custom" id="inj-body-custom">
-              <input type="text" class="ai" id="inj-body-text" placeholder="Type body part..." oninput="syncCustom(this,'inj-body')">
+              <input type="text" class="ai" id="inj-body-text" placeholder="Type body part..." oninput="syncCustom(this,'inj-body')"/>
             </div>
           </div>
         </div>
@@ -452,16 +579,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
             <option value="Sidelined">🔴 Sidelined</option>
           </select>
         </div>
-        <div><label class="al">Notes / Description</label><input type="text" id="inj-notes" class="ai" placeholder="e.g. Grade 1 hamstring strain..."></div>
-        <div><label class="al">Injury Date</label><input type="date" id="inj-date" class="ai"></div>
+        <div><label class="al">Notes / Description</label><input type="text" id="inj-notes" class="ai" placeholder="e.g. Grade 1 hamstring strain..."/></div>
+        <div><label class="al">Injury Date</label><input type="date" id="inj-date" class="ai"/></div>
         <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:12px">
           <p style="font-size:.7rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">📅 Rehab Window</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div><label class="al">Rehab Start</label><input type="date" id="inj-rehab-start" class="ai"></div>
-            <div><label class="al">Expected Return</label><input type="date" id="inj-rehab-end" class="ai"></div>
+            <div><label class="al">Rehab Start</label><input type="date" id="inj-rehab-start" class="ai"/></div>
+            <div><label class="al">Expected Return</label><input type="date" id="inj-rehab-end" class="ai"/></div>
           </div>
         </div>
-        <div><label class="al">Session Restrictions</label><input type="text" id="inj-restrictions" class="ai" placeholder="e.g. No sprinting, upper body only..."></div>
+        <div><label class="al">Session Restrictions</label><input type="text" id="inj-restrictions" class="ai" placeholder="e.g. No sprinting, upper body only..."/></div>
         <div style="display:flex;gap:8px">
           <button class="bp" onclick="logInjury()" style="flex:1;justify-content:center" id="inj-submit-btn">Log Injury</button>
           <button class="bg-btn" id="inj-cancel-edit-btn" style="display:none" onclick="cancelInjEdit()">Cancel</button>
@@ -505,19 +632,38 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
 <!-- ATHLETE LOGS -->
 <div id="page-athlete-logs" class="view-page">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px">
     <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Athlete Submitted Logs</h1>
-    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-      <select id="logs-ath-filter" class="as" style="width:170px" onchange="renderAthleteLogsData()"><option value="all">All Athletes</option></select>
+    <div style="display:flex;gap:8px">
       <button onclick="exportLogsCSV()" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:6px;padding:5px 10px;color:#22C55E;font-size:.76rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-        CSV
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>CSV
       </button>
       <button onclick="window.print()" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:5px 10px;color:#60A5FA;font-size:.76rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-        Print
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print
       </button>
     </div>
+  </div>
+  <!-- Date + Athlete Filter -->
+  <div class="df-bar">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+    <label>Athlete:</label>
+    <select id="logs-ath-filter" class="as" style="width:150px" onchange="renderAthleteLogsData()"><option value="all">All Athletes</option></select>
+    <label>Status:</label>
+    <select id="logs-status-filter" class="as" style="width:130px" onchange="renderAthleteLogsData()">
+      <option value="all">All Entries</option>
+      <option value="missing-rpe">Missing RPE</option>
+      <option value="missing-well">Missing Wellness</option>
+      <option value="low-well">Low Wellness (&lt;60%)</option>
+    </select>
+    <label>From:</label><input type="date" id="logs-date-from" class="ai" style="width:130px" onchange="renderAthleteLogsData()"/>
+    <label>To:</label><input type="date" id="logs-date-to" class="ai" style="width:130px" onchange="renderAthleteLogsData()"/>
+    <div class="df-quick">
+      <button onclick="setLogsRange(7)">7D</button>
+      <button onclick="setLogsRange(30)">30D</button>
+      <button onclick="setLogsRange(90)">3M</button>
+      <button onclick="setLogsRange(0)">All</button>
+    </div>
+    <button onclick="clearLogsFilters()" style="background:none;border:1px solid #232B3E;border-radius:5px;padding:3px 8px;color:#64748B;cursor:pointer;font-size:.7rem">✕ Clear</button>
   </div>
   <div style="border-bottom:1px solid #232B3E;margin-bottom:16px;display:flex">
     <button class="tab-btn active" id="logs-tab-w" onclick="switchLogsTab('wellness')">Wellness</button>
@@ -541,47 +687,57 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   <div class="sc" style="max-width:500px">
     <div class="sc-hd"><span style="font-size:.86rem;font-weight:600;color:#E2E8F0">New Athlete Account</span></div>
     <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
-      <div><label class="al">Full Name</label><input type="text" id="new-ath-name" class="ai" placeholder="e.g. Rahul Sharma"></div>
+      <div><label class="al">Full Name</label><input type="text" id="new-ath-name" class="ai" placeholder="e.g. Rahul Sharma"/></div>
       <div class="fg fg-2">
-        <div><label class="al">Position / Role</label><input type="text" id="new-ath-pos" class="ai" placeholder="e.g. Striker"></div>
-        <div><label class="al">Age</label><input type="number" id="new-ath-age" class="ai" placeholder="22" min="14" max="60"></div>
-      </div>
-      <div>
-        <label class="al">Discipline / Sport</label>
-        <select id="new-ath-discipline" class="as">
-          <option value="Football">⚽ Football / Soccer</option>
-          <option value="Boxing">🥊 Boxing</option>
-          <option value="Calisthenics">💪 Calisthenics</option>
-          <option value="Cricket">🏏 Cricket</option>
-          <option value="Basketball">🏀 Basketball</option>
-          <option value="Badminton">🏸 Badminton</option>
-          <option value="Tennis">🎾 Tennis</option>
-          <option value="Swimming">🏊 Swimming</option>
-          <option value="Athletics">🏃 Athletics / Track</option>
-          <option value="Weightlifting">🏋️ Weightlifting</option>
-          <option value="MMA">🥋 MMA / Martial Arts</option>
-          <option value="Cycling">🚴 Cycling</option>
-          <option value="Volleyball">🏐 Volleyball</option>
-          <option value="Hockey">🏑 Hockey</option>
-          <option value="Rugby">🏉 Rugby</option>
-          <option value="General S&amp;C">💪 General S&amp;C</option>
-          <option value="Other">🎯 Other</option>
-        </select>
+        <div><label class="al">Position / Role</label><input type="text" id="new-ath-pos" class="ai" placeholder="e.g. Striker"/></div>
+        <div><label class="al">Age</label><input type="number" id="new-ath-age" class="ai" placeholder="22" min="14" max="60"/></div>
       </div>
       <div class="fg fg-2">
-        <div><label class="al">Username</label><input type="text" id="new-ath-user" class="ai" placeholder="e.g. rahul"></div>
+        <div>
+          <label class="al">Gender</label>
+          <select id="new-ath-gender" class="as">
+            <option value="Male">👨 Male</option>
+            <option value="Female">👩 Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="al">Discipline / Sport</label>
+          <select id="new-ath-discipline" class="as">
+            <option value="Football">⚽ Football / Soccer</option>
+            <option value="Boxing">🥊 Boxing</option>
+            <option value="Calisthenics">💪 Calisthenics</option>
+            <option value="Cricket">🏏 Cricket</option>
+            <option value="Basketball">🏀 Basketball</option>
+            <option value="Badminton">🏸 Badminton</option>
+            <option value="Tennis">🎾 Tennis</option>
+            <option value="Swimming">🏊 Swimming</option>
+            <option value="Athletics">🏃 Athletics / Track</option>
+            <option value="Weightlifting">🏋️ Weightlifting</option>
+            <option value="MMA">🥋 MMA / Martial Arts</option>
+            <option value="Cycling">🚴 Cycling</option>
+            <option value="Volleyball">🏐 Volleyball</option>
+            <option value="Hockey">🏑 Hockey</option>
+            <option value="Rugby">🏉 Rugby</option>
+            <option value="General S&C">💪 General S&C</option>
+            <option value="Other">🎯 Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg fg-2">
+        <div><label class="al">Username</label><input type="text" id="new-ath-user" class="ai" placeholder="e.g. rahul"/></div>
         <div>
           <label class="al">Password</label>
           <div class="pw-wrap">
-            <input type="password" id="new-ath-pass" class="ai" placeholder="e.g. rahul123">
+            <input type="password" id="new-ath-pass" class="ai" placeholder="e.g. rahul123"/>
             <button class="pw-eye" onclick="togglePw('new-ath-pass',this)" type="button">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
         </div>
       </div>
       <div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:7px;padding:9px 12px;font-size:.76rem;color:#94A3B8">
-        💡 Share username &amp; password with athlete on WhatsApp
+        💡 Share username & password with athlete on WhatsApp
       </div>
       <button class="bp" onclick="addAthlete()" style="justify-content:center">Add Athlete</button>
     </div>
@@ -596,15 +752,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <span class="badge bdg-b">Full Access</span>
     </div>
     <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
-      <div><label class="al">Full Name</label><input type="text" id="new-coach-name" class="ai" placeholder="e.g. Ravi Sharma"></div>
+      <div><label class="al">Full Name</label><input type="text" id="new-coach-name" class="ai" placeholder="e.g. Ravi Sharma"/></div>
       <div class="fg fg-2">
-        <div><label class="al">Username</label><input type="text" id="new-coach-user" class="ai" placeholder="e.g. coach2"></div>
+        <div><label class="al">Username</label><input type="text" id="new-coach-user" class="ai" placeholder="e.g. coach2"/></div>
         <div>
           <label class="al">Password</label>
           <div class="pw-wrap">
-            <input type="password" id="new-coach-pass" class="ai" placeholder="e.g. coach456">
+            <input type="password" id="new-coach-pass" class="ai" placeholder="e.g. coach456"/>
             <button class="pw-eye" onclick="togglePw('new-coach-pass',this)" type="button">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
         </div>
@@ -626,7 +782,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <p style="font-size:.78rem;color:#475569;margin-top:3px">Edit athletes and coach/admin accounts</p>
     </div>
     <button class="bg-btn" onclick="renderManageAthletes()" style="display:flex;align-items:center;gap:5px">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 .49-3.49"></path></svg>Refresh
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.49"/></svg>Refresh
     </button>
   </div>
 
@@ -634,6 +790,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   <div style="border-bottom:1px solid #232B3E;margin-bottom:18px;display:flex">
     <button class="tab-btn active" id="manage-tab-ath" onclick="switchManageTab('athletes')">👤 Athletes</button>
     <button class="tab-btn" id="manage-tab-coach" onclick="switchManageTab('coaches')">🛡️ Coach / Admin</button>
+    <button class="tab-btn" id="manage-tab-access" onclick="switchManageTab('access')">🔐 Access Control</button>
   </div>
 
   <!-- ATHLETES TAB -->
@@ -646,7 +803,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
         </div>
         <div style="overflow-x:auto">
           <table class="apex-table">
-            <thead><tr><th>Name</th><th>Sport</th><th>Position</th><th>Age</th><th>Username</th><th>Password</th><th>Action</th></tr></thead>
+            <thead><tr><th>Name</th><th>Sport</th><th>Position</th><th>Age</th><th>Gender</th><th>Username</th><th>Password</th><th>Action</th></tr></thead>
             <tbody id="manage-ath-tbody"></tbody>
           </table>
         </div>
@@ -658,40 +815,50 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
             <button onclick="closeEditAth()" style="background:none;border:none;color:#64748B;cursor:pointer;font-size:1.1rem;line-height:1">✕</button>
           </div>
           <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
-            <input type="hidden" id="edit-ath-id">
-            <input type="hidden" id="edit-ath-user-id">
+            <input type="hidden" id="edit-ath-id"/>
+            <input type="hidden" id="edit-ath-user-id"/>
             <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px 12px">
               <p style="font-size:.68rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">📋 Profile Info</p>
               <div style="display:flex;flex-direction:column;gap:10px">
-                <div><label class="al">Full Name</label><input type="text" id="edit-ath-name" class="ai" placeholder="Full name"></div>
+                <div><label class="al">Full Name</label><input type="text" id="edit-ath-name" class="ai" placeholder="Full name"/></div>
                 <div class="fg fg-2">
-                  <div><label class="al">Position / Role</label><input type="text" id="edit-ath-pos" class="ai" placeholder="e.g. Striker"></div>
-                  <div><label class="al">Age</label><input type="number" id="edit-ath-age" class="ai" placeholder="22" min="14" max="60"></div>
+                  <div><label class="al">Position / Role</label><input type="text" id="edit-ath-pos" class="ai" placeholder="e.g. Striker"/></div>
+                  <div><label class="al">Age</label><input type="number" id="edit-ath-age" class="ai" placeholder="22" min="14" max="60"/></div>
                 </div>
-                <div><label class="al">Discipline / Sport</label>
-                  <select id="edit-ath-discipline" class="as">
-                    <option value="Football">⚽ Football / Soccer</option><option value="Boxing">🥊 Boxing</option>
-                    <option value="Calisthenics">💪 Calisthenics</option><option value="Cricket">🏏 Cricket</option>
-                    <option value="Basketball">🏀 Basketball</option><option value="Badminton">🏸 Badminton</option>
-                    <option value="Tennis">🎾 Tennis</option><option value="Swimming">🏊 Swimming</option>
-                    <option value="Athletics">🏃 Athletics / Track</option><option value="Weightlifting">🏋️ Weightlifting</option>
-                    <option value="MMA">🥋 MMA / Martial Arts</option><option value="Cycling">🚴 Cycling</option>
-                    <option value="Volleyball">🏐 Volleyball</option><option value="Hockey">🏑 Hockey</option>
-                    <option value="Rugby">🏉 Rugby</option><option value="General S&amp;C">💪 General S&amp;C</option>
-                    <option value="Other">🎯 Other</option>
-                  </select>
+                <div class="fg fg-2">
+                  <div>
+                    <label class="al">Gender</label>
+                    <select id="edit-ath-gender" class="as">
+                      <option value="Male">👨 Male</option>
+                      <option value="Female">👩 Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="al">Discipline / Sport</label>
+                    <select id="edit-ath-discipline" class="as">
+                      <option value="Football">⚽ Football / Soccer</option><option value="Boxing">🥊 Boxing</option>
+                      <option value="Calisthenics">💪 Calisthenics</option><option value="Cricket">🏏 Cricket</option>
+                      <option value="Basketball">🏀 Basketball</option><option value="Badminton">🏸 Badminton</option>
+                      <option value="Tennis">🎾 Tennis</option><option value="Swimming">🏊 Swimming</option>
+                      <option value="Athletics">🏃 Athletics / Track</option><option value="Weightlifting">🏋️ Weightlifting</option>
+                      <option value="MMA">🥋 MMA / Martial Arts</option><option value="Cycling">🚴 Cycling</option>
+                      <option value="Volleyball">🏐 Volleyball</option><option value="Hockey">🏑 Hockey</option>
+                      <option value="Rugby">🏉 Rugby</option><option value="General S&C">💪 General S&C</option>
+                      <option value="Other">🎯 Other</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
             </div>
             <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px 12px">
               <p style="font-size:.68rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">🔐 Login Credentials</p>
               <div style="display:flex;flex-direction:column;gap:10px">
-                <div><label class="al">Username</label><input type="text" id="edit-username" class="ai" placeholder="username"></div>
+                <div><label class="al">Username</label><input type="text" id="edit-username" class="ai" placeholder="username"/></div>
                 <div><label class="al">Password</label>
                   <div class="pw-wrap">
-                    <input type="password" id="edit-password" class="ai" placeholder="password">
+                    <input type="password" id="edit-password" class="ai" placeholder="password"/>
                     <button class="pw-eye" onclick="togglePw('edit-password',this)" type="button">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </button>
                   </div>
                 </div>
@@ -699,7 +866,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
             </div>
             <div style="display:flex;gap:8px">
               <button class="bp" onclick="saveAllAthleteChanges()" style="flex:1;justify-content:center" id="save-ath-btn">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>Save Changes
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Save Changes
               </button>
               <button class="bg-btn" onclick="closeEditAth()">Cancel</button>
             </div>
@@ -731,20 +898,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
             <button onclick="closeEditCoach()" style="background:none;border:none;color:#64748B;cursor:pointer;font-size:1.1rem;line-height:1">✕</button>
           </div>
           <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
-            <input type="hidden" id="edit-coach-user-id">
+            <input type="hidden" id="edit-coach-user-id"/>
             <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px 12px">
               <p style="font-size:.68rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">👤 Profile</p>
-              <div><label class="al">Full Name</label><input type="text" id="edit-coach-name" class="ai" placeholder="Coach name"></div>
+              <div><label class="al">Full Name</label><input type="text" id="edit-coach-name" class="ai" placeholder="Coach name"/></div>
             </div>
             <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px 12px">
               <p style="font-size:.68rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">🔐 Login Credentials</p>
               <div style="display:flex;flex-direction:column;gap:10px">
-                <div><label class="al">Username</label><input type="text" id="edit-coach-username" class="ai" placeholder="username"></div>
+                <div><label class="al">Username</label><input type="text" id="edit-coach-username" class="ai" placeholder="username"/></div>
                 <div><label class="al">New Password</label>
                   <div class="pw-wrap">
-                    <input type="password" id="edit-coach-password" class="ai" placeholder="new password">
+                    <input type="password" id="edit-coach-password" class="ai" placeholder="new password"/>
                     <button class="pw-eye" onclick="togglePw('edit-coach-password',this)" type="button">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </button>
                   </div>
                 </div>
@@ -755,7 +922,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
             </div>
             <div style="display:flex;gap:8px">
               <button class="bp" onclick="saveCoachChanges()" style="flex:1;justify-content:center" id="save-coach-btn">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>Save Changes
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Save Changes
               </button>
               <button class="bg-btn" onclick="closeEditCoach()">Cancel</button>
             </div>
@@ -764,7 +931,209 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       </div>
     </div>
   </div>
+
+  <!-- ACCESS CONTROL PANEL (rendered dynamically) -->
+  <div id="manage-access-panel-placeholder" style="display:none"></div>
+
 </div>
+
+<!-- WEEKLY CALENDAR -->
+<div id="page-calendar" class="view-page">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div>
+      <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">Weekly Calendar</h1>
+      <p id="cal-week-label" style="font-size:.78rem;color:#475569;margin-top:3px"></p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button onclick="calNav(-1)" class="bg-btn" style="padding:5px 12px">← Prev</button>
+      <button onclick="calToday()" class="bp" style="padding:5px 14px;font-size:.78rem">Today</button>
+      <button onclick="calNav(1)" class="bg-btn" style="padding:5px 12px">Next →</button>
+      <select id="cal-view" class="as" style="width:120px;padding:5px 8px;font-size:.76rem" onchange="renderCalendar()">
+        <option value="week">Weekly</option>
+        <option value="month">Monthly</option>
+      </select>
+      <button onclick="openNewSession()" class="bp" style="padding:5px 14px;font-size:.78rem;background:linear-gradient(135deg,#3B82F6,#8B5CF6)">
+        + New Session
+      </button>
+    </div>
+  </div>
+
+  <!-- Cycle Info Bar -->
+  <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+    <div style="background:#1A2035;border:1px solid #232B3E;border-radius:8px;padding:8px 14px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:.7rem;color:#64748B;text-transform:uppercase;font-weight:700">Meso Cycle</span>
+      <input type="number" id="cal-meso" class="ai" style="width:50px;padding:3px 8px;font-size:.8rem;text-align:center" value="1" min="1" max="12" onchange="renderCalendar()"/>
+    </div>
+    <div style="background:#1A2035;border:1px solid #232B3E;border-radius:8px;padding:8px 14px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:.7rem;color:#64748B;text-transform:uppercase;font-weight:700">Micro Week</span>
+      <input type="number" id="cal-micro" class="ai" style="width:50px;padding:3px 8px;font-size:.8rem;text-align:center" value="1" min="1" max="52" onchange="renderCalendar()"/>
+    </div>
+    <div style="background:#1A2035;border:1px solid #232B3E;border-radius:8px;padding:8px 14px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:.7rem;color:#64748B;text-transform:uppercase;font-weight:700">Sport Filter</span>
+      <select id="cal-disc-filter" class="as" style="width:130px;padding:3px 8px;font-size:.76rem" onchange="renderCalendar()">
+        <option value="all">All Sports</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Calendar Grid -->
+  <div id="cal-grid" style="background:#1A2035;border:1px solid #232B3E;border-radius:12px;overflow:hidden"></div>
+</div>
+
+<!-- SESSION MODAL -->
+<div id="session-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:600;align-items:center;justify-content:center;backdrop-filter:blur(4px)" onclick="if(event.target===this)closeSessionModal()">
+  <div style="background:#131720;border:1px solid #232B3E;border-radius:14px;width:94%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.6)">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #232B3E;position:sticky;top:0;background:#131720">
+      <span id="session-modal-title" style="font-size:.96rem;font-weight:700;color:#E2E8F0">New Session</span>
+      <button onclick="closeSessionModal()" style="background:none;border:none;color:#64748B;cursor:pointer;font-size:1.2rem">✕</button>
+    </div>
+    <div style="padding:18px;display:flex;flex-direction:column;gap:12px">
+      <input type="hidden" id="sm-id"/>
+      <div><label class="al">Session Title</label><input type="text" id="sm-title" class="ai" placeholder="e.g. Lower Body Strength — Group A"/></div>
+      <div class="fg fg-2">
+        <div><label class="al">Date</label><input type="date" id="sm-date" class="ai"/></div>
+        <div><label class="al">Time</label><input type="time" id="sm-time" class="ai" value="06:30"/></div>
+      </div>
+      <div class="fg fg-2">
+        <div>
+          <label class="al">Session Type</label>
+          <select id="sm-type" class="as">
+            <option>Strength – Lower</option><option>Strength – Upper</option>
+            <option>Strength – Full Body</option><option>Power & Speed</option>
+            <option>Conditioning</option><option>HIIT</option><option>Recovery</option>
+            <option>Match / Game</option><option>Speed & Agility</option>
+            <option>Plyometrics</option><option>Skill / Technical</option>
+          </select>
+        </div>
+        <div><label class="al">Duration (min)</label><input type="number" id="sm-dur" class="ai" value="60" min="15" max="300"/></div>
+      </div>
+      <div class="fg fg-2">
+        <div>
+          <label class="al">Meso Cycle</label>
+          <input type="number" id="sm-meso" class="ai" value="1" min="1" max="12" placeholder="1"/>
+        </div>
+        <div>
+          <label class="al">Week (Micro)</label>
+          <input type="number" id="sm-week" class="ai" value="1" min="1" max="52" placeholder="1"/>
+        </div>
+      </div>
+      <div>
+        <label class="al">Sport / Discipline</label>
+        <select id="sm-disc" class="as">
+          <option value="all">All Athletes</option>
+          <option value="Football">Football</option><option value="Boxing">Boxing</option>
+          <option value="Cricket">Cricket</option><option value="Basketball">Basketball</option>
+          <option value="Athletics">Athletics</option><option value="General S&C">General S&C</option>
+        </select>
+      </div>
+      <div>
+        <label class="al">Color Label</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:.76rem;color:#CBD5E1"><input type="radio" name="sm-color" value="#3B82F6" checked style="accent-color:#3B82F6"/> 🔵 Strength</label>
+          <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:.76rem;color:#CBD5E1"><input type="radio" name="sm-color" value="#22C55E" style="accent-color:#22C55E"/> 🟢 Conditioning</label>
+          <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:.76rem;color:#CBD5E1"><input type="radio" name="sm-color" value="#EF4444" style="accent-color:#EF4444"/> 🔴 Match/Game</label>
+          <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:.76rem;color:#CBD5E1"><input type="radio" name="sm-color" value="#F59E0B" style="accent-color:#F59E0B"/> 🟡 Recovery</label>
+          <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:.76rem;color:#CBD5E1"><input type="radio" name="sm-color" value="#8B5CF6" style="accent-color:#8B5CF6"/> 🟣 Power/Speed</label>
+        </div>
+      </div>
+      <div><label class="al">Notes</label><input type="text" id="sm-notes" class="ai" placeholder="Focus points, venue, equipment..."/></div>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="bp" onclick="saveCalSession()" style="flex:1;justify-content:center" id="sm-save-btn">Save Session</button>
+        <button id="sm-delete-btn" style="display:none;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:7px;padding:8px 14px;color:#EF4444;font-size:.8rem;cursor:pointer" onclick="deleteCalSession()">Delete</button>
+        <button class="bg-btn" onclick="closeSessionModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MENSTRUAL CYCLE TRACKER — COACH VIEW -->
+<div id="page-menstrual-coach" class="view-page">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div>
+      <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">🌸 Cycle Tracker — Team Overview</h1>
+      <p style="font-size:.76rem;color:#64748B;margin-top:3px">Female athletes menstrual cycle monitoring</p>
+    </div>
+    <div style="display:flex;gap:8px">
+      <select id="mc-coach-disc" class="as" style="width:150px;padding:5px 8px;font-size:.76rem" onchange="renderMenstrualCoach()">
+        <option value="all">All Sports</option>
+      </select>
+      <button class="bg-btn" onclick="renderMenstrualCoach()" style="padding:5px 10px">↻ Refresh</button>
+    </div>
+  </div>
+
+  <!-- Phase Guide -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px">
+    <div style="background:#1A2035;border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:12px;border-left:3px solid #EF4444">
+      <p style="font-size:.72rem;font-weight:700;color:#EF4444;margin-bottom:4px">🔴 Menstrual (Day 1-5)</p>
+      <p style="font-size:.7rem;color:#94A3B8">Light training, focus on recovery & mobility. Reduce intensity.</p>
+    </div>
+    <div style="background:#1A2035;border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:12px;border-left:3px solid #22C55E">
+      <p style="font-size:.72rem;font-weight:700;color:#22C55E;margin-bottom:4px">🟢 Follicular (Day 6-13)</p>
+      <p style="font-size:.7rem;color:#94A3B8">Energy increases. Good for strength & high intensity work.</p>
+    </div>
+    <div style="background:#1A2035;border:1px solid rgba(59,130,246,.3);border-radius:10px;padding:12px;border-left:3px solid #3B82F6">
+      <p style="font-size:.72rem;font-weight:700;color:#60A5FA;margin-bottom:4px">🔵 Ovulation (Day 14-17)</p>
+      <p style="font-size:.7rem;color:#94A3B8">Peak performance window. Best time for max effort & competition.</p>
+    </div>
+    <div style="background:#1A2035;border:1px solid rgba(234,179,8,.3);border-radius:10px;padding:12px;border-left:3px solid #EAB308">
+      <p style="font-size:.72rem;font-weight:700;color:#EAB308;margin-bottom:4px">🟡 Luteal (Day 18-28)</p>
+      <p style="font-size:.7rem;color:#94A3B8">May feel fatigued. Reduce intensity if needed. Monitor closely.</p>
+    </div>
+  </div>
+
+  <!-- Athletes Grid -->
+  <div id="mc-coach-grid">
+    <div class="empty-s">Loading cycle data...</div>
+  </div>
+</div>
+
+<!-- MENSTRUAL CYCLE TRACKER — ATHLETE VIEW -->
+<div id="page-menstrual" class="view-page">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div>
+      <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">🌸 My Cycle Tracker</h1>
+      <p style="font-size:.76rem;color:#64748B;margin-top:3px">Private & secure — only you can see this</p>
+    </div>
+    <button class="bg-btn" onclick="renderMenstrual()" style="padding:5px 10px">↻ Refresh</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:start">
+    <div class="sc">
+      <div class="sc-hd" style="border-bottom:2px solid #EC4899">
+        <span style="font-size:.86rem;font-weight:600;color:#E2E8F0" id="mc-form-title">Log New Cycle</span>
+      </div>
+      <div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">
+        <input type="hidden" id="mc-edit-id"/>
+        <div><label class="al">Cycle Start Date</label><input type="date" id="mc-start" class="ai"/></div>
+        <div><label class="al">Cycle End Date (optional)</label><input type="date" id="mc-end" class="ai"/></div>
+        <div><label class="al">Notes / How are you feeling?</label><input type="text" id="mc-notes" class="ai" placeholder="e.g. Cramps, fatigue, mood changes..."/></div>
+        <div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px 12px">
+          <p style="font-size:.7rem;font-weight:700;color:#64748B;text-transform:uppercase;margin-bottom:6px">💡 Training Tips by Phase</p>
+          <ul style="font-size:.73rem;color:#94A3B8;line-height:1.6;padding-left:14px">
+            <li><span style="color:#EF4444">Day 1-5:</span> Light training, rest if needed</li>
+            <li><span style="color:#22C55E">Day 6-13:</span> Energy up — great for strength</li>
+            <li><span style="color:#60A5FA">Day 14-17:</span> Peak performance!</li>
+            <li><span style="color:#EAB308">Day 18-28:</span> May feel tired — reduce if needed</li>
+          </ul>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="bp" onclick="saveMenstrualCycle()" style="flex:1;justify-content:center;background:linear-gradient(135deg,#EC4899,#8B5CF6)" id="mc-save-btn">Log Cycle</button>
+          <button class="bg-btn" id="mc-cancel-btn" style="display:none" onclick="cancelMcEdit()">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <div class="sc">
+      <div class="sc-hd" style="border-bottom:2px solid #EC4899">
+        <span style="font-size:.86rem;font-weight:600;color:#E2E8F0">Cycle History</span>
+        <span class="badge" style="background:rgba(236,72,153,.12);color:#EC4899" id="mc-count">0 cycles</span>
+      </div>
+      <div id="mc-history-content"><div class="empty-s">No cycles logged yet.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ACCESS CONTROL PANEL (standalone, not in manage page) -->
+
 
 <!-- MY PLAN -->
 <div id="page-my-plan" class="view-page">
@@ -772,7 +1141,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <div><h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">My Training Plan</h1><p style="font-size:.78rem;color:#475569;margin-top:3px">Assigned by your coach — view only</p></div>
     <div style="display:flex;gap:8px;align-items:center">
       <select id="plan-filter-week" class="as" style="width:120px" onchange="renderMyPlan()"><option value="all">All Plans</option></select>
-      <button class="bp" onclick="window.print()" style="padding:7px 14px;font-size:.78rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> Print</button>
+      <button class="bp" onclick="window.print()" style="padding:7px 14px;font-size:.78rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Print</button>
     </div>
   </div>
   <!-- Today's Pending Sessions Banner -->
@@ -788,7 +1157,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <p id="todays-date-lbl" style="font-size:.78rem;color:#475569;margin-top:3px"></p>
     </div>
     <button class="bg-btn" onclick="renderTodaysSessions()" style="display:flex;align-items:center;gap:5px">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 .49-3.49"></path></svg>Refresh
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.49"/></svg>Refresh
     </button>
   </div>
 
@@ -803,17 +1172,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     </div>
     <div id="wellness-submitted-view" style="display:none;padding:14px 18px">
       <div style="display:flex;align-items:center;gap:10px">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         <span id="wellness-submitted-text" style="font-size:.84rem;color:#94A3B8"></span>
       </div>
     </div>
     <div id="wellness-form-view" class="sc-bd">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
-        <div class="slider-row" style="margin-bottom:0"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:.78rem;color:#CBD5E1">😴 Sleep</span><span id="ts-val-sleep" style="font-size:.82rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="ts-sl-sleep" min="1" max="5" value="3" oninput="updTsSlider('sleep',this.value)"></div>
-        <div class="slider-row" style="margin-bottom:0"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:.78rem;color:#CBD5E1">⚡ Energy</span><span id="ts-val-fatigue" style="font-size:.82rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="ts-sl-fatigue" min="1" max="5" value="3" oninput="updTsSlider('fatigue',this.value)"></div>
-        <div class="slider-row" style="margin-bottom:0"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:.78rem;color:#CBD5E1">💪 Soreness</span><span id="ts-val-soreness" style="font-size:.82rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="ts-sl-soreness" min="1" max="5" value="3" oninput="updTsSlider('soreness',this.value)"></div>
-        <div class="slider-row" style="margin-bottom:0"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:.78rem;color:#CBD5E1">🧠 Stress</span><span id="ts-val-stress" style="font-size:.82rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="ts-sl-stress" min="1" max="5" value="3" oninput="updTsSlider('stress',this.value)"></div>
-        <div class="slider-row" style="margin-bottom:0;grid-column:1/-1"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:.78rem;color:#CBD5E1">😊 Mood</span><span id="ts-val-mood" style="font-size:.82rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="ts-sl-mood" min="1" max="5" value="3" oninput="updTsSlider('mood',this.value)"></div>
+        <div class="slider-row" style="margin-bottom:0"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:.78rem;color:#CBD5E1">😴 Sleep</span><span id="ts-val-sleep" style="font-size:.82rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="ts-sl-sleep" min="1" max="5" value="3" oninput="updTsSlider('sleep',this.value)"/></div>
+        <div class="slider-row" style="margin-bottom:0"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:.78rem;color:#CBD5E1">⚡ Energy</span><span id="ts-val-fatigue" style="font-size:.82rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="ts-sl-fatigue" min="1" max="5" value="3" oninput="updTsSlider('fatigue',this.value)"/></div>
+        <div class="slider-row" style="margin-bottom:0"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:.78rem;color:#CBD5E1">💪 Soreness</span><span id="ts-val-soreness" style="font-size:.82rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="ts-sl-soreness" min="1" max="5" value="3" oninput="updTsSlider('soreness',this.value)"/></div>
+        <div class="slider-row" style="margin-bottom:0"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:.78rem;color:#CBD5E1">🧠 Stress</span><span id="ts-val-stress" style="font-size:.82rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="ts-sl-stress" min="1" max="5" value="3" oninput="updTsSlider('stress',this.value)"/></div>
+        <div class="slider-row" style="margin-bottom:0;grid-column:1/-1"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:.78rem;color:#CBD5E1">😊 Mood</span><span id="ts-val-mood" style="font-size:.82rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="ts-sl-mood" min="1" max="5" value="3" oninput="updTsSlider('mood',this.value)"/></div>
       </div>
       <button class="bp" style="width:100%;justify-content:center" id="ts-wellness-btn" onclick="submitTsWellness()">Submit Wellness</button>
     </div>
@@ -821,7 +1190,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
   <!-- Today's Plan Sessions with RPE -->
   <div id="todays-sessions-content">
-    <div class="empty-s"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>Loading sessions...</div>
+    <div class="empty-s"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Loading sessions...</div>
   </div>
 </div>
 
@@ -836,11 +1205,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <div class="sc" style="margin-bottom:14px">
       <div class="sc-hd"><span style="font-size:.86rem;font-weight:600;color:#E2E8F0">How are you feeling today?</span><span style="font-size:.72rem;color:#64748B">1=Poor · 5=Great</span></div>
       <div class="sc-bd">
-        <div class="slider-row"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:.82rem;font-weight:500;color:#CBD5E1">😴 Sleep Quality</span><span id="val-sleep" style="font-size:.9rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="sl-sleep" min="1" max="5" value="3" oninput="updSlider('sleep',this.value)"></div>
-        <div class="slider-row"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:.82rem;font-weight:500;color:#CBD5E1">⚡ Energy / Fatigue</span><span id="val-fatigue" style="font-size:.9rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="sl-fatigue" min="1" max="5" value="3" oninput="updSlider('fatigue',this.value)"></div>
-        <div class="slider-row"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:.82rem;font-weight:500;color:#CBD5E1">💪 Muscle Soreness</span><span id="val-soreness" style="font-size:.9rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="sl-soreness" min="1" max="5" value="3" oninput="updSlider('soreness',this.value)"></div>
-        <div class="slider-row"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:.82rem;font-weight:500;color:#CBD5E1">🧠 Stress Level</span><span id="val-stress" style="font-size:.9rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="sl-stress" min="1" max="5" value="3" oninput="updSlider('stress',this.value)"></div>
-        <div class="slider-row" style="margin-bottom:0"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:.82rem;font-weight:500;color:#CBD5E1">😊 Mood</span><span id="val-mood" style="font-size:.9rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="sl-mood" min="1" max="5" value="3" oninput="updSlider('mood',this.value)"></div>
+        <div class="slider-row"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:.82rem;font-weight:500;color:#CBD5E1">😴 Sleep Quality</span><span id="val-sleep" style="font-size:.9rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="sl-sleep" min="1" max="5" value="3" oninput="updSlider('sleep',this.value)"/></div>
+        <div class="slider-row"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:.82rem;font-weight:500;color:#CBD5E1">⚡ Energy / Fatigue</span><span id="val-fatigue" style="font-size:.9rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="sl-fatigue" min="1" max="5" value="3" oninput="updSlider('fatigue',this.value)"/></div>
+        <div class="slider-row"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:.82rem;font-weight:500;color:#CBD5E1">💪 Muscle Soreness</span><span id="val-soreness" style="font-size:.9rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="sl-soreness" min="1" max="5" value="3" oninput="updSlider('soreness',this.value)"/></div>
+        <div class="slider-row"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:.82rem;font-weight:500;color:#CBD5E1">🧠 Stress Level</span><span id="val-stress" style="font-size:.9rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="sl-stress" min="1" max="5" value="3" oninput="updSlider('stress',this.value)"/></div>
+        <div class="slider-row" style="margin-bottom:0"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:.82rem;font-weight:500;color:#CBD5E1">😊 Mood</span><span id="val-mood" style="font-size:.9rem;font-weight:700;color:#60A5FA">3</span></div><input type="range" id="sl-mood" min="1" max="5" value="3" oninput="updSlider('mood',this.value)"/></div>
       </div>
     </div>
     <button class="bp" style="width:100%;padding:11px;justify-content:center" id="submit-wellness-btn" onclick="submitWellness()">Submit Check-In</button>
@@ -869,16 +1238,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <option value="__other__">✏️ Other (type custom)...</option>
     </select>
     <div class="cs-custom" id="tl-type-custom">
-      <input type="text" class="ai" id="tl-type-text" placeholder="Type session type..." oninput="syncCustom(this,'tl-type')">
+      <input type="text" class="ai" id="tl-type-text" placeholder="Type session type..." oninput="syncCustom(this,'tl-type')"/>
     </div>
   </div>
 </div>
-        <div><label class="al">Duration (minutes)</label><input type="number" id="tl-dur" class="ai" placeholder="e.g. 60" min="1" max="360" oninput="calcAU()"></div>
+        <div><label class="al">Duration (minutes)</label><input type="number" id="tl-dur" class="ai" placeholder="e.g. 60" min="1" max="360" oninput="calcAU()"/></div>
         <div><label class="al">Session RPE (1–10)</label>
-          <div style="display:flex;align-items:center;gap:10px"><input type="range" id="tl-rpe" min="1" max="10" value="5" oninput="document.getElementById('rpe-val').textContent=this.value;calcAU()" style="flex:1"><span id="rpe-val" style="font-size:1.1rem;font-weight:700;color:#60A5FA;min-width:24px;text-align:center">5</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><input type="range" id="tl-rpe" min="1" max="10" value="5" oninput="document.getElementById('rpe-val').textContent=this.value;calcAU()" style="flex:1"/><span id="rpe-val" style="font-size:1.1rem;font-weight:700;color:#60A5FA;min-width:24px;text-align:center">5</span></div>
           <div style="display:flex;justify-content:space-between;font-size:.66rem;color:#475569;margin-top:2px"><span>Very Easy</span><span>Moderate</span><span>Max</span></div>
         </div>
-        <div><label class="al">Date</label><input type="date" id="tl-date" class="ai"></div>
+        <div><label class="al">Date</label><input type="date" id="tl-date" class="ai"/></div>
         <button class="bp" onclick="submitSessionLog()" style="justify-content:center" id="submit-session-btn">Log Session</button>
       </div>
     </div>
@@ -891,11 +1260,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <h1 style="font-size:1.3rem;font-weight:700;color:#E2E8F0">My History</h1>
     <div style="display:flex;gap:8px">
       <button onclick="exportMyHistoryCSV()" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:6px;padding:5px 10px;color:#22C55E;font-size:.76rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         CSV
       </button>
       <button onclick="window.print()" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:5px 10px;color:#60A5FA;font-size:.76rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
         Print
       </button>
     </div>
@@ -957,6 +1326,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     </div>
   </div>
 </div>
+
+<!-- MENSTRUAL CYCLE TRACKER -->
+
 </main>
 </div>
 
@@ -965,8 +1337,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 const SB_URL='https://sgdqgtunzjokdyairoey.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNnZHFndHVuempva2R5YWlyb2V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMDI0NDYsImV4cCI6MjA5Nzc3ODQ0Nn0.0YhpVPxz96j9eX0T_t-4WXMb_kZmdSLeuxwNhKyNS94';
 
-let SESSION=null,ALL_ATHLETES=[],ALL_WELLNESS=[],ALL_TRAINING=[],ALL_INJURIES=[],ALL_PLANS=[];
-let chartWL_inst=null,chartACWR_inst=null,exCount=0,logsTab='wellness';
+let SESSION=null,ALL_ATHLETES=[],ALL_WELLNESS=[],ALL_TRAINING=[],ALL_INJURIES=[],ALL_PLANS=[],ALL_SCHEDULES=[],ALL_ACCESS=[];
+let chartWL_inst=null,chartACWR_inst=null,chartEWMA_inst=null,chartTeam_inst=null,exCount=0,logsTab='wellness';
 
 // Pure XHR — no fetch, no Headers object — works everywhere
 function apiCall(method,path,body){
@@ -1078,16 +1450,46 @@ function togglePw(inputId,btn){
 
 // DOWNLOAD APP
 function downloadApp(){
-  const html=document.documentElement.outerHTML;
-  const blob=new Blob([html],{type:'text/html'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download='apex-ams-cloud.html';
-  document.body.appendChild(a);a.click();
-  document.body.removeChild(a);URL.revokeObjectURL(url);
+  try{
+    const html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+    const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.setAttribute('href',url);
+    a.setAttribute('download','apex-ams.html');
+    a.style.cssText='display:none;position:fixed;top:-100px';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{
+      if(document.body.contains(a)) document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    },3000);
+    toast('✅ Downloading...');
+  }catch(err){
+    console.error('Download error:',err);
+    // Fallback: open in new tab
+    const html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+    const blob=new Blob([html],{type:'text/html'});
+    const url=URL.createObjectURL(blob);
+    window.open(url,'_blank');
+    toast('File opened in new tab — press Ctrl+S to save');
+  }
 }
 
 // LOGIN
+
+// Quick test function - run in console: testDB()
+async function testDB(){
+  try{
+    toast('Testing connection...');
+    const r=await dbGet('users','?limit=1');
+    toast('✅ DB OK! Users found: '+r.length);
+    console.log('DB test OK:',r);
+  }catch(e){
+    toast('❌ DB Error: '+e.message,'err');
+    console.error('DB test failed:',e);
+  }
+}
 async function doLogin(){
   const username=document.getElementById('login-username').value.trim().toLowerCase();
   const password=document.getElementById('login-password').value.trim();
@@ -1098,7 +1500,18 @@ async function doLogin(){
   try{
     const users=await dbGet('users',`?username=eq.${username}&password=eq.${password}&select=*`);
     if(!users||users.length===0){
-      errEl.style.display='block';errEl.textContent='Wrong username or password. Please try again.';
+      // Check if it's a "no data" vs "wrong password" situation
+      const allUsers=await dbGet('users','?select=username&limit=5').catch(()=>null);
+      if(allUsers===null){
+        errEl.style.display='block';
+        errEl.innerHTML='⚠️ <b>Cannot connect to database.</b><br>Run the SQL setup in Supabase (see guide).';
+      }else if(allUsers.length===0){
+        errEl.style.display='block';
+        errEl.innerHTML='⚠️ <b>Database is empty!</b><br>No users found. Run the SQL setup script in Supabase to create default users.';
+      }else{
+        errEl.style.display='block';
+        errEl.textContent='Wrong username or password. Try: coach / coach123';
+      }
       btn.innerHTML='Sign In';btn.disabled=false;return;
     }
     const user=users[0];
@@ -1108,33 +1521,51 @@ async function doLogin(){
       if(aths&&aths.length>0) SESSION.athlete_id=aths[0].id;
     }
     await loadAllData();
-    bootApp();
+    await bootApp();
   }catch(e){
     errEl.style.display='block';
     const msg=e.message||'';
-    if(msg.includes('Failed to fetch')||msg.includes('NetworkError'))errEl.textContent='⚠️ No internet connection. Please check and try again.';
-    else if(msg.includes('401')||msg.includes('403'))errEl.textContent='⚠️ API key error: '+msg;
-    else if(msg.includes('relation')||msg.includes('does not exist'))errEl.textContent='⚠️ Database not set up. Run SQL setup in Supabase.';
+    if(msg.includes('Network')||msg.includes('Failed to fetch'))errEl.innerHTML='⚠️ <b>No internet / connection blocked.</b><br>Check your internet and try again.';
+    else if(msg.includes('401')||msg.includes('403')||msg.includes('JWT')||msg.includes('apikey'))errEl.innerHTML='⚠️ <b>API key error.</b><br>Run: GRANT ALL ON ALL TABLES IN SCHEMA public TO anon;';
+    else if(msg.includes('relation')||msg.includes('does not exist')||msg.includes('404'))errEl.innerHTML='⚠️ <b>Tables not found.</b><br>Run the SQL setup script in Supabase first.';
     else errEl.textContent='⚠️ Error: '+msg;
     btn.innerHTML='Sign In';btn.disabled=false;
+    console.error('Login error:',e);
   }
 }
 
 async function loadAllData(){
-  const[athletes,wellness,training,injuries,plans,assignments]=await Promise.all([
-    dbGet('athletes','?select=*,users(name,username)&order=name'),
-    dbGet('wellness_logs','?select=*&order=log_date.desc&limit=500'),
-    dbGet('training_logs','?select=*&order=log_date.desc&limit=500'),
-    dbGet('injuries','?select=*&order=injury_date.desc'),
-    dbGet('plans','?select=*&order=created_at.desc'),
-    dbGet('plan_assignments','?select=*'),
-  ]);
-  ALL_ATHLETES=athletes||[];ALL_WELLNESS=wellness||[];ALL_TRAINING=training||[];
-  ALL_INJURIES=injuries||[];
-  ALL_PLANS=(plans||[]).map(p=>({...p,exercises:p.exercises||[],assignedTo:(assignments||[]).filter(a=>a.plan_id===p.id).map(a=>a.athlete_id)}));
+  try{
+    const[athletes,users,wellness,training,injuries,plans,assignments]=await Promise.all([
+      dbGet('athletes','?select=*&order=name'),
+      dbGet('users','?select=id,name,username,password,role'),
+      dbGet('wellness_logs','?select=*&order=log_date.desc&limit=500'),
+      dbGet('training_logs','?select=*&order=log_date.desc&limit=500'),
+      dbGet('injuries','?select=*&order=injury_date.desc'),
+      dbGet('plans','?select=*&order=created_at.desc'),
+      dbGet('plan_assignments','?select=*'),
+    ]);
+    // Manually join athletes with users
+    const usersMap={};
+    (users||[]).forEach(u=>{usersMap[u.id]=u;});
+    ALL_ATHLETES=(athletes||[]).map(a=>({
+      ...a,
+      users:usersMap[a.user_id]||null,
+    }));
+    ALL_WELLNESS=wellness||[];
+    ALL_TRAINING=training||[];
+    ALL_INJURIES=injuries||[];
+    ALL_PLANS=(plans||[]).map(p=>({
+      ...p,
+      exercises:p.exercises||[],
+      assignedTo:(assignments||[]).filter(a=>a.plan_id===p.id).map(a=>a.athlete_id)
+    }));
+  }catch(e){throw e;}
+  // Load optional tables silently
+  try{const s=await dbGet('session_schedule','?select=*&order=scheduled_date.asc');ALL_SCHEDULES=s||[];}catch(e){ALL_SCHEDULES=[];}
 }
 
-function bootApp(){
+async function bootApp(){
   document.getElementById('login-screen').style.display='none';
   const av=document.getElementById('topbar-avatar');
   av.textContent=SESSION.name.charAt(0).toUpperCase();
@@ -1144,7 +1575,22 @@ function bootApp(){
   document.getElementById('topbar-role').textContent=SESSION.role==='coach'?'Coach / Analyst':'Athlete';
   document.getElementById('coach-nav').style.display=SESSION.role==='coach'?'block':'none';
   document.getElementById('athlete-nav').style.display=SESSION.role==='athlete'?'block':'none';
-  SESSION.role==='coach'?nav('dashboard'):nav('my-plan');
+  const mcLink=document.getElementById('mc-nav-link');
+  if(mcLink) mcLink.style.display=SESSION.role==='athlete'?'flex':'none';
+  // Load access control silently — don't block login if table missing
+  try{await loadAccessControl();}catch(e){console.log('Access control not loaded:',e.message);}
+  // Show data load status
+  if(SESSION.role==='coach'){
+    if(ALL_ATHLETES.length===0){
+      toast('⚠️ No athletes in database. Add athletes or run SQL setup!','err');
+    }else{
+      toast('✅ Loaded '+ALL_ATHLETES.length+' athletes');
+    }
+  }
+  // Small delay so DOM is ready
+  setTimeout(()=>{
+    SESSION.role==='coach'?nav('dashboard'):nav('my-plan');
+  },50);
 }
 
 function doLogout(){
@@ -1161,16 +1607,33 @@ function doLogout(){
 function nav(page){
   document.querySelectorAll('.view-page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
-  const el=document.getElementById('page-'+page);if(el)el.classList.add('active');
-  const lnk=document.querySelector(`.nav-link[data-page="${page}"]`);if(lnk)lnk.classList.add('active');
-  switch(page){
-    case'dashboard':renderDashboard();break;case'roster':renderFullRoster();break;
-    case'workout-builder':initBuilder();break;case'plans-list':renderPlansList();break;
-    case'analytics':initAnalytics();break;case'injuries':renderInjuries();break;
-    case'athlete-logs':renderAthleteLogs();break;case'my-plan':renderMyPlan();break;
-    case'wellness-log':resetWellnessForm();break;case'session-log':resetSessionLog();break;
-    case'my-history':renderMyHistory();break;case'manage-athletes':renderManageAthletes();break;
-    case'todays-session':renderTodaysSessions();break;
+  const el=document.getElementById('page-'+page);
+  if(el) el.classList.add('active');
+  const lnk=document.querySelector(`.nav-link[data-page="${page}"]`);
+  if(lnk) lnk.classList.add('active');
+  try{
+    switch(page){
+      case'dashboard':renderDashboard();break;
+      case'roster':renderFullRoster();break;
+      case'workout-builder':initBuilder();break;
+      case'plans-list':renderPlansList();break;
+      case'analytics':initAnalytics();break;
+      case'injuries':renderInjuries();break;
+      case'athlete-logs':renderAthleteLogs();break;
+      case'my-plan':renderMyPlan();break;
+      case'wellness-log':resetWellnessForm();break;
+      case'session-log':resetSessionLog();break;
+      case'my-history':renderMyHistory();break;
+      case'manage-athletes':renderManageAthletes();break;
+      case'add-athlete':renderAddAthlete();break;
+      case'todays-session':renderTodaysSessions();break;
+      case'calendar':initCalendar();break;
+      case'menstrual':renderMenstrual();break;
+      case'menstrual-coach':renderMenstrualCoach();break;
+    }
+  }catch(e){
+    console.error('Page render error ['+page+']:',e);
+    if(el) el.innerHTML=(el.innerHTML||'')+'<div style="margin:20px;padding:14px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;color:#EF4444;font-size:.8rem"><b>⚠️ Render error on '+page+':</b><br>'+e.message+'</div>';
   }
 }
 
@@ -1194,10 +1657,13 @@ function populateDashFilters(){
 function clearDashFilters(){
   document.getElementById('dash-discipline-filter').value='all';
   document.getElementById('dash-player-filter').value='all';
+  const f1=document.getElementById('dash-date-from');if(f1)f1.value='';
+  const f2=document.getElementById('dash-date-to');if(f2)f2.value='';
   renderDashboard();
 }
 
 function renderDashboard(){
+  try{
   document.getElementById('dash-date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   populateDashFilters();
   const discFilter=document.getElementById('dash-discipline-filter').value;
@@ -1240,53 +1706,55 @@ function renderDashboard(){
       <td>${injB}</td>
     </tr>`;
   }).join('');
-  document.getElementById('roster-status-tbody').innerHTML=rows||'<tr><td colspan="7"><div class="empty-s">No athletes match filter.</div></td></tr>';
+  document.getElementById('roster-status-tbody').innerHTML=rows||'<tr><td colspan="7"><div class="empty-s">No athletes found. Add athletes first.</div></td></tr>';
+  }catch(err){
+    console.error('Dashboard error:',err);
+    const g=document.getElementById('kpi-grid');
+    if(g) g.innerHTML='<div style="color:#EF4444;font-size:.8rem;padding:10px">⚠️ Dashboard error: '+err.message+'</div>';
+  }
 }
 
 // ─── FEATURE 1: MANAGE ATHLETES (username/password change) ───
 // ─── MANAGE ATHLETES — Full Edit All Fields ───
 function renderManageAthletes(){
   closeEditAth();
-  // Join athletes with users to get all data
-  Promise.all([
-    dbGet('athletes','?select=*,users(id,username,password)&order=name'),
-  ]).then(([athletes])=>{
-    const rows=(athletes||[]).map(a=>{
-      const username=a.users?.username||'—';
-      const password=a.users?.password||'—';
-      const uid=a.users?.id||'';
-      return`<tr style="cursor:pointer" onclick="openEditAth('${a.id}','${uid}','${a.name}','${a.position||''}','${a.age||''}','${a.discipline||''}','${username}','${password}')">
-        <td style="font-weight:600;color:#E2E8F0">${a.name}</td>
-        <td>${a.discipline?`<span class="badge bdg-p" style="font-size:.62rem">${a.discipline}</span>`:'—'}</td>
-        <td style="color:#94A3B8">${a.position||'—'}</td>
-        <td>${a.age||'—'}</td>
-        <td><code style="background:#0B0E14;padding:2px 7px;border-radius:4px;font-size:.76rem;color:#60A5FA">${username}</code></td>
-        <td>
-          <div style="display:flex;align-items:center;gap:6px">
-            <span id="pw-${a.id}" style="font-family:monospace;font-size:.76rem;color:#94A3B8">••••••</span>
-            <button onclick="event.stopPropagation();toggleShowPw('${a.id}','${password}')" style="background:none;border:none;cursor:pointer;color:#64748B;padding:2px">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-          </div>
-        </td>
-        <td>
-          <button onclick="event.stopPropagation();openEditAth('${a.id}','${uid}','${a.name}','${a.position||''}','${a.age||''}','${a.discipline||''}','${username}','${password}')"
-            style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:4px 10px;color:#60A5FA;font-size:.74rem;font-weight:600;cursor:pointer">
-            ✏️ Edit
+  // Use already-loaded ALL_ATHLETES (manually joined in loadAllData)
+  const athletes=ALL_ATHLETES;
+  const rows=athletes.map(a=>{
+    const username=a.users?.username||'—';
+    const password=a.users?.password||'—';
+    const uid=a.users?.id||a.user_id||'';
+    const gender=a.gender||'Male';
+    const gIcon=gender==='Female'?'👩':gender==='Male'?'👨':'⚧';
+    const gCol=gender==='Female'?'#EC4899':'#60A5FA';
+    return`<tr style="cursor:pointer" onclick="openEditAth('${a.id}','${uid}','${a.name}','${a.position||''}','${a.age||''}','${a.discipline||''}','${username}','${password}','${gender}')">
+      <td style="font-weight:600;color:#E2E8F0">${a.name} <span style="font-size:.7rem;color:${gCol}">${gIcon}</span></td>
+      <td>${a.discipline?`<span class="badge bdg-p" style="font-size:.62rem">${a.discipline}</span>`:'—'}</td>
+      <td style="color:#94A3B8">${a.position||'—'}</td>
+      <td>${a.age||'—'}</td>
+      <td><span style="font-size:.72rem;font-weight:700;color:${gCol}">${gender}</span></td>
+      <td><code style="background:#0B0E14;padding:2px 7px;border-radius:4px;font-size:.76rem;color:#60A5FA">${username}</code></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span id="pw-${a.id}" style="font-family:monospace;font-size:.76rem;color:#94A3B8">••••••</span>
+          <button onclick="event.stopPropagation();toggleShowPw('${a.id}','${password}')" style="background:none;border:none;cursor:pointer;color:#64748B;padding:2px">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
-        </td>
-      </tr>`;
-    }).join('');
-    document.getElementById('manage-ath-tbody').innerHTML=rows||'<tr><td colspan="7"><div class="empty-s">No athletes found.</div></td></tr>';
-  }).catch(e=>toast('Error: '+e.message,'err'));
+        </div>
+      </td>
+      <td>
+        <button onclick="event.stopPropagation();openEditAth('${a.id}','${uid}','${a.name}','${a.position||''}','${a.age||''}','${a.discipline||''}','${username}','${password}','${gender}')"
+          style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:4px 10px;color:#60A5FA;font-size:.74rem;font-weight:600;cursor:pointer">
+          ✏️ Edit
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('manage-ath-tbody').innerHTML=rows||'<tr><td colspan="8"><div class="empty-s">No athletes found.</div></td></tr>';
 }
 
-function toggleShowPw(id, pw){
-  const el=document.getElementById('pw-'+id);
-  el.textContent=el.textContent.includes('•')?pw:'••••••';
-}
 
-function openEditAth(athId, userId, name, pos, age, discipline, username, password){
+function openEditAth(athId, userId, name, pos, age, discipline, username, password, gender){
   document.getElementById('edit-ath-panel').style.display='block';
   document.getElementById('edit-ath-title').textContent='✏️ Editing: '+name;
   document.getElementById('edit-ath-id').value=athId;
@@ -1302,7 +1770,9 @@ function openEditAth(athId, userId, name, pos, age, discipline, username, passwo
   const match=opts.find(o=>o.value===discipline);
   if(match) discSel.value=discipline;
   else discSel.value='General S&C';
-  // Scroll to panel
+  // Set gender
+  const genSel=document.getElementById('edit-ath-gender');
+  if(genSel) genSel.value=gender||'Male';
   document.getElementById('edit-ath-panel').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
@@ -1317,6 +1787,7 @@ async function saveAllAthleteChanges(){
   const pos=document.getElementById('edit-ath-pos').value.trim();
   const age=parseInt(document.getElementById('edit-ath-age').value)||0;
   const discipline=document.getElementById('edit-ath-discipline').value;
+  const gender=document.getElementById('edit-ath-gender')?.value||'Male';
   const username=document.getElementById('edit-username').value.trim().toLowerCase();
   const password=document.getElementById('edit-password').value.trim();
   if(!name||!username||!password){toast('Name, username and password are required.','err');return;}
@@ -1324,7 +1795,7 @@ async function saveAllAthleteChanges(){
   btn.innerHTML='<span class="loader"></span> Saving...';btn.disabled=true;
   try{
     // Update athletes table
-    await dbPatch('athletes',{name,position:pos,age,discipline},`?id=eq.${athId}`);
+    await dbPatch('athletes',{name,position:pos,age,discipline,gender},`?id=eq.${athId}`);
     // Update users table
     await dbPatch('users',{name,username,password},`?id=eq.${userId}`);
     await loadAllData();
@@ -1341,16 +1812,11 @@ function cancelEdit(){closeEditAth();}
 async function saveUserChanges(){await saveAllAthleteChanges();}
 
 // ─── MANAGE TAB SWITCH ───
-function switchManageTab(tab){
-  document.getElementById('manage-ath-panel').style.display=tab==='athletes'?'block':'none';
-  document.getElementById('manage-coach-panel').style.display=tab==='coaches'?'block':'none';
-  document.getElementById('manage-tab-ath').className='tab-btn'+(tab==='athletes'?' active':'');
-  document.getElementById('manage-tab-coach').className='tab-btn'+(tab==='coaches'?' active':'');
-  if(tab==='coaches') renderCoachList();
-}
 
 // ─── COACH/ADMIN LIST ───
 function renderCoachList(){
+  const tbody=document.getElementById('manage-coach-tbody');
+  if(tbody) tbody.innerHTML='<tr><td colspan="5"><span class="loader"></span></td></tr>';
   dbGet('users','?role=eq.coach&select=*&order=name').then(coaches=>{
     const rows=(coaches||[]).map(c=>{
       const isSelf=SESSION&&SESSION.id===c.id;
@@ -1550,6 +2016,7 @@ function populateRosterFilters(){
 }
 
 function renderFullRoster(){
+  try{
   populateRosterFilters();
   const discFilter=document.getElementById('roster-discipline-filter').value;
   const playerFilter=document.getElementById('roster-player-filter').value;
@@ -1577,7 +2044,12 @@ function renderFullRoster(){
       </td>
     </tr>`;
   }).join('');
-  document.getElementById('roster-full-tbody').innerHTML=rows||'<tr><td colspan="8"><div class="empty-s">No athletes match filter.</div></td></tr>';
+  document.getElementById('roster-full-tbody').innerHTML=rows||'<tr><td colspan="8"><div class="empty-s">No athletes found. Add athletes first from "Add Athlete".</div></td></tr>';
+  }catch(err){
+    console.error('Roster error:',err);
+    const t=document.getElementById('roster-full-tbody');
+    if(t) t.innerHTML='<tr><td colspan="8" style="color:#EF4444;padding:10px">⚠️ Roster error: '+err.message+'</td></tr>';
+  }
 }
 
 async function deleteAthlete(athleteId, userId, name){
@@ -1679,65 +2151,254 @@ async function savePlan(){
   if(exercises.length===0){toast('Add at least one exercise.','err');return;}
   const assignedTo=[...document.querySelectorAll('#wb-assign-checks input:checked')].map(c=>c.value);
   if(assignedTo.length===0){toast('Select at least one athlete.','err');return;}
-  const btn=document.getElementById('save-plan-btn');btn.innerHTML='<span class="loader"></span> Saving...';btn.disabled=true;
+  const btn=document.getElementById('save-plan-btn');
+  const editingId=btn.dataset.editingId;
+  btn.innerHTML='<span class="loader"></span> Saving...';btn.disabled=true;
   try{
-    const plan=await dbPost('plans',{name,phase:getSelectVal('wb-phase'),week_number:parseInt(document.getElementById('wb-week').value)||1,session_date:document.getElementById('wb-date').value,session_time:document.getElementById('wb-time').value,session_type:getSelectVal('wb-type'),notes:document.getElementById('wb-notes').value.trim(),exercises});
-    const planId=plan[0].id;
-    await Promise.all(assignedTo.map(athId=>dbPost('plan_assignments',{plan_id:planId,athlete_id:athId})));
-    await loadAllData();toast('✅ Plan saved and assigned!');clearBuilder();
+    if(editingId){
+      // UPDATE existing plan
+      await dbPatch('plans',{name,phase:getSelectVal('wb-phase'),week_number:parseInt(document.getElementById('wb-week').value)||1,session_date:document.getElementById('wb-date').value,session_time:document.getElementById('wb-time').value,session_type:getSelectVal('wb-type'),notes:document.getElementById('wb-notes').value.trim(),exercises},`?id=eq.${editingId}`);
+      await dbDelete('plan_assignments',`?plan_id=eq.${editingId}`);
+      await Promise.all(assignedTo.map(athId=>dbPost('plan_assignments',{plan_id:editingId,athlete_id:athId})));
+      delete btn.dataset.editingId;
+      btn.textContent='Save & Assign Plan';
+      await loadAllData();toast('✅ Plan updated!');clearBuilder();
+    } else {
+      // NEW plan
+      const plan=await dbPost('plans',{name,phase:getSelectVal('wb-phase'),week_number:parseInt(document.getElementById('wb-week').value)||1,session_date:document.getElementById('wb-date').value,session_time:document.getElementById('wb-time').value,session_type:getSelectVal('wb-type'),notes:document.getElementById('wb-notes').value.trim(),exercises});
+      const planId=plan[0].id;
+      await Promise.all(assignedTo.map(athId=>dbPost('plan_assignments',{plan_id:planId,athlete_id:athId})));
+      await loadAllData();toast('✅ Plan saved and assigned!');clearBuilder();
+    }
   }catch(e){toast('Error: '+e.message,'err');}
   btn.innerHTML='Save & Assign Plan';btn.disabled=false;
 }
 
 // PLANS LIST
-function renderPlansList(){
-  const rows=ALL_PLANS.map(p=>{
-    const names=(p.assignedTo||[]).map(id=>{const a=ALL_ATHLETES.find(x=>x.id===id);return a?a.name:'?';}).join(', ');
-    return`<tr>
-      <td style="font-weight:600;color:#E2E8F0">${p.name}</td>
-      <td style="color:#94A3B8;font-size:.78rem">${p.session_type||'—'}</td>
-      <td><span class="badge bdg-b">${p.phase||'—'}</span></td>
-      <td style="font-weight:600;color:#A78BFA">W${p.week_number}</td>
-      <td style="color:#94A3B8">${fmtDate(p.session_date)}</td>
-      <td style="font-weight:600;color:#60A5FA">${(p.exercises||[]).length}</td>
-      <td style="font-size:.76rem;color:#94A3B8;max-width:180px">${names}</td>
-      <td>
-        <div style="display:flex;gap:5px">
-          <button onclick="copyPlan('${p.id}')" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:4px 8px;color:#60A5FA;font-size:.72rem;font-weight:600;cursor:pointer">📋 Copy</button>
-          <button class="bg-btn" style="padding:3px 8px;font-size:.72rem" onclick="deletePlan('${p.id}')">🗑 Delete</button>
-        </div>
-      </td>
-    </tr>`;
-  }).join('');
-  document.getElementById('plans-list-tbody').innerHTML=rows||'<tr><td colspan="8"><div class="empty-s">No plans saved. Use Workout Builder.</div></td></tr>';
-}
 async function deletePlan(id){
   if(!confirm('Delete this plan?'))return;
   try{await dbDelete('plan_assignments',`?plan_id=eq.${id}`);await dbDelete('plans',`?id=eq.${id}`);await loadAllData();renderPlansList();toast('Plan deleted.');}
   catch(e){toast('Error: '+e.message,'err');}
 }
 
-// ANALYTICS
-function initAnalytics(){
-  const sel=document.getElementById('analytics-ath-sel');const prev=sel.value;
-  sel.innerHTML=ALL_ATHLETES.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
-  if(prev&&ALL_ATHLETES.find(a=>a.id===prev))sel.value=prev;else if(ALL_ATHLETES.length)sel.value=ALL_ATHLETES[0].id;
+// ─── ANALYTICS — Full Version with RA, EWMA, Team, Date Range ───
+function setAnRange(days){
+  const to=new Date();
+  const from=new Date();
+  from.setDate(from.getDate()-days);
+  document.getElementById('an-date-from').value=from.toISOString().split('T')[0];
+  document.getElementById('an-date-to').value=to.toISOString().split('T')[0];
   renderAnalyticsCharts();
 }
+
+function onAnViewChange(){
+  const mode=document.getElementById('an-view-mode').value;
+  document.getElementById('an-single-wrap').style.display=mode==='single'?'flex':'none';
+  document.getElementById('an-team-wrap').style.display=mode==='team'?'flex':'none';
+  renderAnalyticsCharts();
+}
+
+function initAnalytics(){
+  const sel=document.getElementById('analytics-ath-sel');
+  const prev=sel.value;
+  sel.innerHTML=ALL_ATHLETES.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
+  if(prev&&ALL_ATHLETES.find(a=>a.id===prev)) sel.value=prev;
+  else if(ALL_ATHLETES.length) sel.value=ALL_ATHLETES[0].id;
+
+  // Populate team disc filter
+  const discs=[...new Set(ALL_ATHLETES.map(a=>a.discipline).filter(Boolean))].sort();
+  const td=document.getElementById('an-team-disc');
+  td.innerHTML='<option value="all">All Sports</option>'+discs.map(d=>`<option value="${d}">${d}</option>`).join('');
+
+  // Default date range — last 28 days
+  if(!document.getElementById('an-date-from').value){
+    const to=new Date();
+    const from=new Date();
+    from.setDate(from.getDate()-28);
+    document.getElementById('an-date-from').value=from.toISOString().split('T')[0];
+    document.getElementById('an-date-to').value=to.toISOString().split('T')[0];
+  }
+  renderAnalyticsCharts();
+}
+
+function getAnDates(){
+  const from=document.getElementById('an-date-from').value;
+  const to=document.getElementById('an-date-to').value;
+  if(!from||!to) return null;
+  const dates=[];
+  const cur=new Date(from+'T00:00:00');
+  const end=new Date(to+'T00:00:00');
+  while(cur<=end){dates.push(cur.toISOString().split('T')[0]);cur.setDate(cur.getDate()+1);}
+  return dates;
+}
+
+function calcEWMA(values,lambda=0.1){
+  // EWMA: ewma[i] = lambda * value[i] + (1-lambda) * ewma[i-1]
+  const result=[];
+  let prev=null;
+  values.forEach(v=>{
+    if(v===null||v===undefined){result.push(null);return;}
+    if(prev===null){prev=v;result.push(v);return;}
+    const e=lambda*v+(1-lambda)*prev;
+    prev=e;result.push(+e.toFixed(2));
+  });
+  return result;
+}
+
+function calcACWR_RA(training,dateStr){
+  // Rolling Average: acute=7day avg, chronic=28day avg
+  const getAvg=(n)=>{
+    let tot=0;
+    for(let j=0;j<n;j++){
+      const d=new Date(dateStr+'T00:00:00');
+      d.setDate(d.getDate()-j);
+      const ds=d.toISOString().split('T')[0];
+      tot+=training.filter(t=>t.log_date===ds).reduce((s,t)=>s+t.au,0);
+    }
+    return tot/n;
+  };
+  const acute=getAvg(7),chronic=getAvg(28);
+  return chronic>0?+(acute/chronic).toFixed(2):null;
+}
+
+function calcACWR_EWMA(auByDate,dates,lambda=0.1){
+  // EWMA ACWR: ewma_acute (lambda=0.1 for ~7d) / ewma_chronic (lambda=0.05 for ~28d)
+  let ewmaAcute=null,ewmaChronic=null;
+  return dates.map(d=>{
+    const au=auByDate[d]||0;
+    ewmaAcute=ewmaAcute===null?au:lambda*au+(1-lambda)*ewmaAcute;
+    ewmaChronic=ewmaChronic===null?au:0.05*au+(1-0.05)*ewmaChronic;
+    if(ewmaChronic===0) return null;
+    return+(ewmaAcute/ewmaChronic).toFixed(2);
+  });
+}
+
 function renderAnalyticsCharts(){
-  const athId=document.getElementById('analytics-ath-sel').value;const d7=getLast7Days();
-  const training=ALL_TRAINING.filter(t=>t.athlete_id===athId);const wellness=ALL_WELLNESS.filter(w=>w.athlete_id===athId);
-  const labels=d7.map(dLabel);const auByDay=d7.map(d=>training.filter(t=>t.log_date===d).reduce((s,t)=>s+t.au,0));
-  const wellByDay=d7.map(d=>{const w=wellness.find(x=>x.log_date===d);return w?w.score:null;});
-  if(chartWL_inst)chartWL_inst.destroy();
-  const cA=document.getElementById('chartWL').getContext('2d');
-  chartWL_inst=new Chart(cA,{data:{labels,datasets:[{type:'line',label:'Wellness %',data:wellByDay,borderColor:'#22C55E',backgroundColor:'rgba(34,197,94,.08)',borderWidth:2.5,pointBackgroundColor:'#22C55E',pointRadius:4,tension:.35,fill:true,yAxisID:'yL',spanGaps:true},{type:'bar',label:'Load (AU)',data:auByDay,backgroundColor:'rgba(59,130,246,.45)',borderColor:'rgba(59,130,246,.7)',borderWidth:1,borderRadius:4,yAxisID:'yR'}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#94A3B8',font:{size:11},boxWidth:11}},tooltip:{backgroundColor:'#1A2035',borderColor:'#232B3E',borderWidth:1,titleColor:'#E2E8F0',bodyColor:'#94A3B8'}},scales:{yL:{type:'linear',position:'left',min:0,max:100,grid:{color:'rgba(35,43,62,.5)'},ticks:{color:'#94A3B8',font:{size:10},callback:v=>v+'%'}},yR:{type:'linear',position:'right',min:0,grid:{drawOnChartArea:false},ticks:{color:'#94A3B8',font:{size:10}}},x:{grid:{color:'rgba(35,43,62,.5)'},ticks:{color:'#94A3B8',font:{size:10}}}}}});
-  const acwrData=[],acwrLabels=[];
-  for(let i=13;i>=0;i--){const refDate=new Date();refDate.setDate(refDate.getDate()-i);const refStr=refDate.toISOString().split('T')[0];acwrLabels.push(dLabel(refStr));const getAvg=n=>{let tot=0;for(let j=0;j<n;j++){const d2=new Date(refStr+'T00:00:00');d2.setDate(d2.getDate()-j);const ds=d2.toISOString().split('T')[0];tot+=training.filter(t=>t.log_date===ds).reduce((s,t)=>s+t.au,0);}return tot/n;};const acute=getAvg(7),chronic=getAvg(28);acwrData.push(chronic>0?+(acute/chronic).toFixed(2):null);}
-  const sweetPlugin={id:'sw',beforeDraw(chart){const{ctx:c,chartArea:{left,right},scales:{y}}=chart;if(!y)return;c.save();c.fillStyle='rgba(34,197,94,.07)';c.fillRect(left,y.getPixelForValue(1.3),right-left,y.getPixelForValue(.8)-y.getPixelForValue(1.3));c.strokeStyle='rgba(239,68,68,.6)';c.lineWidth=1.5;c.setLineDash([5,4]);c.beginPath();c.moveTo(left,y.getPixelForValue(1.5));c.lineTo(right,y.getPixelForValue(1.5));c.stroke();c.setLineDash([]);c.restore();}};
-  if(chartACWR_inst)chartACWR_inst.destroy();
-  const cB=document.getElementById('chartACWR').getContext('2d');
-  chartACWR_inst=new Chart(cB,{type:'line',plugins:[sweetPlugin],data:{labels:acwrLabels,datasets:[{label:'ACWR',data:acwrData,borderColor:'#F59E0B',backgroundColor:'rgba(245,158,11,.07)',borderWidth:2.5,pointBackgroundColor:acwrData.map(v=>!v?'#64748B':v>1.5?'#EF4444':v>1.3?'#EAB308':v>=0.8?'#22C55E':'#EAB308'),pointRadius:5,tension:.35,fill:false,spanGaps:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94A3B8',font:{size:11},boxWidth:11}},tooltip:{backgroundColor:'#1A2035',borderColor:'#232B3E',borderWidth:1,titleColor:'#E2E8F0',bodyColor:'#94A3B8',callbacks:{label:ctx=>`ACWR: ${ctx.parsed.y!==null?ctx.parsed.y.toFixed(2):'—'}`}}},scales:{y:{min:0,max:2.2,grid:{color:'rgba(35,43,62,.5)'},ticks:{color:'#94A3B8',font:{size:10},stepSize:.5}},x:{grid:{color:'rgba(35,43,62,.5)'},ticks:{color:'#94A3B8',font:{size:10}}}}}});
+  const mode=document.getElementById('an-view-mode').value;
+  const dates=getAnDates();
+  if(!dates||dates.length===0) return;
+  const labels=dates.map(d=>dLabel(d));
+  document.getElementById('an-wl-sub').textContent=`${dLabel(dates[0])} → ${dLabel(dates[dates.length-1])} (${dates.length} days)`;
+
+  if(mode==='single'){
+    const athId=document.getElementById('analytics-ath-sel').value;
+    const training=ALL_TRAINING.filter(t=>t.athlete_id===athId);
+    const wellness=ALL_WELLNESS.filter(w=>w.athlete_id===athId);
+
+    const auByDate={};
+    training.forEach(t=>{auByDate[t.log_date]=(auByDate[t.log_date]||0)+t.au;});
+
+    const auByDay=dates.map(d=>auByDate[d]||0);
+    const wellByDay=dates.map(d=>{const w=wellness.find(x=>x.log_date===d);return w?w.score:null;});
+    const acwrRA=dates.map(d=>calcACWR_RA(training,d));
+    const acwrEWMA=calcACWR_EWMA(auByDate,dates);
+    const auEWMA=calcEWMA(auByDay,0.1);
+
+    // Stats
+    const avgWell=wellByDay.filter(v=>v!==null).reduce((s,v)=>s+v,0)/(wellByDay.filter(v=>v!==null).length||1);
+    const totalAU=auByDay.reduce((s,v)=>s+v,0);
+    const avgRPE=training.filter(t=>dates.includes(t.log_date)).reduce((s,t)=>s+t.rpe,0)/(training.filter(t=>dates.includes(t.log_date)).length||1);
+    const lastACWR=acwrRA.filter(v=>v!==null).pop()||0;
+    const sessCount=training.filter(t=>dates.includes(t.log_date)).length;
+
+    const wc=wcol(Math.round(avgWell));
+    const acwrColor=lastACWR>1.5?'#EF4444':lastACWR>1.3?'#EAB308':lastACWR>=0.8?'#22C55E':'#60A5FA';
+    document.getElementById('an-stats-row').innerHTML=[
+      ['Avg Wellness',Math.round(avgWell)+'%',wc.hex],
+      ['Sessions',sessCount,'#60A5FA'],
+      ['Total AU',Math.round(totalAU).toLocaleString(),'#A78BFA'],
+      ['Avg RPE',avgRPE.toFixed(1),'#EF4444'],
+      ['Last ACWR',lastACWR.toFixed(2),acwrColor],
+    ].map(([l,v,c])=>`<div style="background:#1A2035;border:1px solid #232B3E;border-radius:10px;padding:12px;text-align:center"><p style="font-size:.62rem;color:#64748B;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">${l}</p><p style="font-size:1.1rem;font-weight:800;color:${c}">${v}</p></div>`).join('');
+
+    // WL Chart
+    if(chartWL_inst) chartWL_inst.destroy();
+    chartWL_inst=new Chart(document.getElementById('chartWL').getContext('2d'),{
+      data:{labels,datasets:[
+        {type:'line',label:'Wellness %',data:wellByDay,borderColor:'#22C55E',backgroundColor:'rgba(34,197,94,.08)',borderWidth:2.5,pointRadius:3,tension:.35,fill:true,yAxisID:'yL',spanGaps:true},
+        {type:'bar',label:'AU Load',data:auByDay,backgroundColor:'rgba(59,130,246,.4)',borderColor:'rgba(59,130,246,.7)',borderWidth:1,borderRadius:3,yAxisID:'yR'},
+        {type:'line',label:'AU EWMA',data:auEWMA,borderColor:'#A78BFA',backgroundColor:'transparent',borderWidth:2,borderDash:[5,3],pointRadius:0,yAxisID:'yR',spanGaps:true},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#94A3B8',font:{size:10},boxWidth:10}}},scales:{yL:{type:'linear',position:'left',min:0,max:100,grid:{color:'rgba(35,43,62,.5)'},ticks:{color:'#94A3B8',font:{size:9},callback:v=>v+'%'}},yR:{type:'linear',position:'right',min:0,grid:{drawOnChartArea:false},ticks:{color:'#94A3B8',font:{size:9}}},x:{grid:{color:'rgba(35,43,62,.3)'},ticks:{color:'#94A3B8',font:{size:8},maxTicksLimit:10}}}}
+    });
+
+    // ACWR RA Chart
+    if(chartACWR_inst) chartACWR_inst.destroy();
+    const sweetPlugin={id:'sw',beforeDraw(chart){const{ctx:ct,chartArea:{left,right},scales:{y}}=chart;if(!y)return;ct.save();ct.fillStyle='rgba(34,197,94,.07)';ct.fillRect(left,y.getPixelForValue(1.3),right-left,y.getPixelForValue(.8)-y.getPixelForValue(1.3));ct.strokeStyle='rgba(239,68,68,.5)';ct.lineWidth=1;ct.setLineDash([4,3]);ct.beginPath();ct.moveTo(left,y.getPixelForValue(1.5));ct.lineTo(right,y.getPixelForValue(1.5));ct.stroke();ct.setLineDash([]);ct.restore();}};
+    chartACWR_inst=new Chart(document.getElementById('chartACWR').getContext('2d'),{
+      type:'line',plugins:[sweetPlugin],
+      data:{labels,datasets:[{label:'ACWR (RA)',data:acwrRA,borderColor:'#22C55E',backgroundColor:'rgba(34,197,94,.07)',borderWidth:2.5,pointBackgroundColor:acwrRA.map(v=>!v?'#64748B':v>1.5?'#EF4444':v>1.3?'#EAB308':v>=0.8?'#22C55E':'#60A5FA'),pointRadius:4,tension:.35,fill:false,spanGaps:true}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94A3B8',font:{size:10},boxWidth:10}},tooltip:{callbacks:{label:ctx=>`RA ACWR: ${ctx.parsed.y!==null?ctx.parsed.y.toFixed(2):'—'}`}}},scales:{y:{min:0,max:2.2,grid:{color:'rgba(35,43,62,.5)'},ticks:{color:'#94A3B8',font:{size:9},stepSize:.5}},x:{grid:{color:'rgba(35,43,62,.3)'},ticks:{color:'#94A3B8',font:{size:8},maxTicksLimit:10}}}}
+    });
+
+    // EWMA Chart
+    if(chartEWMA_inst) chartEWMA_inst.destroy();
+    const ewmaPlugin={id:'ew',beforeDraw(chart){const{ctx:ct,chartArea:{left,right},scales:{y}}=chart;if(!y)return;ct.save();ct.fillStyle='rgba(34,197,94,.07)';ct.fillRect(left,y.getPixelForValue(1.3),right-left,y.getPixelForValue(.8)-y.getPixelForValue(1.3));ct.strokeStyle='rgba(239,68,68,.5)';ct.lineWidth=1;ct.setLineDash([4,3]);ct.beginPath();ct.moveTo(left,y.getPixelForValue(1.5));ct.lineTo(right,y.getPixelForValue(1.5));ct.stroke();ct.setLineDash([]);ct.restore();}};
+    chartEWMA_inst=new Chart(document.getElementById('chartEWMA').getContext('2d'),{
+      type:'line',plugins:[ewmaPlugin],
+      data:{labels,datasets:[
+        {label:'ACWR (EWMA)',data:acwrEWMA,borderColor:'#EF4444',backgroundColor:'rgba(239,68,68,.07)',borderWidth:2.5,pointBackgroundColor:acwrEWMA.map(v=>!v?'#64748B':v>1.5?'#EF4444':v>1.3?'#EAB308':v>=0.8?'#22C55E':'#60A5FA'),pointRadius:4,tension:.35,fill:false,spanGaps:true},
+        {label:'ACWR (RA)',data:acwrRA,borderColor:'#22C55E',backgroundColor:'transparent',borderWidth:1.5,borderDash:[5,3],pointRadius:2,tension:.35,spanGaps:true},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94A3B8',font:{size:10},boxWidth:10}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y!==null?ctx.parsed.y.toFixed(2):'—'}`}}},scales:{y:{min:0,max:2.2,grid:{color:'rgba(35,43,62,.5)'},ticks:{color:'#94A3B8',font:{size:9},stepSize:.5}},x:{grid:{color:'rgba(35,43,62,.3)'},ticks:{color:'#94A3B8',font:{size:8},maxTicksLimit:10}}}}
+    });
+
+    // Team chart — show team wellness for context
+    renderTeamChart();
+
+  } else {
+    // TEAM MODE
+    const disc=document.getElementById('an-team-disc').value;
+    let athletes=ALL_ATHLETES;
+    if(disc!=='all') athletes=athletes.filter(a=>a.discipline===disc);
+    renderTeamChart(athletes,dates);
+  }
+
+  // RPE Pending check
+  renderRpePending();
+}
+
+function renderTeamChart(athletes,dates){
+  if(!athletes) athletes=ALL_ATHLETES;
+  if(!dates) dates=getAnDates()||[];
+  if(chartTeam_inst) chartTeam_inst.destroy();
+  const labels=athletes.map(a=>a.name.split(' ')[0]);
+  const lastWell=athletes.map(a=>{
+    const w=ALL_WELLNESS.filter(x=>x.athlete_id===a.id&&(dates.length===0||dates.includes(x.log_date))).sort((x,y)=>y.log_date.localeCompare(x.log_date))[0];
+    return w?w.score:null;
+  });
+  const colors2=lastWell.map(v=>v===null?'#334155':v>=80?'rgba(34,197,94,.7)':v>=60?'rgba(234,179,8,.7)':'rgba(239,68,68,.7)');
+  chartTeam_inst=new Chart(document.getElementById('chartTeam').getContext('2d'),{
+    type:'bar',
+    data:{labels,datasets:[{label:'Latest Wellness %',data:lastWell,backgroundColor:colors2,borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`Wellness: ${ctx.parsed.y!==null?ctx.parsed.y+'%':'No data'}`}}},scales:{y:{min:0,max:100,grid:{color:'rgba(35,43,62,.5)'},ticks:{color:'#94A3B8',font:{size:9},callback:v=>v+'%'},suggestedMax:100},x:{grid:{color:'rgba(35,43,62,.3)'},ticks:{color:'#94A3B8',font:{size:8}}}}}
+  });
+}
+
+function renderRpePending(){
+  const today=todayStr();
+  const missing=ALL_ATHLETES.filter(a=>{
+    const hasWell=ALL_WELLNESS.some(w=>w.athlete_id===a.id&&w.log_date===today);
+    const hasRPE=ALL_TRAINING.some(t=>t.athlete_id===a.id&&t.log_date===today);
+    return !hasWell||!hasRPE;
+  });
+  const el=document.getElementById('an-rpe-pending');
+  if(!el) return;
+  if(missing.length===0){el.style.display='none';return;}
+  el.style.display='block';
+  el.innerHTML=`<div style="background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.25);border-radius:10px;padding:12px 16px">
+    <p style="font-size:.78rem;font-weight:700;color:#EAB308;margin-bottom:8px">⏳ Pending Today (${today}) — ${missing.length} athlete${missing.length>1?'s':''}</p>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      ${missing.map(a=>{
+        const hasW=ALL_WELLNESS.some(w=>w.athlete_id===a.id&&w.log_date===today);
+        const hasR=ALL_TRAINING.some(t=>t.athlete_id===a.id&&t.log_date===today);
+        return`<span style="background:#0B0E14;border:1px solid #232B3E;border-radius:6px;padding:3px 10px;font-size:.74rem;color:#E2E8F0">
+          ${a.name} ${!hasW?'<span style="color:#EF4444">W</span>':'<span style="color:#22C55E">W✓</span>'} ${!hasR?'<span style="color:#EF4444">RPE</span>':'<span style="color:#22C55E">RPE✓</span>'}
+        </span>`;
+      }).join('')}
+    </div>
+    <p style="font-size:.68rem;color:#64748B;margin-top:6px">W = Wellness  |  RPE = Session RPE  |  Red = Not submitted  |  Green ✓ = Done</p>
+  </div>`;
 }
 
 // INJURIES
@@ -1765,6 +2426,8 @@ function onInjDiscFilter(doRender=true){
 function clearInjFilters(){
   document.getElementById('inj-disc-filter').value='all';
   document.getElementById('inj-ath-filter').value='all';
+  const f1=document.getElementById('inj-date-from');if(f1)f1.value='';
+  const f2=document.getElementById('inj-date-to');if(f2)f2.value='';
   renderInjuries();
 }
 
@@ -1775,15 +2438,21 @@ function renderInjuries(){
 
   const discF=document.getElementById('inj-disc-filter').value;
   const athF=document.getElementById('inj-ath-filter').value;
+  const{from,to}=getDateRange('inj-date-from','inj-date-to');
 
-  // Filter athletes
   let filtAths=ALL_ATHLETES;
   if(discF!=='all') filtAths=filtAths.filter(a=>a.discipline===discF);
   if(athF!=='all') filtAths=filtAths.filter(a=>a.id===athF);
   const filtIds=new Set(filtAths.map(a=>a.id));
 
-  const active=ALL_INJURIES.filter(i=>!i.resolved&&filtIds.has(i.athlete_id));
-  const resolved=ALL_INJURIES.filter(i=>i.resolved&&filtIds.has(i.athlete_id));
+  let active=ALL_INJURIES.filter(i=>!i.resolved&&filtIds.has(i.athlete_id));
+  let resolved=ALL_INJURIES.filter(i=>i.resolved&&filtIds.has(i.athlete_id));
+
+  // Date filter on injury_date
+  if(from||to){
+    active=active.filter(i=>inRange(i.injury_date,from,to));
+    resolved=resolved.filter(i=>inRange(i.injury_date,from,to));
+  }
 
   document.getElementById('inj-count-badge').textContent=active.length+' active';
   document.getElementById('inj-hist-count').textContent=resolved.length+' resolved';
@@ -1949,6 +2618,11 @@ async function deleteInj(id){
 }
 
 // ─── ADD COACH / ADMIN ───
+function renderAddAthlete(){
+  // Populate discipline options if needed — form is static HTML
+  switchAddRole('athlete');
+}
+
 function switchAddRole(role){
   document.getElementById('add-athlete-form').style.display=role==='athlete'?'block':'none';
   document.getElementById('add-coach-form').style.display=role==='coach'?'block':'none';
@@ -1976,7 +2650,11 @@ async function addCoach(){
 
 // ─── TODAY'S SESSIONS (Athlete portal) ───
 function renderTodaysSessions(){
-  if(!SESSION?.athlete_id) return;
+  if(!SESSION?.athlete_id){
+    const el=document.getElementById('todays-sessions-content');
+    if(el) el.innerHTML='<div class="empty-s">No athlete profile linked. Contact your coach.</div>';
+    return;
+  }
   const today=todayStr();
   document.getElementById('todays-date-lbl').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
@@ -2270,9 +2948,27 @@ function renderAthleteLogs(){
 function switchLogsTab(tab){logsTab=tab;document.getElementById('logs-w-panel').style.display=tab==='wellness'?'block':'none';document.getElementById('logs-t-panel').style.display=tab==='training'?'block':'none';document.getElementById('logs-tab-w').className='tab-btn'+(tab==='wellness'?' active':'');document.getElementById('logs-tab-t').className='tab-btn'+(tab==='training'?' active':'');renderAthleteLogsData();}
 function renderAthleteLogsData(){
   const sel=document.getElementById('logs-ath-filter').value;
+  const status=document.getElementById('logs-status-filter')?.value||'all';
+  const{from,to}=getDateRange('logs-date-from','logs-date-to');
+
   let wellness=[...ALL_WELLNESS].sort((a,b)=>b.log_date.localeCompare(a.log_date));
   let training=[...ALL_TRAINING].sort((a,b)=>b.log_date.localeCompare(a.log_date));
   if(sel!=='all'){wellness=wellness.filter(w=>w.athlete_id===sel);training=training.filter(t=>t.athlete_id===sel);}
+  if(from||to){wellness=wellness.filter(w=>inRange(w.log_date,from,to));training=training.filter(t=>inRange(t.log_date,from,to));}
+
+  // Status filters
+  if(status==='low-well') wellness=wellness.filter(w=>w.score<60);
+  if(status==='missing-rpe'){
+    // Show dates where wellness exists but no RPE
+    const rpeDate=new Set(training.map(t=>t.log_date+'_'+t.athlete_id));
+    wellness=wellness.filter(w=>!rpeDate.has(w.log_date+'_'+w.athlete_id));
+  }
+  if(status==='missing-well'){
+    // Show RPE entries where no wellness that day
+    const wellDate=new Set(wellness.map(w=>w.log_date+'_'+w.athlete_id));
+    training=training.filter(t=>!wellDate.has(t.log_date+'_'+t.athlete_id));
+    wellness=[];
+  }
 
   const delBtn=(fn,id)=>`<button onclick="${fn}('${id}')" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:5px;padding:2px 7px;color:#EF4444;font-size:.7rem;cursor:pointer" title="Delete">🗑</button>`;
 
@@ -2280,13 +2976,13 @@ function renderAthleteLogsData(){
     const a=ALL_ATHLETES.find(x=>x.id===w.athlete_id);const wc=wcol(w.score);
     return`<tr><td style="color:#94A3B8">${fmtDate(w.log_date)}</td><td style="font-weight:600;color:#E2E8F0">${a?a.name:'?'}</td><td>${w.sleep}</td><td>${w.fatigue}</td><td>${w.soreness}</td><td>${w.stress}</td><td>${w.mood}</td><td style="font-weight:700;color:${wc.hex}">${w.score}%</td><td><span class="badge ${wc.cls}">${wc.label}</span></td><td>${delBtn('deleteWellnessLog',w.id)}</td></tr>`;
   }).join('');
-  document.getElementById('coach-w-tbody').innerHTML=wRows||'<tr><td colspan="10"><div class="empty-s">No wellness logs.</div></td></tr>';
+  document.getElementById('coach-w-tbody').innerHTML=wRows||'<tr><td colspan="10"><div class="empty-s">No wellness logs match filter.</div></td></tr>';
 
   const tRows=training.map(t=>{
     const a=ALL_ATHLETES.find(x=>x.id===t.athlete_id);
     return`<tr><td style="color:#94A3B8">${fmtDate(t.log_date)}</td><td style="font-weight:600;color:#E2E8F0">${a?a.name:'?'}</td><td>${t.session_type}</td><td>${t.duration_mins} min</td><td>${t.rpe}</td><td style="font-weight:700;color:#60A5FA">${t.au}</td><td>${delBtn('deleteSessionLog',t.id)}</td></tr>`;
   }).join('');
-  document.getElementById('coach-t-tbody').innerHTML=tRows||'<tr><td colspan="7"><div class="empty-s">No session logs.</div></td></tr>';
+  document.getElementById('coach-t-tbody').innerHTML=tRows||'<tr><td colspan="7"><div class="empty-s">No session logs match filter.</div></td></tr>';
 }
 
 async function deleteWellnessLog(id){
@@ -2313,22 +3009,28 @@ async function addAthlete(){
   const pos=document.getElementById('new-ath-pos').value.trim();
   const age=parseInt(document.getElementById('new-ath-age').value);
   const discipline=document.getElementById('new-ath-discipline').value;
+  const gender=document.getElementById('new-ath-gender')?.value||'Male';
   const username=document.getElementById('new-ath-user').value.trim().toLowerCase();
   const password=document.getElementById('new-ath-pass').value.trim();
   if(!name||!pos||!username||!password){toast('All fields required.','err');return;}
   if(!age||age<14){toast('Valid age required.','err');return;}
   try{
     const userRes=await dbPost('users',{name,username,password,role:'athlete'});
-    await dbPost('athletes',{user_id:userRes[0].id,name,position:pos,age,discipline});
+    await dbPost('athletes',{user_id:userRes[0].id,name,position:pos,age,discipline,gender});
     await loadAllData();
     ['new-ath-name','new-ath-pos','new-ath-age','new-ath-user','new-ath-pass'].forEach(id=>document.getElementById(id).value='');
-    toast('✅ '+name+' added! ('+discipline+') Login: '+username+' / '+password);
+    toast('✅ '+name+' added! ('+discipline+' · '+gender+') Login: '+username+' / '+password);
   }catch(e){toast('Error: '+e.message,'err');}
 }
 
 // MY PLAN
 function renderMyPlan(){
-  if(!SESSION)return;
+  if(!SESSION){return;}
+  if(!SESSION.athlete_id){
+    const el=document.getElementById('my-plan-content');
+    if(el) el.innerHTML='<div class="empty-s">Athlete profile not linked. Please contact your coach to set up your account.</div>';
+    return;
+  }
   const myPlans=ALL_PLANS.filter(p=>p.assignedTo&&p.assignedTo.includes(SESSION.athlete_id));
   const wf=document.getElementById('plan-filter-week');
   if(myPlans.length===0){
@@ -2518,8 +3220,646 @@ function exportAllDataCSV(){
   toast('✅ Exporting all data — 3 files will download!');
 }
 
+// ─── WEEKLY CALENDAR ───
+let calCurrentDate=new Date();
+let calSchedules=[];
+
+function initCalendar(){
+  try{
+    const discs=[...new Set((ALL_ATHLETES||[]).map(a=>a.discipline).filter(Boolean))].sort();
+    const df=document.getElementById('cal-disc-filter');
+    if(df) df.innerHTML='<option value="all">All Sports</option>'+discs.map(d=>`<option value="${d}">${d}</option>`).join('');
+    calSchedules=[...(ALL_SCHEDULES||[])];
+    renderCalendar();
+  }catch(e){
+    const g=document.getElementById('cal-grid');
+    if(g) g.innerHTML='<div style="padding:20px;color:#EF4444">Calendar error: '+e.message+'</div>';
+    console.error('Calendar init error:',e);
+  }
+}
+
+function calNav(dir){
+  const view=document.getElementById('cal-view').value;
+  if(view==='week') calCurrentDate.setDate(calCurrentDate.getDate()+dir*7);
+  else calCurrentDate.setMonth(calCurrentDate.getMonth()+dir);
+  renderCalendar();
+}
+
+function calToday(){calCurrentDate=new Date();renderCalendar();}
+
+function getWeekDates(refDate){
+  const monday=new Date(refDate);
+  const day=monday.getDay();
+  const diff=day===0?-6:1-day;
+  monday.setDate(monday.getDate()+diff);
+  const dates=[];
+  for(let i=0;i<7;i++){
+    const d=new Date(monday);
+    d.setDate(monday.getDate()+i);
+    dates.push(d);
+  }
+  return dates;
+}
+
+function renderCalendar(){
+  calSchedules=[...ALL_SCHEDULES];
+  const view=document.getElementById('cal-view').value;
+  const discFilter=document.getElementById('cal-disc-filter').value;
+  const meso=document.getElementById('cal-meso').value;
+  const micro=document.getElementById('cal-micro').value;
+  const today=todayStr();
+
+  // Filter schedules
+  let filtered=calSchedules;
+  if(discFilter!=='all') filtered=filtered.filter(s=>s.discipline===discFilter||s.discipline==='all');
+
+  if(view==='week'){
+    const weekDates=getWeekDates(calCurrentDate);
+    const startStr=weekDates[0].toISOString().split('T')[0];
+    const endStr=weekDates[6].toISOString().split('T')[0];
+
+    document.getElementById('cal-week-label').textContent=
+      `Week of ${weekDates[0].toLocaleDateString('en-GB',{day:'numeric',month:'short'})} — ${weekDates[6].toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}  |  Meso ${meso}  |  Micro Week ${micro}`;
+
+    const dayNames=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const colors3={'#3B82F6':'rgba(59,130,246,.15)','#22C55E':'rgba(34,197,94,.15)','#EF4444':'rgba(239,68,68,.15)','#F59E0B':'rgba(245,158,11,.15)','#8B5CF6':'rgba(139,92,246,.15)'};
+
+    let html=`<div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid #232B3E">`;
+    weekDates.forEach((d,i)=>{
+      const ds=d.toISOString().split('T')[0];
+      const isToday=ds===today;
+      html+=`<div style="padding:8px 10px;text-align:center;border-right:${i<6?'1px solid #232B3E':'none'};${isToday?'background:rgba(59,130,246,.08)':''}">
+        <p style="font-size:.7rem;font-weight:700;color:${isToday?'#60A5FA':'#64748B'};text-transform:uppercase">${dayNames[i]}</p>
+        <p style="font-size:1rem;font-weight:800;color:${isToday?'#E2E8F0':'#94A3B8'};margin-top:2px">${d.getDate()}</p>
+        ${isToday?'<div style="width:5px;height:5px;border-radius:50%;background:#3B82F6;margin:2px auto 0"></div>':''}
+      </div>`;
+    });
+    html+=`</div><div style="display:grid;grid-template-columns:repeat(7,1fr);min-height:300px">`;
+
+    weekDates.forEach((d,i)=>{
+      const ds=d.toISOString().split('T')[0];
+      const isToday=ds===today;
+      const daySessions=filtered.filter(s=>s.scheduled_date===ds).sort((a,b)=>(a.scheduled_time||'').localeCompare(b.scheduled_time||''));
+
+      html+=`<div style="border-right:${i<6?'1px solid #232B3E':'none'};min-height:200px;padding:6px;${isToday?'background:rgba(59,130,246,.03)':''}">`;
+      daySessions.forEach(s=>{
+        const bg=colors3[s.color]||'rgba(59,130,246,.15)';
+        const bc=s.color||'#3B82F6';
+        html+=`<div onclick="openEditSession('${s.id}')" style="background:${bg};border-left:3px solid ${bc};border-radius:4px;padding:5px 7px;margin-bottom:5px;cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+          <p style="font-size:.7rem;font-weight:700;color:#E2E8F0;line-height:1.2;margin-bottom:2px">${s.title}</p>
+          ${s.scheduled_time?`<p style="font-size:.64rem;color:#64748B">${fmtTime(s.scheduled_time)}</p>`:''}
+          ${s.duration_mins?`<p style="font-size:.62rem;color:#64748B">${s.duration_mins}min</p>`:''}
+        </div>`;
+      });
+      html+=`<button onclick="openNewSessionOnDate('${ds}')" style="width:100%;background:none;border:1px dashed #232B3E;border-radius:4px;padding:4px;color:#334155;cursor:pointer;font-size:.68rem;margin-top:4px" onmouseover="this.style.borderColor='#3B82F6';this.style.color='#60A5FA'" onmouseout="this.style.borderColor='#232B3E';this.style.color='#334155'">+ Add</button>`;
+      html+=`</div>`;
+    });
+    html+=`</div>`;
+    document.getElementById('cal-grid').innerHTML=html;
+
+  } else {
+    // Month view
+    const year=calCurrentDate.getFullYear();
+    const month=calCurrentDate.getMonth();
+    const firstDay=new Date(year,month,1);
+    const lastDay=new Date(year,month+1,0);
+    const startDow=firstDay.getDay()===0?6:firstDay.getDay()-1;
+
+    document.getElementById('cal-week-label').textContent=
+      `${firstDay.toLocaleDateString('en-GB',{month:'long',year:'numeric'})}  |  Meso ${meso}  |  Micro Week ${micro}`;
+
+    const dayNames=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    let html=`<div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid #232B3E">`;
+    dayNames.forEach(d=>{html+=`<div style="padding:7px;text-align:center;font-size:.68rem;font-weight:700;color:#64748B;text-transform:uppercase">${d}</div>`;});
+    html+=`</div><div style="display:grid;grid-template-columns:repeat(7,1fr)">`;
+
+    for(let i=0;i<startDow;i++) html+=`<div style="border-right:1px solid #232B3E;border-bottom:1px solid #232B3E;min-height:80px;padding:4px;background:#0d1118"></div>`;
+
+    for(let day=1;day<=lastDay.getDate();day++){
+      const d=new Date(year,month,day);
+      const ds=d.toISOString().split('T')[0];
+      const isToday=ds===todayStr();
+      const daySessions=filtered.filter(s=>s.scheduled_date===ds);
+      const col=(startDow+day-1)%7;
+      html+=`<div style="border-right:${col<6?'1px solid #232B3E':'none'};border-bottom:1px solid #232B3E;min-height:80px;padding:5px;${isToday?'background:rgba(59,130,246,.06)':''}">
+        <p style="font-size:.75rem;font-weight:700;color:${isToday?'#60A5FA':'#64748B'};margin-bottom:3px">${day}</p>
+        ${daySessions.slice(0,2).map(s=>`<div onclick="openEditSession('${s.id}')" style="background:${s.color||'#3B82F6'}22;border-left:2px solid ${s.color||'#3B82F6'};border-radius:3px;padding:2px 5px;margin-bottom:2px;cursor:pointer;font-size:.62rem;color:#E2E8F0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.title}</div>`).join('')}
+        ${daySessions.length>2?`<div style="font-size:.6rem;color:#64748B">+${daySessions.length-2} more</div>`:''}
+        <button onclick="openNewSessionOnDate('${ds}')" style="background:none;border:none;color:#334155;cursor:pointer;font-size:.65rem;padding:1px 3px" onmouseover="this.style.color='#60A5FA'" onmouseout="this.style.color='#334155'">+ Add</button>
+      </div>`;
+    }
+    html+=`</div>`;
+    document.getElementById('cal-grid').innerHTML=html;
+  }
+}
+
+function openNewSession(){
+  document.getElementById('sm-id').value='';
+  document.getElementById('session-modal-title').textContent='New Session';
+  document.getElementById('sm-title').value='';
+  document.getElementById('sm-date').value=todayStr();
+  document.getElementById('sm-time').value='06:30';
+  document.getElementById('sm-type').value='Strength – Lower';
+  document.getElementById('sm-dur').value='60';
+  document.getElementById('sm-meso').value=document.getElementById('cal-meso').value;
+  document.getElementById('sm-week').value=document.getElementById('cal-micro').value;
+  document.getElementById('sm-notes').value='';
+  document.getElementById('sm-disc').value='all';
+  document.querySelector('input[name="sm-color"][value="#3B82F6"]').checked=true;
+  document.getElementById('sm-delete-btn').style.display='none';
+  document.getElementById('session-modal').style.display='flex';
+}
+
+function openNewSessionOnDate(dateStr){
+  openNewSession();
+  document.getElementById('sm-date').value=dateStr;
+}
+
+function openEditSession(id){
+  const s=ALL_SCHEDULES.find(x=>x.id===id);
+  if(!s) return;
+  document.getElementById('sm-id').value=id;
+  document.getElementById('session-modal-title').textContent='Edit Session';
+  document.getElementById('sm-title').value=s.title;
+  document.getElementById('sm-date').value=s.scheduled_date;
+  document.getElementById('sm-time').value=s.scheduled_time||'06:30';
+  document.getElementById('sm-type').value=s.session_type||'Strength – Lower';
+  document.getElementById('sm-dur').value=s.duration_mins||60;
+  document.getElementById('sm-meso').value=s.meso_number||1;
+  document.getElementById('sm-week').value=s.week_number||1;
+  document.getElementById('sm-notes').value=s.notes||'';
+  document.getElementById('sm-disc').value=s.discipline||'all';
+  const col=s.color||'#3B82F6';
+  const radio=document.querySelector(`input[name="sm-color"][value="${col}"]`);
+  if(radio) radio.checked=true;
+  document.getElementById('sm-delete-btn').style.display='block';
+  document.getElementById('session-modal').style.display='flex';
+}
+
+function closeSessionModal(){
+  document.getElementById('session-modal').style.display='none';
+}
+
+async function saveCalSession(){
+  const id=document.getElementById('sm-id').value;
+  const color=document.querySelector('input[name="sm-color"]:checked')?.value||'#3B82F6';
+  const data={
+    title:document.getElementById('sm-title').value.trim(),
+    scheduled_date:document.getElementById('sm-date').value,
+    scheduled_time:document.getElementById('sm-time').value,
+    session_type:document.getElementById('sm-type').value,
+    duration_mins:parseInt(document.getElementById('sm-dur').value)||60,
+    meso_number:parseInt(document.getElementById('sm-meso').value)||1,
+    week_number:parseInt(document.getElementById('sm-week').value)||1,
+    notes:document.getElementById('sm-notes').value.trim(),
+    discipline:document.getElementById('sm-disc').value,
+    color,
+    created_by:SESSION?.id,
+  };
+  if(!data.title){toast('Enter a session title.','err');return;}
+  if(!data.scheduled_date){toast('Select a date.','err');return;}
+  const btn=document.getElementById('sm-save-btn');
+  btn.innerHTML='<span class="loader"></span>';btn.disabled=true;
+  try{
+    if(id){
+      await dbPatch('session_schedule',data,`?id=eq.${id}`);
+      toast('✅ Session updated!');
+    } else {
+      await dbPost('session_schedule',data);
+      toast('✅ Session added to calendar!');
+    }
+    await loadAllData();
+    closeSessionModal();
+    renderCalendar();
+  }catch(e){toast('Error: '+e.message,'err');}
+  btn.innerHTML='Save Session';btn.disabled=false;
+}
+
+async function deleteCalSession(){
+  const id=document.getElementById('sm-id').value;
+  if(!id||!confirm('Delete this session from calendar?')) return;
+  try{
+    await dbDelete('session_schedule',`?id=eq.${id}`);
+    await loadAllData();
+    closeSessionModal();
+    renderCalendar();
+    toast('Session deleted.');
+  }catch(e){toast('Error: '+e.message,'err');}
+}
+
+// ─── DATE FILTER HELPERS ───
+function getDateRange(fromId,toId){
+  const from=document.getElementById(fromId)?.value;
+  const to=document.getElementById(toId)?.value;
+  return{from,to};
+}
+function inRange(dateStr,from,to){
+  if(!from&&!to) return true;
+  if(from&&dateStr<from) return false;
+  if(to&&dateStr>to) return false;
+  return true;
+}
+function setRange(fromId,toId,days){
+  const to=new Date();
+  const from=new Date();
+  if(days>0) from.setDate(from.getDate()-days);
+  else{from.setFullYear(2020);} // "All" = very old date
+  document.getElementById(fromId).value=days>0?from.toISOString().split('T')[0]:'';
+  document.getElementById(toId).value=to.toISOString().split('T')[0];
+}
+function setDashRange(d){setRange('dash-date-from','dash-date-to',d);renderDashboard();}
+function setPlanRange(d){setRange('plans-date-from','plans-date-to',d);renderPlansList();}
+function setInjRange(d){setRange('inj-date-from','inj-date-to',d);renderInjuries();}
+function setLogsRange(d){setRange('logs-date-from','logs-date-to',d);renderAthleteLogsData();}
+function clearPlanFilters(){
+  ['plans-disc-filter','plans-phase-filter'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='all';});
+  ['plans-date-from','plans-date-to'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  renderPlansList();
+}
+function clearLogsFilters(){
+  const el=document.getElementById('logs-ath-filter');if(el)el.value='all';
+  const el2=document.getElementById('logs-status-filter');if(el2)el2.value='all';
+  ['logs-date-from','logs-date-to'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  renderAthleteLogsData();
+}
+
+// ─── ACCESS CONTROL ───
+
+async function loadAccessControl(){
+  try{
+    const data=await dbGet('team_access','?select=*');
+    ALL_ACCESS=data||[];
+  }catch(e){
+    ALL_ACCESS=[];
+    // Table may not exist yet — silently ignore
+  }
+}
+
+function switchManageTab(tab){
+  document.getElementById('manage-ath-panel').style.display=tab==='athletes'?'block':'none';
+  document.getElementById('manage-coach-panel').style.display=tab==='coaches'?'block':'none';
+  // Access control renders inline in manage-access-panel-placeholder
+  const ap=document.getElementById('manage-access-panel-placeholder');
+  if(ap) ap.style.display=tab==='access'?'block':'none';
+
+  document.getElementById('manage-tab-ath').className='tab-btn'+(tab==='athletes'?' active':'');
+  document.getElementById('manage-tab-coach').className='tab-btn'+(tab==='coaches'?' active':'');
+  const at=document.getElementById('manage-tab-access');
+  if(at) at.className='tab-btn'+(tab==='access'?' active':'');
+
+  if(tab==='coaches') renderCoachList();
+  if(tab==='access') renderAccessControl();
+}
+
+async function renderAccessControl(){
+  const placeholder=document.getElementById('manage-access-panel-placeholder');
+  if(!placeholder) return;
+  placeholder.innerHTML='<div style="padding:20px;text-align:center"><span class="loader"></span> Loading...</div>';
+  try{
+    await loadAccessControl();
+    const coaches=await dbGet('users','?role=eq.coach&select=*').catch(()=>[]);
+    const pages=['dashboard','injuries','analytics','plans','logs'];
+    const pageLabels={dashboard:'Dashboard',injuries:'Injury Tracker',analytics:'Analytics',plans:'Saved Plans',logs:'Athlete Logs'};
+    const rows=coaches.map(coach=>{
+      const acc=ALL_ACCESS.find(a=>a.user_id===coach.id)||{};
+      const team=acc.discipline||'all';
+      let perms={};
+      try{perms=JSON.parse(acc.permissions||'{}');}catch(e){}
+      const isSelf=SESSION&&SESSION.id===coach.id;
+      const nameEsc=(coach.name||'').replace(/'/g,'&#39;');
+      const permsEsc=JSON.stringify(perms).replace(/'/g,'&#39;').replace(/"/g,'&quot;');
+      return '<tr>'
+        +'<td style="font-weight:600;color:#E2E8F0">'+coach.name+(isSelf?'<span class="badge bdg-b" style="margin-left:6px;font-size:.58rem">You</span>':'')+'</td>'
+        +'<td><span class="badge bdg-p" style="font-size:.64rem">'+(team==='all'?'All Sports':team)+'</span></td>'
+        +pages.map(p=>{
+          const lv=perms[p]||'full';
+          return '<td style="text-align:center"><span class="badge '+(lv==='full'?'bdg-g':lv==='view'?'bdg-y':'')
+            +'" style="font-size:.6rem">'+(lv==='full'?'Full':lv==='view'?'View':'None')+'</span></td>';
+        }).join('')
+        +'<td><button onclick="openEditAccess(\''+coach.id+'\',\''+nameEsc+'\',\''+team+'\',\''+permsEsc+'\')" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:3px 9px;color:#60A5FA;font-size:.72rem;cursor:pointer">🔐 Set</button></td>'
+        +'</tr>';
+    }).join('');
+
+    placeholder.innerHTML='<div style="display:grid;grid-template-columns:1fr 420px;gap:18px;align-items:start">'
+      +'<div class="sc"><div class="sc-hd"><span style="font-size:.86rem;font-weight:600;color:#E2E8F0">🔐 Coach Access Control</span>'
+      +'<span class="badge bdg-r" style="font-size:.62rem">Super Admin Only</span></div>'
+      +'<div style="padding:10px 16px;background:rgba(59,130,246,.05);border-bottom:1px solid #232B3E;font-size:.75rem;color:#94A3B8">'
+      +'Control which sport/team each coach can access and page permissions.</div>'
+      +'<div style="overflow-x:auto"><table class="apex-table"><thead><tr>'
+      +'<th>Coach</th><th>Team</th><th>Dashboard</th><th>Injuries</th><th>Analytics</th><th>Plans</th><th>Logs</th><th>Edit</th>'
+      +'</tr></thead><tbody>'+(rows||'<tr><td colspan="8"><div class="empty-s">No coaches found.</div></td></tr>')+'</tbody></table></div></div>'
+      +'<div id="edit-access-panel-wrap"></div></div>';
+  }catch(err){
+    console.error('Access control error:',err);
+    placeholder.innerHTML='<div style="padding:14px;color:#EF4444;font-size:.8rem">⚠️ Error: '+err.message+'<br><br>Run this SQL in Supabase:<br><code>GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated;</code></div>';
+  }
+}
+
+
+function editMcEntry(id,start,end,notes){
+  document.getElementById('mc-edit-id').value=id;
+  document.getElementById('mc-start').value=start;
+  document.getElementById('mc-end').value=end||'';
+  document.getElementById('mc-notes').value=notes||'';
+  const t=document.getElementById('mc-form-title');
+  if(t) t.textContent='✏️ Edit Cycle';
+  document.getElementById('mc-save-btn').textContent='Update Cycle';
+  document.getElementById('mc-cancel-btn').style.display='inline-flex';
+  document.getElementById('mc-save-btn').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ─── ACCESS CONTROL EDIT ───
+function openEditAccess(userId,name,team,permsStr){
+  const wrap=document.getElementById('edit-access-panel-wrap');
+  if(!wrap) return;
+  let perms={};
+  try{perms=JSON.parse(permsStr||'{}');}catch(e){}
+  const pages=['dashboard','roster','workout-builder','analytics','injuries','athlete-logs','add-athlete','manage-athletes','calendar'];
+  const labels={dashboard:'Dashboard',roster:'Roster','workout-builder':'Workout Builder',analytics:'Analytics',injuries:'Injury Tracker','athlete-logs':'Athlete Logs','add-athlete':'Add User','manage-athletes':'Manage Users',calendar:'Calendar'};
+  const sportOpts=['all','Football','Boxing','Cricket','Basketball','Athletics','Weightlifting','MMA','General S&C','Other'];
+  const sportLabels={'all':'All Sports','Football':'⚽ Football','Boxing':'🥊 Boxing','Cricket':'🏏 Cricket','Basketball':'🏀 Basketball','Athletics':'🏃 Athletics','Weightlifting':'🏋️ Weightlifting','MMA':'🥋 MMA','General S&C':'💪 General S&C','Other':'🎯 Other'};
+  wrap.innerHTML='<div class="sc"><div class="sc-hd">'
+    +'<span style="font-size:.86rem;font-weight:600;color:#E2E8F0">🔐 '+name+'</span>'
+    +'<button onclick="document.getElementById(\'edit-access-panel-wrap\').innerHTML=\'\'" style="background:none;border:none;color:#64748B;cursor:pointer;font-size:1.1rem">✕</button>'
+    +'</div><div class="sc-bd" style="display:flex;flex-direction:column;gap:12px">'
+    +'<input type="hidden" id="edit-access-uid" value="'+userId+'"/>'
+    +'<div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px 12px">'
+    +'<p style="font-size:.7rem;font-weight:700;color:#64748B;text-transform:uppercase;margin-bottom:6px">🏅 Team Access</p>'
+    +'<label class="al">Which sport can this coach manage?</label>'
+    +'<select id="access-team-sel" class="as">'
+    +sportOpts.map(function(s){return'<option value="'+s+'"'+(team===s?' selected':'')+'>'+sportLabels[s]+'</option>';}).join('')
+    +'</select></div>'
+    +'<div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:10px 12px">'
+    +'<p style="font-size:.7rem;font-weight:700;color:#64748B;text-transform:uppercase;margin-bottom:8px">📋 Page Permissions</p>'
+    +pages.map(function(p){return'<div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1A2035">'
+      +'<span style="font-size:.78rem;color:#CBD5E1">'+(labels[p]||p)+'</span>'
+      +'<select id="perm-'+p+'" class="as" style="width:110px;padding:3px 7px;font-size:.74rem">'
+      +'<option value="full"'+((perms[p]||'full')==='full'?' selected':'')+'>✅ Full Access</option>'
+      +'<option value="view"'+(perms[p]==='view'?' selected':'')+'>👁️ View Only</option>'
+      +'<option value="none"'+(perms[p]==='none'?' selected':'')+'>🚫 No Access</option>'
+      +'</select></div>';
+    }).join('')
+    +'</div>'
+    +'<button class="bp" onclick="saveAccessControl()" style="justify-content:center" id="save-access-btn">'
+    +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>'
+    +'Save Access Settings</button></div></div>';
+}
+
+async function saveAccessControl(){
+  const uid=document.getElementById('edit-access-uid')?.value;
+  const team=document.getElementById('access-team-sel')?.value||'all';
+  if(!uid){toast('Select a coach first.','err');return;}
+  const pages=['dashboard','roster','workout-builder','analytics','injuries','athlete-logs','add-athlete','manage-athletes','calendar'];
+  const perms={};
+  pages.forEach(function(p){const s=document.getElementById('perm-'+p);if(s)perms[p]=s.value;});
+  const btn=document.getElementById('save-access-btn');
+  if(btn){btn.innerHTML='<span class="loader"></span>';btn.disabled=true;}
+  try{
+    const existing=ALL_ACCESS.find(function(a){return a.user_id===uid;});
+    if(existing){
+      await dbPatch('team_access',{discipline:team,permissions:JSON.stringify(perms),access_level:'custom'},'?user_id=eq.'+uid);
+    }else{
+      await dbPost('team_access',{user_id:uid,discipline:team,permissions:JSON.stringify(perms),access_level:'custom'});
+    }
+    await loadAccessControl();
+    toast('✅ Access settings saved!');
+    renderAccessControl();
+  }catch(e){toast('Error: '+e.message,'err');}
+  if(btn){btn.innerHTML='Save Access Settings';btn.disabled=false;}
+}
+
+function cancelMcEdit(){
+  document.getElementById('mc-edit-id').value='';
+  document.getElementById('mc-start').value='';
+  document.getElementById('mc-end').value='';
+  document.getElementById('mc-notes').value='';
+  const t=document.getElementById('mc-form-title');
+  if(t) t.textContent='Log New Cycle';
+  document.getElementById('mc-save-btn').textContent='Log Cycle';
+  document.getElementById('mc-cancel-btn').style.display='none';
+}
+
+async function renderMenstrual(){
+  if(!SESSION) return;
+  if(SESSION.role==='coach'){nav('menstrual-coach');return;}
+  if(!SESSION.athlete_id){
+    const hc=document.getElementById('mc-history-content');
+    if(hc) hc.innerHTML='<div class="empty-s">Athlete profile not linked. Contact your coach.</div>';
+    return;
+  }
+  try{
+    const cycles=await dbGet('menstrual_cycles','?athlete_id=eq.'+SESSION.athlete_id+'&order=cycle_start.desc');
+    const countEl=document.getElementById('mc-count');
+    if(countEl) countEl.textContent=(cycles?cycles.length:0)+' cycles';
+    const hc=document.getElementById('mc-history-content');
+    if(!hc) return;
+    if(!cycles||cycles.length===0){
+      hc.innerHTML='<div class="empty-s">No cycles logged yet. Start tracking above!</div>';
+      return;
+    }
+    var rows=cycles.map(function(cy){
+      var start=new Date(cy.cycle_start+'T00:00:00');
+      var endD=cy.cycle_end?new Date(cy.cycle_end+'T00:00:00'):null;
+      var duration=endD?Math.floor((endD-start)/(1000*60*60*24))+' days':'Ongoing';
+      var daysAgo=Math.floor((new Date()-start)/(1000*60*60*24));
+      var phase=daysAgo<=5?'Menstrual':daysAgo<=13?'Follicular':daysAgo<=17?'Ovulation':'Luteal';
+      var pCol=daysAgo<=5?'#EF4444':daysAgo<=13?'#22C55E':daysAgo<=17?'#60A5FA':'#EAB308';
+      var nesc=(cy.notes||'').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
+      return '<div style="background:#0B0E14;border:1px solid #232B3E;border-radius:8px;padding:12px;margin-bottom:8px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px">'
+        +'<div><p style="font-size:.82rem;font-weight:600;color:#E2E8F0;margin-bottom:3px">'+fmtDate(cy.cycle_start)+(endD?' → '+fmtDate(cy.cycle_end):'')+'</p>'
+        +'<p style="font-size:.74rem;color:#64748B">Duration: '+duration+' | Day '+(daysAgo+1)+'</p>'
+        +(daysAgo<=28?'<span class="badge" style="background:'+pCol+'22;color:'+pCol+';font-size:.62rem">'+phase+' Phase</span>':'')
+        +(cy.notes?'<p style="font-size:.72rem;color:#94A3B8;margin-top:4px">'+cy.notes+'</p>':'')
+        +'</div><div style="display:flex;gap:4px">'
+        +'<button onclick="editMcEntry(\''+cy.id+'\',\''+cy.cycle_start+'\',\''+(cy.cycle_end||'')+'\',\''+nesc+'\')" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:5px;padding:3px 7px;color:#60A5FA;font-size:.7rem;cursor:pointer">✏️</button>'
+        +'<button onclick="deleteMcEntry(\''+cy.id+'\')" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:5px;padding:3px 7px;color:#EF4444;font-size:.7rem;cursor:pointer">🗑</button>'
+        +'</div></div>';
+    }).join('');
+    hc.innerHTML='<div style="padding:14px">'+rows+'</div>';
+  }catch(e){
+    const hc=document.getElementById('mc-history-content');
+    if(hc) hc.innerHTML='<div style="color:#EF4444;padding:10px;font-size:.8rem">⚠️ Error: '+e.message+'</div>';
+    console.error('Menstrual error:',e);
+  }
+}
+
+async function renderMenstrualCoach(){
+  const grid=document.getElementById('mc-coach-grid');
+  if(!grid) return;
+  try{
+    const df=document.getElementById('mc-coach-disc');
+    const disc=df?df.value:'all';
+    const discs=[...new Set((ALL_ATHLETES||[]).map(function(a){return a.discipline;}).filter(Boolean))].sort();
+    if(df){var cur=df.value;df.innerHTML='<option value="all">All Sports</option>'+discs.map(function(d){return'<option value="'+d+'">'+d+'</option>';}).join('');df.value=cur;}
+    var athletes=ALL_ATHLETES.filter(function(a){return a.gender==='Female';});
+    if(disc!=='all') athletes=athletes.filter(function(a){return a.discipline===disc;});
+    if(athletes.length===0){
+      grid.innerHTML='<div class="empty-s">No female athletes found. Set Gender = Female when adding athletes.</div>';
+      return;
+    }
+    grid.innerHTML='<div style="padding:16px;color:#64748B;font-size:.8rem"><span class="loader"></span> Loading cycle data...</div>';
+    var cards=await Promise.all(athletes.map(async function(a){
+      var last=null;
+      try{var r=await dbGet('menstrual_cycles','?athlete_id=eq.'+a.id+'&order=cycle_start.desc&limit=1');last=r&&r[0]?r[0]:null;}catch(e){}
+      if(last){
+        var s=new Date(last.cycle_start+'T00:00:00');
+        var da=Math.floor((new Date()-s)/(1000*60*60*24));
+        var phase,pc,tip;
+        if(da<=5){phase='🔴 Menstrual';pc='#EF4444';tip='Light training — focus on recovery';}
+        else if(da<=13){phase='🟢 Follicular';pc='#22C55E';tip='Energy rising — good for strength';}
+        else if(da<=17){phase='🔵 Ovulation';pc='#60A5FA';tip='Peak performance window!';}
+        else if(da<=28){phase='🟡 Luteal';pc='#EAB308';tip='Monitor fatigue — reduce if needed';}
+        else{phase='⚪ Unknown';pc='#64748B';tip='Cycle data may be outdated';}
+        return '<div style="background:#1A2035;border:1px solid #232B3E;border-radius:10px;padding:14px;border-left:3px solid '+pc+'">'
+          +'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">'
+          +'<div><p style="font-size:.86rem;font-weight:700;color:#E2E8F0">'+a.name+'</p>'
+          +'<p style="font-size:.7rem;color:#64748B">'+(a.discipline||'')+'</p></div>'
+          +'<span style="font-size:.7rem;font-weight:700;color:'+pc+';background:'+pc+'22;padding:3px 8px;border-radius:10px">'+phase+'</span></div>'
+          +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'
+          +'<div style="background:#0B0E14;border-radius:6px;padding:7px 10px"><p style="font-size:.62rem;color:#64748B;margin-bottom:2px">Day of Cycle</p><p style="font-size:.9rem;font-weight:700;color:#E2E8F0">Day '+(da+1)+'</p></div>'
+          +'<div style="background:#0B0E14;border-radius:6px;padding:7px 10px"><p style="font-size:.62rem;color:#64748B;margin-bottom:2px">Last Start</p><p style="font-size:.8rem;font-weight:600;color:#94A3B8">'+fmtDate(last.cycle_start)+'</p></div>'
+          +'</div><p style="font-size:.7rem;color:'+pc+';margin-top:7px">💡 '+tip+'</p>'
+          +(last.notes?'<p style="font-size:.7rem;color:#64748B;margin-top:4px;font-style:italic">'+last.notes+'</p>':'')
+          +'</div>';
+      }
+      return '<div style="background:#1A2035;border:1px solid #232B3E;border-radius:10px;padding:14px;opacity:.6">'
+        +'<p style="font-size:.84rem;font-weight:600;color:#94A3B8">'+a.name+'</p>'
+        +'<p style="font-size:.7rem;color:#475569;margin-top:4px">No cycle data logged</p></div>';
+    }));
+    grid.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">'+cards.join('')+'</div>';
+  }catch(err){
+    grid.innerHTML='<div style="color:#EF4444;padding:14px;font-size:.8rem">⚠️ Error: '+err.message+'</div>';
+    console.error('Cycle coach error:',err);
+  }
+}
+
+async function saveMenstrualCycle(){
+  if(!SESSION?.athlete_id){toast('Athlete profile not found.','err');return;}
+  const editId=document.getElementById('mc-edit-id').value;
+  const start=document.getElementById('mc-start').value;
+  const end=document.getElementById('mc-end').value;
+  const notes=document.getElementById('mc-notes').value.trim();
+  if(!start){toast('Select cycle start date.','err');return;}
+  const btn=document.getElementById('mc-save-btn');
+  btn.innerHTML='<span class="loader"></span>';btn.disabled=true;
+  try{
+    const data={athlete_id:SESSION.athlete_id,cycle_start:start,cycle_end:end||null,notes};
+    if(editId){
+      await dbPatch('menstrual_cycles',data,`?id=eq.${editId}`);
+      toast('✅ Cycle updated!');
+      cancelMcEdit();
+    } else {
+      await dbPost('menstrual_cycles',data);
+      toast('✅ Cycle logged!');
+      document.getElementById('mc-start').value='';
+      document.getElementById('mc-end').value='';
+      document.getElementById('mc-notes').value='';
+    }
+    renderMenstrual();
+  }catch(e){toast('Error: '+e.message,'err');}
+  btn.innerHTML=editId?'Update Cycle':'Log Cycle';btn.disabled=false;
+}
+
+async function deleteMcEntry(id){
+  if(!confirm('Delete this cycle entry?')) return;
+  try{
+    await dbDelete('menstrual_cycles',`?id=eq.${id}`);
+    renderMenstrual();
+    toast('Cycle entry deleted.');
+  }catch(e){toast('Error: '+e.message,'err');}
+}
+
+// ─── UPDATED PLANS LIST with date + phase filter ───
+function renderPlansList(){
+  const disc=document.getElementById('plans-disc-filter')?.value||'all';
+  const phase=document.getElementById('plans-phase-filter')?.value||'all';
+  const{from,to}=getDateRange('plans-date-from','plans-date-to');
+
+  // Populate disc filter
+  const discs=[...new Set(ALL_ATHLETES.map(a=>a.discipline).filter(Boolean))].sort();
+  const df=document.getElementById('plans-disc-filter');
+  if(df){const cur=df.value;df.innerHTML='<option value="all">All Sports</option>'+discs.map(d=>`<option value="${d}">${d}</option>`).join('');df.value=cur;}
+
+  let plans=ALL_PLANS;
+  if(phase!=='all') plans=plans.filter(p=>p.phase===phase);
+  if(from||to) plans=plans.filter(p=>inRange(p.session_date,from,to));
+  // Disc filter — show plans assigned to athletes of that sport
+  if(disc!=='all'){
+    const athIds=new Set(ALL_ATHLETES.filter(a=>a.discipline===disc).map(a=>a.id));
+    plans=plans.filter(p=>p.assignedTo&&p.assignedTo.some(id=>athIds.has(id)));
+  }
+
+  const rows=plans.map(p=>{
+    const names=(p.assignedTo||[]).map(id=>{const a=ALL_ATHLETES.find(x=>x.id===id);return a?a.name:'?';}).join(', ');
+    return`<tr>
+      <td style="font-weight:600;color:#E2E8F0">${p.name}</td>
+      <td style="color:#94A3B8;font-size:.78rem">${p.session_type||'—'}</td>
+      <td><span class="badge bdg-b">${p.phase||'—'}</span></td>
+      <td style="font-weight:600;color:#A78BFA">W${p.week_number}</td>
+      <td style="color:#94A3B8">${fmtDate(p.session_date)}</td>
+      <td style="font-weight:600;color:#60A5FA">${(p.exercises||[]).length}</td>
+      <td style="font-size:.76rem;color:#94A3B8;max-width:160px">${names}</td>
+      <td>
+        <div style="display:flex;gap:5px">
+          <button onclick="editPlan('${p.id}')" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:4px 8px;color:#60A5FA;font-size:.72rem;font-weight:600;cursor:pointer">✏️ Edit</button>
+          <button onclick="copyPlan('${p.id}')" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.25);border-radius:6px;padding:4px 8px;color:#A78BFA;font-size:.72rem;font-weight:600;cursor:pointer">📋 Copy</button>
+          <button class="bg-btn" style="padding:3px 8px;font-size:.72rem" onclick="deletePlan('${p.id}')">🗑</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('plans-list-tbody').innerHTML=rows||'<tr><td colspan="8"><div class="empty-s">No plans match filter. Use Workout Builder to create one.</div></td></tr>';
+}
+
+// ─── EDIT PLAN (load into builder) ───
+function editPlan(planId){
+  const plan=ALL_PLANS.find(p=>p.id===planId);
+  if(!plan){toast('Plan not found.','err');return;}
+  nav('workout-builder');
+  setTimeout(()=>{
+    document.getElementById('wb-name').value=plan.name;
+    document.getElementById('wb-week').value=plan.week_number||1;
+    document.getElementById('wb-date').value=plan.session_date||todayStr();
+    document.getElementById('wb-time').value=plan.session_time||'06:30';
+    document.getElementById('wb-notes').value=plan.notes||'';
+    // Set phase
+    const phSel=document.getElementById('wb-phase');
+    if(phSel){const o=[...phSel.options].find(x=>x.value===plan.phase);if(o)phSel.value=plan.phase;}
+    // Set session type
+    const tySel=document.getElementById('wb-type');
+    if(tySel){const o=[...tySel.options].find(x=>x.value===plan.session_type);if(o)tySel.value=plan.session_type;}
+    // Load exercises
+    document.getElementById('exercise-list').innerHTML='';
+    exCount=0;
+    (plan.exercises||[]).forEach(e=>{
+      addExRow();
+      const rows=document.querySelectorAll('#exercise-list .ex-row');
+      const row=rows[rows.length-1];
+      if(row){
+        row.querySelector('.ex-name').value=e.name||'';
+        row.querySelector('.ex-sets').value=e.sets||3;
+        row.querySelector('.ex-reps').value=e.reps||8;
+        row.querySelector('.ex-tempo').value=e.tempo||'2-0-2-0';
+        row.querySelector('.ex-weight').value=e.weight||0;
+        row.querySelector('.ex-unit').value=e.unit||'kg';
+        row.querySelector('.ex-rest').value=e.rest||90;
+        if(row.querySelector('.ex-dist')) row.querySelector('.ex-dist').value=e.distance||'';
+        if(row.querySelector('.ex-intensity')) row.querySelector('.ex-intensity').value=e.intensity||70;
+        if(row.querySelector('.ex-rpe')) row.querySelector('.ex-rpe').value=e.rpe||7;
+      }
+    });
+    // Check assigned athletes
+    const checkboxes=document.querySelectorAll('#wb-assign-checks input[type="checkbox"]');
+    checkboxes.forEach(cb=>{cb.checked=plan.assignedTo&&plan.assignedTo.includes(cb.value);});
+    // Store editing plan id
+    document.getElementById('save-plan-btn').dataset.editingId=planId;
+    document.getElementById('save-plan-btn').textContent='Update Plan';
+    calcTotals();
+    toast('Plan loaded for editing — make changes and click Update Plan');
+  },300);
+}
+
 // MY HISTORY - handled by new functions above
 </script>
-
-
-</body></html>
+</body>
+</html>
